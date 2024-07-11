@@ -47,7 +47,7 @@ export default async function Header() {
     },
   ]
   return (
-    <div className="flex-1 flex flex-col gap-20 items-center max-w-lg mx-auto">  
+    <div className="flex-1 flex flex-col gap-20 items-center max-w-lg mx-auto mb-2">  
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           <div className={hidden}>

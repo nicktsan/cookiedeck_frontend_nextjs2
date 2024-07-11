@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
+import { CreateDeck } from "@/actions/deck/createDeck"
+import { IDeckCreateResponseDto } from "@/actions/deck/createDeckDTO"
 
 const folders = [
   { label: "No folder", value: " " },//Select Items cannot have an empty value. We will get rid of leading and trailing whitespace on form submit.
@@ -34,7 +36,7 @@ const visibilities = [
   { label: "Unlisted", value: "unlisted" },
 ] as const
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(3, {
     message: "name must be at least 3 characters.",
   }),
@@ -59,11 +61,26 @@ export function CreateDeckForm() {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     //todo remove all leading and trailing whitespace in values
-    console.log(values)
+    // console.log(values)
+    const res: IDeckCreateResponseDto = await CreateDeck(values)
+    // console.log("res")
+    // console.log(res)
+    // console.log("res data: ")
+    // console.log(res.data)
+    // export interface IDeckCreateResponseData {
+    //   id?: string;
+    //   message?: string;
+    //     error?: string;
+    // }
+    
+    // export interface IDeckCreateResponseDto {
+    //   statusCode: number;
+    //     data: IDeckCreateResponseData;
+    // }
   }
   return (
     <Form {...form}>
