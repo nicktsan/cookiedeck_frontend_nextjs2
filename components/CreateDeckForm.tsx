@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-// import { toast } from "@/components/ui/use-toast" //todo install this later if you want to display error message
+import { toast } from "@/components/ui/use-toast"
 import {
   Select,
   SelectContent,
@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { CreateDeck } from "@/actions/deck/createDeck"
 import { IDeckCreateResponseDto } from "@/actions/deck/createDeckDTO"
+import { useRouter } from 'next/navigation'
 
 const folders = [
   { label: "No folder", value: " " },//Select Items cannot have an empty value. We will get rid of leading and trailing whitespace on form submit.
@@ -50,6 +51,7 @@ export const formSchema = z.object({
 })
 
 export function CreateDeckForm() {
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,9 +64,6 @@ export function CreateDeckForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //todo remove all leading and trailing whitespace in values
     // console.log(values)
     const res: IDeckCreateResponseDto = await CreateDeck(values)
     // console.log("res")
@@ -81,6 +80,21 @@ export function CreateDeckForm() {
     //   statusCode: number;
     //     data: IDeckCreateResponseData;
     // }
+    if (res.data.id) {
+      router.push(`/deck/${res.data.id}`)
+    }
+    if (res.data.error){
+      // console.log(res.data.error)
+      toast({
+        title: "Error",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(res, null, 2)}</code>
+          </pre>
+        ),
+        // variant: "destructive",
+      })
+    }
   }
   return (
     <Form {...form}>

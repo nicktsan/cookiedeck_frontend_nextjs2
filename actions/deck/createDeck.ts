@@ -28,28 +28,29 @@ async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<IDeckCr
     } as IDeckCreateResponseData
   };
   try {
-    const { data } = await axios.post(url, body, {
+    const { status, data } = await axios.post(url, body, {
       headers: {
         'Authorization': `Bearer ${session?.access_token}`,
         'Content-Type': 'application/json'
       }
     })
     if (data) {
+      // console.log('CreateDeck data:', data);
       CreateDeckres =  {
-        statusCode: data.status,
-        data: data.data as IDeckCreateResponseData,
+        statusCode: status,
+        data: data as IDeckCreateResponseData,
       }
     }
     // console.log('CreateDeckres:', CreateDeckres
   } catch (error) {
-    const { response } = error as AxiosError;
+    const { response, status } = error as AxiosError;
     // console.log('Error occured during deck creation: ', errResp);
     CreateDeckres = {
       statusCode: response!.status,
       data: response?.data as IDeckCreateResponseData,
     }
   }
-  console.log('CreateDeckres:', CreateDeckres);
+  // console.log('CreateDeckres:', CreateDeckres);
   return CreateDeckres;
 }
 
