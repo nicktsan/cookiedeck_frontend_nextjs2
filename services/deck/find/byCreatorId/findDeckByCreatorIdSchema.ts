@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DeckEntity } from "../../deck.entity";
+import { DeckEntitySchema } from "../../deck.entity";
 export const IDeckFindRequestByCreatorIdSchema = z.object({
 	creator_id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,
@@ -13,7 +13,7 @@ export const IDeckFindRequestByCreatorIdSchema = z.object({
 })
 
 export const IDeckFindResponseByCreatorIdDataSchema = z.object({
-	decks: z.array(DeckEntity).nullable().optional(),
+	decks: z.array(DeckEntitySchema).nullable().optional(),
 	message: z.string().optional(),
 	error: z.string().optional(),
 })

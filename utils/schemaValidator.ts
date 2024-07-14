@@ -6,7 +6,7 @@ interface ValidateConfig<T extends z.ZodTypeAny> {
   schemaName: string;
 }
 
-export function validateSchema<T extends z.ZodTypeAny>(
+export function ValidateSchema<T extends z.ZodTypeAny>(
   config: ValidateConfig<T>
 ): z.infer<T> {
   const { data, success, error } = config.schema.safeParse(config.dto);

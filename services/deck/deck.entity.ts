@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const DeckEntity = z.object({
+export const DeckEntitySchema = z.object({
     id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,
 	}),
@@ -20,3 +20,5 @@ export const DeckEntity = z.object({
 	created_at: z.string().datetime().nullable().optional(),
 	updated_at: z.string().datetime().nullable().optional(),
 })
+
+export type DeckEntity = z.infer<typeof DeckEntitySchema>
