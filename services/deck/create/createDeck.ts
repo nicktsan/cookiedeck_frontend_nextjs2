@@ -1,7 +1,7 @@
 'use server'
-import { formSchema } from '../../components/CreateDeckForm';
+import { formSchema } from '../../../components/CreateDeckForm';
 import { z } from 'zod';
-import axios, { AxiosResponse, AxiosError} from 'axios';
+import axios, { AxiosError} from 'axios';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { IDeckCreateResponseDto, IDeckCreateResponseData } from './createDeckDTO'

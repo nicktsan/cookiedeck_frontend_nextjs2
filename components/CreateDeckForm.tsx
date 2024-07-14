@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { CreateDeck } from "@/actions/deck/createDeck"
-import { IDeckCreateResponseDto } from "@/actions/deck/createDeckDTO"
+import { CreateDeck } from "@/services/deck/create/createDeck"
+import { IDeckCreateResponseDto } from "@/services/deck/create/createDeckDTO"
 import { useRouter } from 'next/navigation'
 
 const folders = [

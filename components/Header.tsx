@@ -36,7 +36,7 @@ export default async function Header() {
     isSupabaseConnected = true;
     hidden = "";
   }
-  const components: { title: string; href: string; }[] = [
+  const creations: { title: string; href: string; }[] = [
     {
       title: "New Deck",
       href: "/createdeck",
@@ -46,6 +46,16 @@ export default async function Header() {
       href: "/createbookmark",
     },
   ]
+  const yourStuffs: { title: string; href: string; }[] = [
+    {
+      title: "Your Decks",
+      href: "/yourdecks",
+    },
+    {
+      title: "Your Bookmarks",
+      href: "/yourbookmarks",
+    },
+  ]
   return (
     <div className="flex-1 flex flex-col gap-20 items-center max-w-lg mx-auto mb-2">  
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
@@ -53,13 +63,25 @@ export default async function Header() {
           <div className={hidden}>
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+              <NavigationMenuItem>
+                  <NavigationMenuTrigger>Your Stuff</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                      {components.map((component) => (
+                      {yourStuffs.map((yourStuff) => (
                         <Button asChild>
-                          <Link href={component.href}>{component.title}</Link>
+                          <Link href={yourStuff.href}>{yourStuff.title}</Link>
+                        </Button>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Create</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                      {creations.map((creation) => (
+                        <Button asChild>
+                          <Link href={creation.href}>{creation.title}</Link>
                         </Button>
                       ))}
                     </ul>

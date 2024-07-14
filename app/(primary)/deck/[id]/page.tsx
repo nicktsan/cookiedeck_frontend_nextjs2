@@ -1,5 +1,6 @@
 export default async function DeckView({ params }: { params: { id: string } }) {
 // todo
+  
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <div className="w-full">

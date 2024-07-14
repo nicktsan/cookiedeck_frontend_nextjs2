@@ -1,0 +1,24 @@
+import { z } from "zod";
+import { DeckEntity } from "../../deck.entity";
+export const IDeckFindRequestByCreatorIdSchema = z.object({
+	creator_id: z.string().uuid({
+		message: `creator_id must be a valid UUID`,
+	}),
+	nameOrderDirection: z.enum(["asc", "desc"], {
+		message: `nameOrderDirection must be 'asc' or 'desc'`,
+	}).optional(),
+	updatedAtOrderDirection: z.enum(["asc", "desc"], {
+		message: `updatedAtOrderDirection must be 'asc' or 'desc'`,
+	}).optional(),
+})
+
+export const IDeckFindResponseByCreatorIdDataSchema = z.object({
+	decks: z.array(DeckEntity).nullable().optional(),
+	message: z.string().optional(),
+	error: z.string().optional(),
+})
+
+export const IDeckFindResponseByCreatorIdSchema = z.object({
+	statusCode: z.number().min(100).max(599),
+    data: IDeckFindResponseByCreatorIdDataSchema
+})
