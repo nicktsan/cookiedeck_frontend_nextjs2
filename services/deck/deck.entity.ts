@@ -17,8 +17,8 @@ export const DeckEntitySchema = z.object({
 	visibility: z.enum(["public", "private", "unlisted"], {
 		message: "Visibility must be a valid value.",
 	  }).optional(),
-	created_at: z.string().datetime().nullable().optional(),
-	updated_at: z.string().datetime().nullable().optional(),
+	created_at: z.string().datetime().optional(),
+	updated_at: z.string().datetime().optional(),
 })
 
 export type DeckEntity = z.infer<typeof DeckEntitySchema>

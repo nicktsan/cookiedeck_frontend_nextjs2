@@ -1,8 +1,8 @@
 import { z, ZodIssue } from "zod";
 
 interface ValidateConfig<T extends z.ZodTypeAny> {
-  dto: unknown;
-  schema: T;
+  dto: unknown; //res.data
+  schema: T; //data schema
   schemaName: string;
 }
 

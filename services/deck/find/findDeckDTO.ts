@@ -1,15 +1,8 @@
-export interface IDeckFindRequestDto {
-    id: string;
-}
+import { z } from "zod";
+import { IDeckFindRequestSchema, IDeckFindResponseSchema, IDeckFindResponseDataSchema } from "./findDeckSchema"
 
-export interface IDeckFindResponseDto {
-    id: string;
-    name: string;
-    creator_id: string;
-    creator_username: string;
-    banner_url: string | null;
-    description: string | null;
-    views: number;
-    updated_at: Date | null;
-    message: string;
-}
+type IDeckFindRequestDTO = z.infer<typeof IDeckFindRequestSchema>;
+type IDeckFindResponseDTO = z.infer<typeof IDeckFindResponseSchema>;
+type IDeckFindResponseDataDTO = z.infer<typeof IDeckFindResponseDataSchema>;
+
+export type { IDeckFindRequestDTO, IDeckFindResponseDTO, IDeckFindResponseDataDTO }
