@@ -31,6 +31,10 @@ export function CardSearch() {
     // },
   })
   const [cardSearchResults, setCardSearchResults] = useState<CardEntity[]>([]);
+  let scrollAreaClass = "hidden";
+  if (cardSearchResults.length > 0) {
+    scrollAreaClass = "h-72 w-72 rounded-md border";
+  }
   const scrollAreaHeight = useMemo(() => {
     // Assuming each item (including separator) is roughly 3rem (48px) tall
     const itemHeight = 48;
@@ -53,6 +57,33 @@ export function CardSearch() {
       setCardSearchResults([]);
     }
   }
+
+  const handleCardClick = async (card: CardEntity) => {
+    console.log(card);
+    // setSelectedCard(card.id);
+    // try {
+    //   const response = await fetch('your-api-endpoint', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(card),
+    //   });
+    //   if (!response.ok) {
+    //     throw new Error('Network response was not ok');
+    //   }
+    //   const data = await response.json();
+    //   console.log('API response:', data);
+    //   // Handle the API response as needed
+    // } catch (error) {
+    //   console.error('Error posting card data:', error);
+    //   // Handle the error as needed
+    // } 
+    // finally {
+    //   setSelectedCard(null);
+    // }
+  };
+
   return (
     <div>
       <Form {...form}>
@@ -76,15 +107,24 @@ export function CardSearch() {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-      <ScrollArea className="h-72 w-72 rounded-md border" style={{ height: `${scrollAreaHeight}px` }}>
+      <ScrollArea className={scrollAreaClass} style={{ height: `${scrollAreaHeight}px` }}>
         <div className="p-4">
           {cardSearchResults.length > 0 ? (
             cardSearchResults.map((cardSearchResult) => (
               <React.Fragment key={cardSearchResult.id}>
-                <div className="text-sm">
+                <div 
+                  className={`
+                    text-sm p-2 rounded cursor-pointer
+                    transition-colors duration-200 ease-in-out
+                    hover:bg-gray-100
+
+                  `}
+                  // ${selectedCard === cardSearchResult.id ? 'bg-gray-200' : ''}
+                  onClick={() => handleCardClick(cardSearchResult)}
+                >
                   {cardSearchResult.color}: {cardSearchResult.name_eng}
                 </div>
-                <Separator className="my-2" />
+                {/* <Separator className="my-2" /> */}
               </React.Fragment>
             ))
           ) : (
