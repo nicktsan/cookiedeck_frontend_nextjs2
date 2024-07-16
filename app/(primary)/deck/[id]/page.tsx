@@ -1,9 +1,9 @@
 "use client"
 import { useState, useEffect, useCallback } from 'react';
 import { DeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
-import DeckInfo from "@/components/DeckInfo";
-import CardSearch from "@/components/CardSearch";
-import DeckSlotDisplay from "@/components/DeckSlotDisplay";
+import DeckInfo from "@/components/deckpage/DeckInfo";
+import CardSearch from "@/components/deckpage/CardSearch";
+import DeckSlotDisplay from "@/components/deckpage/DeckSlotDisplay";
 import { DeckslotFindResponseDTO } from "@/services/deckslot/find/deckslot-find.dto";
 import { FindDeck } from '@/services/deck/find/findDeck';
 import { DeckSlotFindByDeckId } from '@/services/deckslot/find/bydeckId/deckslot-find-bydeckid';

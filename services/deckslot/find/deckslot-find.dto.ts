@@ -1,17 +1,4 @@
-// import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsUUID } from "class-validator"
 import {z} from "zod"
-// export class DeckslotFindRequestSchema {
-//     @IsNotEmpty()
-//     @IsUUID()
-//     deck_id: string,
-//     @IsNotEmpty()
-//     @IsNumber()
-//     card_id: number,
-//     @IsOptional()
-//     @IsIn(['main', 'maybe'], { message: `board must be "main" or "maybe"` })
-//     board?: string
-// }
-
 export const DeckslotFindResponseSchema = z.object({
     deck_id: z.string().uuid({
         message: "deck_id must be a valid UUID"

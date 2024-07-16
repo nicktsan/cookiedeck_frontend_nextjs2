@@ -1,6 +1,5 @@
 import {z} from "zod"
 export const DeckSlotEntitySchema = z.object({
-    // id: "not a real id it's just here to satisfy IEntity"
     deck_id: z.string().uuid({
         message: "deck_id must be a valid UUID"
     }),

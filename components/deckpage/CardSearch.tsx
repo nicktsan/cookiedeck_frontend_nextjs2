@@ -2,13 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import React, { useMemo, useState } from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,20 +14,17 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { CardSearchRequestDTO, CardSearchResponseDTO, CardSearchResponseDataDTO } from "@/services/card/find/card-findDTO"
-import { CardSearchRequestSchema, CardSearchResponseSchema, CardSearchResponseDataSchema } from "@/services/card/find/card-find.schema"
+import { CardSearchRequestDTO } from "@/services/card/find/card-findDTO"
+import { CardSearchRequestSchema } from "@/services/card/find/card-find.schema"
 import { CardFind } from "@/services/card/find/card-find"
-import { ScrollArea } from "./ui/scroll-area"
+import { ScrollArea } from "../ui/scroll-area"
 import { CardEntity } from "@/services/card/card.entity"
-import { Separator } from "./ui/separator"
 import { CreateDeckSlot } from "@/services/deckslot/create/createDeckSlot";
 
 interface DeckIdProps {
   deckId: string | undefined;
   onUpdate: () => void;
 }
-
-// export default function DeckInfo({displayDeck}: DeckInfoProps) {
 export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
@@ -83,9 +78,6 @@ export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
                 <FormControl>
                   <Input placeholder="Find and add cards to main deck." {...field} />
                 </FormControl>
-                {/* <FormDescription>
-                  This is your public display name.
-                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
@@ -105,12 +97,10 @@ export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
                     hover:bg-gray-100
 
                   `}
-                  // ${selectedCard === cardSearchResult.id ? 'bg-gray-200' : ''}
                   onClick={() => handleCardClick(cardSearchResult)}
                 >
                   {cardSearchResult.color}: {cardSearchResult.name_eng}
                 </div>
-                {/* <Separator className="my-2" /> */}
               </React.Fragment>
             ))
           ) : (

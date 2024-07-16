@@ -70,16 +70,6 @@ export function CreateDeckForm() {
     // console.log(res)
     // console.log("res data: ")
     // console.log(res.data)
-    // export interface DeckCreateResponseData {
-    //   id?: string;
-    //   message?: string;
-    //     error?: string;
-    // }
-    
-    // export interface DeckCreateResponseDto {
-    //   statusCode: number;
-    //     data: DeckCreateResponseData;
-    // }
     if (res.data.id) {
       router.push(`/deck/${res.data.id}`)
     }
@@ -92,7 +82,6 @@ export function CreateDeckForm() {
             <code className="text-white">{JSON.stringify(res, null, 2)}</code>
           </pre>
         ),
-        // variant: "destructive",
       })
     }
   }

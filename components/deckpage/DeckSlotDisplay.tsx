@@ -1,6 +1,5 @@
 "use client"
 import { DeckslotFindResponseDTO } from "@/services/deckslot/find/deckslot-find.dto";
-import Link from "next/link";
 
 interface DeckInfoProps {
     deckslots: DeckslotFindResponseDTO[] | undefined | null;

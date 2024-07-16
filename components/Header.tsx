@@ -17,16 +17,6 @@ import Link from "next/link";
 
 export default async function Header() {
   const supabase = createClient();
-  // const canInitSupabaseClient = () => {
-  //   // This function is just for the interactive tutorial.
-  //   // Feel free to remove it once you have Supabase connected.
-  //   try {
-  //     createClient();
-  //     return true;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // };
   const {
     data: { user },
   } = await supabase.auth.getUser();

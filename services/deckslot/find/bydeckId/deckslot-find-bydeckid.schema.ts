@@ -1,10 +1,6 @@
-// import { IsNotEmpty, IsUUID } from "class-validator"
-// import { DeckslotFindResponseDto } from "../deckslot-find.dto"
 import {z} from "zod"
 import { DeckslotFindResponseSchema } from "../deckslot-find.dto"
 export const DeckslotFindByDeckIdRequestSchema = z.object({
-    // @IsNotEmpty()
-    // @IsUUID()
     deck_id: z.string().uuid()
 })
 
