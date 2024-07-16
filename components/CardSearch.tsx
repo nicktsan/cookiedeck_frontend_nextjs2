@@ -26,15 +26,13 @@ import { CreateDeckSlot } from "@/services/deckslot/create/createDeckSlot";
 
 interface DeckIdProps {
   deckId: string | undefined;
+  onUpdate: () => void;
 }
 
 // export default function DeckInfo({displayDeck}: DeckInfoProps) {
-export default function CardSearch({deckId}: DeckIdProps) {
+export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
-    // defaultValues: {
-    //   username: "",
-    // },
   })
   const [cardSearchResults, setCardSearchResults] = useState<CardEntity[]>([]);
   let scrollAreaClass = "hidden";
@@ -68,6 +66,7 @@ export default function CardSearch({deckId}: DeckIdProps) {
     // console.log(card);
     // const isDeckSlotCreated: boolean = 
     await CreateDeckSlot(card, deckId)
+    onUpdate();
     //console.log(isDeckSlotCreated)
   };
 
