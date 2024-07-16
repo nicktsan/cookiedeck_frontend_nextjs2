@@ -78,13 +78,13 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
 
 // Example usage for different HTTP methods:
 
-// async function FindDeckByCreatorId(params: z.infer<typeof IDeckFindRequestByCreatorIdSchema>) {
+// async function FindDeckByCreatorId(params: z.infer<typeof DeckFindRequestByCreatorIdSchema>) {
 //   const url = process.env.BACKEND_URL + '/deck/find/bycreatorid';
 //   return MakeApiRequest({
 //     url,
 //     method: 'GET',
-//     requestSchema: IDeckFindRequestByCreatorIdSchema,
-//     responseSchema: IDeckFindResponseByCreatorIdSchema,
+//     requestSchema: DeckFindRequestByCreatorIdSchema,
+//     responseSchema: DeckFindResponseByCreatorIdSchema,
 //     data: params
 //   });
 // }

@@ -1,10 +1,10 @@
-export interface IDeckCreateResponseData {
+export interface DeckCreateResponseData {
 	id?: string;
 	message?: string;
     error?: string;
 }
 
-export interface IDeckCreateResponseDto {
+export interface DeckCreateResponseDto {
 	statusCode: number;
-    data: IDeckCreateResponseData;
+    data: DeckCreateResponseData;
 }

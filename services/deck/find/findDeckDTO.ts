@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { IDeckFindRequestSchema, IDeckFindResponseSchema, IDeckFindResponseDataSchema } from "./findDeckSchema"
+import { DeckFindRequestSchema, DeckFindResponseSchema, DeckFindResponseDataSchema } from "./findDeckSchema"
 
-type IDeckFindRequestDTO = z.infer<typeof IDeckFindRequestSchema>;
-type IDeckFindResponseDTO = z.infer<typeof IDeckFindResponseSchema>;
-type IDeckFindResponseDataDTO = z.infer<typeof IDeckFindResponseDataSchema>;
+type DeckFindRequestDTO = z.infer<typeof DeckFindRequestSchema>;
+type DeckFindResponseDTO = z.infer<typeof DeckFindResponseSchema>;
+type DeckFindResponseDataDTO = z.infer<typeof DeckFindResponseDataSchema>;
 
-export type { IDeckFindRequestDTO, IDeckFindResponseDTO, IDeckFindResponseDataDTO }
+export type { DeckFindRequestDTO, DeckFindResponseDTO, DeckFindResponseDataDTO }

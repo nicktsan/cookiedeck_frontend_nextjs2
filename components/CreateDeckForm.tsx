@@ -24,7 +24,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { CreateDeck } from "@/services/deck/create/createDeck"
-import { IDeckCreateResponseDto } from "@/services/deck/create/createDeckDTO"
+import { DeckCreateResponseDto } from "@/services/deck/create/createDeckDTO"
 import { useRouter } from 'next/navigation'
 
 const folders = [
@@ -65,20 +65,20 @@ export function CreateDeckForm() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log(values)
-    const res: IDeckCreateResponseDto = await CreateDeck(values)
+    const res: DeckCreateResponseDto = await CreateDeck(values)
     // console.log("res")
     // console.log(res)
     // console.log("res data: ")
     // console.log(res.data)
-    // export interface IDeckCreateResponseData {
+    // export interface DeckCreateResponseData {
     //   id?: string;
     //   message?: string;
     //     error?: string;
     // }
     
-    // export interface IDeckCreateResponseDto {
+    // export interface DeckCreateResponseDto {
     //   statusCode: number;
-    //     data: IDeckCreateResponseData;
+    //     data: DeckCreateResponseData;
     // }
     if (res.data.id) {
       router.push(`/deck/${res.data.id}`)

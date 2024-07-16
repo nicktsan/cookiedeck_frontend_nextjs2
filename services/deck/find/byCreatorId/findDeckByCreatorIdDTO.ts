@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { IDeckFindRequestByCreatorIdSchema, IDeckFindResponseByCreatorIdDataSchema, IDeckFindResponseByCreatorIdSchema } from "./findDeckByCreatorIdSchema";
+import { DeckFindRequestByCreatorIdSchema, DeckFindResponseByCreatorIdDataSchema, DeckFindResponseByCreatorIdSchema } from "./findDeckByCreatorIdSchema";
 
-type IDeckFindRequestByCreatorIdDTO = z.infer<typeof IDeckFindRequestByCreatorIdSchema>;
-type IDeckFindResponseByCreatorIdDataDTO = z.infer<typeof IDeckFindResponseByCreatorIdDataSchema>;
-type IDeckFindResponseByCreatorIdDTO = z.infer<typeof IDeckFindResponseByCreatorIdSchema>;
+type DeckFindRequestByCreatorIdDTO = z.infer<typeof DeckFindRequestByCreatorIdSchema>;
+type DeckFindResponseByCreatorIdDataDTO = z.infer<typeof DeckFindResponseByCreatorIdDataSchema>;
+type DeckFindResponseByCreatorIdDTO = z.infer<typeof DeckFindResponseByCreatorIdSchema>;
 
-export type {IDeckFindRequestByCreatorIdDTO, IDeckFindResponseByCreatorIdDataDTO, IDeckFindResponseByCreatorIdDTO}
+export type {DeckFindRequestByCreatorIdDTO, DeckFindResponseByCreatorIdDataDTO, DeckFindResponseByCreatorIdDTO}

@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { IDeckFindRequestByCreatorIdSchema, IDeckFindResponseByCreatorIdDataSchema, IDeckFindResponseByCreatorIdSchema } from "@/services/deck/find/byCreatorId/findDeckByCreatorIdSchema";
-import { IDeckFindRequestByCreatorIdDTO, IDeckFindResponseByCreatorIdDataDTO, IDeckFindResponseByCreatorIdDTO } from "@/services/deck/find/byCreatorId/findDeckByCreatorIdDTO"
+import { DeckFindRequestByCreatorIdSchema, DeckFindResponseByCreatorIdDataSchema, DeckFindResponseByCreatorIdSchema } from "@/services/deck/find/byCreatorId/findDeckByCreatorIdSchema";
+import { DeckFindRequestByCreatorIdDTO, DeckFindResponseByCreatorIdDataDTO, DeckFindResponseByCreatorIdDTO } from "@/services/deck/find/byCreatorId/findDeckByCreatorIdDTO"
 import { MakeApiRequest } from "@/services/baseApiRequest";
 import { DeckEntity } from "@/services/deck/deck.entity";
 import Link from "next/link";
 import { ValidateSchema } from "@/utils/schemaValidator";
 export default async function YourDecks() {
-    function validate(dto: unknown): IDeckFindResponseByCreatorIdDataDTO {
-        return ValidateSchema({ dto, schema: IDeckFindResponseByCreatorIdDataSchema, schemaName: "IDeckFindResponseByCreatorIdDataSchema" });
+    function validate(dto: unknown): DeckFindResponseByCreatorIdDataDTO {
+        return ValidateSchema({ dto, schema: DeckFindResponseByCreatorIdDataSchema, schemaName: "DeckFindResponseByCreatorIdDataSchema" });
     }
 
     const supabase = createClient();
@@ -20,15 +20,15 @@ export default async function YourDecks() {
         return redirect("/login");
     }  
     const url = process.env.BACKEND_URL + (process.env.GET_CREATOR_BY_ID_PATH ?? "/deck/find/bycreatorid")
-    const params: IDeckFindRequestByCreatorIdDTO = {
+    const params: DeckFindRequestByCreatorIdDTO = {
         creator_id: user.id,
         nameOrderDirection: "asc",
     }
-    const res: IDeckFindResponseByCreatorIdDTO = await MakeApiRequest({
+    const res: DeckFindResponseByCreatorIdDTO = await MakeApiRequest({
         url,
         method: 'GET',
-        requestSchema: IDeckFindRequestByCreatorIdSchema,
-        responseSchema: IDeckFindResponseByCreatorIdSchema,
+        requestSchema: DeckFindRequestByCreatorIdSchema,
+        responseSchema: DeckFindResponseByCreatorIdSchema,
         data: params
     });
     validate(res.data)

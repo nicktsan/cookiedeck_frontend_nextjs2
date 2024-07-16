@@ -1,9 +1,9 @@
 "use client"
-import { IDeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
+import { DeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
 import { FaEye } from "react-icons/fa";
 
 interface DeckInfoProps {
-    displayDeck: IDeckFindResponseDataDTO | undefined;
+    displayDeck: DeckFindResponseDataDTO | undefined;
   }
 
 export default function DeckInfo({displayDeck}: DeckInfoProps) {

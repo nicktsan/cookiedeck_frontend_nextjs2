@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { DeckEntitySchema } from "../../deck.entity";
-export const IDeckFindRequestByCreatorIdSchema = z.object({
+export const DeckFindRequestByCreatorIdSchema = z.object({
 	creator_id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,
 	}),
@@ -12,13 +12,13 @@ export const IDeckFindRequestByCreatorIdSchema = z.object({
 	}).optional(),
 })
 
-export const IDeckFindResponseByCreatorIdDataSchema = z.object({
+export const DeckFindResponseByCreatorIdDataSchema = z.object({
 	decks: z.array(DeckEntitySchema).nullable().optional(),
 	message: z.string().optional(),
 	error: z.string().optional(),
 })
 
-export const IDeckFindResponseByCreatorIdSchema = z.object({
+export const DeckFindResponseByCreatorIdSchema = z.object({
 	statusCode: z.number().min(100).max(599),
-    data: IDeckFindResponseByCreatorIdDataSchema
+    data: DeckFindResponseByCreatorIdDataSchema
 })

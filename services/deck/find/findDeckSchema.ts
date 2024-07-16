@@ -1,11 +1,11 @@
 import {z} from "zod"
-export const IDeckFindRequestSchema = z.object({
+export const DeckFindRequestSchema = z.object({
     id: z.string().uuid({
         message: `Id must be a valid UUID`
     })
 });
 
-export const IDeckFindResponseDataSchema = z.object({
+export const DeckFindResponseDataSchema = z.object({
     id: z.string().uuid({
         message: `Id must be a valid UUID`
     }).optional(),
@@ -26,7 +26,7 @@ export const IDeckFindResponseDataSchema = z.object({
     error: z.string().optional()
 });
 
-export const IDeckFindResponseSchema = z.object({
+export const DeckFindResponseSchema = z.object({
     statusCode: z.number().min(100).max(599),
-    data: IDeckFindResponseDataSchema
+    data: DeckFindResponseDataSchema
 })

@@ -4,8 +4,8 @@ import { z } from 'zod';
 import axios, { AxiosError} from 'axios';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { IDeckCreateResponseDto, IDeckCreateResponseData } from './createDeckDTO'
-async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<IDeckCreateResponseDto> {
+import { DeckCreateResponseDto, DeckCreateResponseData } from './createDeckDTO'
+async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<DeckCreateResponseDto> {
   const supabase = createClient();
   const {
     data: { user },
@@ -21,11 +21,11 @@ async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<IDeckCr
     Object.entries(formData).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
   );
   // console.log('body', body);
-  let CreateDeckres: IDeckCreateResponseDto = {
+  let CreateDeckres: DeckCreateResponseDto = {
     statusCode: 500,
     data: {
       error: 'Default error'
-    } as IDeckCreateResponseData
+    } as DeckCreateResponseData
   };
   try {
     const { status, data } = await axios.post(url, body, {
@@ -38,7 +38,7 @@ async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<IDeckCr
       // console.log('CreateDeck data:', data);
       CreateDeckres =  {
         statusCode: status,
-        data: data as IDeckCreateResponseData,
+        data: data as DeckCreateResponseData,
       }
     }
     // console.log('CreateDeckres:', CreateDeckres
@@ -47,7 +47,7 @@ async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<IDeckCr
     // console.log('Error occured during deck creation: ', errResp);
     CreateDeckres = {
       statusCode: response!.status,
-      data: response?.data as IDeckCreateResponseData,
+      data: response?.data as DeckCreateResponseData,
     }
   }
   // console.log('CreateDeckres:', CreateDeckres);

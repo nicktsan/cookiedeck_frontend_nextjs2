@@ -1,10 +1,10 @@
 'use server'
-import { IDeckFindRequestByCreatorIdSchema, IDeckFindResponseByCreatorIdSchema, IDeckFindResponseByCreatorIdDataSchema } from './findDeckByCreatorIdSchema';
+import { DeckFindRequestByCreatorIdSchema, DeckFindResponseByCreatorIdSchema, DeckFindResponseByCreatorIdDataSchema } from './findDeckByCreatorIdSchema';
 import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse} from 'axios';
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-async function FindDeckByCreatorId(params: z.infer<typeof IDeckFindRequestByCreatorIdSchema>): Promise<z.infer<typeof IDeckFindResponseByCreatorIdSchema>> {
+async function FindDeckByCreatorId(params: z.infer<typeof DeckFindRequestByCreatorIdSchema>): Promise<z.infer<typeof DeckFindResponseByCreatorIdSchema>> {
   const supabase = createClient();
   const { data: { session }} = await supabase.auth.getSession();
   // console.log('session', session);
@@ -13,13 +13,13 @@ async function FindDeckByCreatorId(params: z.infer<typeof IDeckFindRequestByCrea
   const trimmedParams = Object.fromEntries(
     Object.entries(params).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
   );
-  const validParams = IDeckFindRequestByCreatorIdSchema.parse(trimmedParams);
+  const validParams = DeckFindRequestByCreatorIdSchema.parse(trimmedParams);
   // console.log('validParams', validParams);
-  let FindDeckRes: z.infer<typeof IDeckFindResponseByCreatorIdSchema> = {
+  let FindDeckRes: z.infer<typeof DeckFindResponseByCreatorIdSchema> = {
     statusCode: 500,
     data: {
       error: 'Default error'
-    } as z.infer<typeof IDeckFindResponseByCreatorIdDataSchema>
+    } as z.infer<typeof DeckFindResponseByCreatorIdDataSchema>
   };
   try {
     let res: AxiosResponse;
@@ -44,7 +44,7 @@ async function FindDeckByCreatorId(params: z.infer<typeof IDeckFindRequestByCrea
       // console.log('CreateDeck data:', data);
       FindDeckRes =  {
         statusCode: res.status,
-        data: res.data as z.infer<typeof IDeckFindResponseByCreatorIdDataSchema>,
+        data: res.data as z.infer<typeof DeckFindResponseByCreatorIdDataSchema>,
       }
     }
     // console.log('FindDeckRes:', FindDeckRes
@@ -53,7 +53,7 @@ async function FindDeckByCreatorId(params: z.infer<typeof IDeckFindRequestByCrea
     // console.log('Error occured during deck creation: ', errResp);
     FindDeckRes = {
       statusCode: response!.status,
-      data: response?.data as z.infer<typeof IDeckFindResponseByCreatorIdDataSchema>,
+      data: response?.data as z.infer<typeof DeckFindResponseByCreatorIdDataSchema>,
     }
   }
   // console.log('FindDeckRes:', FindDeckRes);

@@ -1,33 +1,51 @@
 import { MakeApiRequest } from "@/services/baseApiRequest";
-import { IDeckFindRequestDTO, IDeckFindResponseDTO, IDeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
-import { IDeckFindRequestSchema, IDeckFindResponseSchema, IDeckFindResponseDataSchema } from "@/services/deck/find/findDeckSchema";
-import { ValidateSchema } from "@/utils/schemaValidator";
+import { DeckFindRequestDTO, DeckFindResponseDTO, DeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
+import { DeckFindRequestSchema, DeckFindResponseSchema, DeckFindResponseDataSchema } from "@/services/deck/find/findDeckSchema";
+import { validate } from "@/utils/schemaValidator";
 import DeckInfo from "@/components/DeckInfo";
 import CardSearch from "@/components/CardSearch";
+import {DeckslotFindByDeckIdRequestDTO, DeckslotFindByDeckIdResponseDataDTO, DeckslotFindByDeckIdResponseDTO} from "@/services/deckslot/find/bydeckId/deckslot-find-bydeckid.dto"
+import {DeckslotFindByDeckIdRequestSchema, DeckslotFindByDeckIdResponseDataSchema, DeckslotFindByDeckIdResponseSchema} from "@/services/deckslot/find/bydeckId/deckslot-find-bydeckid.schema"
+import DeckSlotDisplay from "@/components/DeckSlotDisplay";
+import { DeckslotFindResponseDTO } from "@/services/deckslot/find/deckslot-find.dto";
 
 export default async function DeckView({ params }: { params: { id: string } }) {
-  function validate(dto: unknown): IDeckFindResponseDataDTO {
-    return ValidateSchema({ dto, schema: IDeckFindResponseDataSchema, schemaName: "IDeckFindResponseDataSchema" });
-  }
-  
-  const url = process.env.BACKEND_URL + "/deck/find";
-  const data: IDeckFindRequestDTO = {
+  const deckFindUrl = process.env.BACKEND_URL + "/deck/find";
+  const deckFindRequestData: DeckFindRequestDTO = {
       id: params.id
   }
-  const res: IDeckFindResponseDTO = await MakeApiRequest({
-      url,
+  const deckSlotFindUrl = process.env.BACKEND_URL + "/deckslot/find/bydeckid";
+  const deckSlotFindRequestData: DeckslotFindByDeckIdRequestDTO = {
+    deck_id: params.id
+  }
+  const [deckFindResponse, deckSlotFindResponse] = await Promise.all([
+    MakeApiRequest({
+      url: deckFindUrl,
       method: 'GET',
-      requestSchema: IDeckFindRequestSchema,
-      responseSchema: IDeckFindResponseSchema,
-      data: data
-  });
-  validate(res.data)
-  let displayDeck: IDeckFindResponseDataDTO | undefined = undefined;
-  if (!res.data.error && res.data.id) {
-    displayDeck = res.data
+      requestSchema: DeckFindRequestSchema,
+      responseSchema: DeckFindResponseSchema,
+      data: deckFindRequestData
+    }),
+    MakeApiRequest({
+      url: deckSlotFindUrl,
+      method: 'GET',
+      requestSchema: DeckslotFindByDeckIdRequestSchema,
+      responseSchema: DeckslotFindByDeckIdResponseSchema,
+      data: deckSlotFindRequestData
+    })
+  ]);
+  validate(deckFindResponse.data, DeckFindResponseDataSchema, "DeckFindResponseDataSchema");
+  validate(deckSlotFindResponse.data, DeckslotFindByDeckIdResponseDataSchema, "DeckslotFindByDeckIdResponseDataSchema");
+  let displayDeck: DeckFindResponseDataDTO | undefined = undefined;
+  let deckSlots: DeckslotFindResponseDTO[] | undefined | null= [];
+  if (!deckFindResponse.data.error && deckFindResponse.data.id) {
+    displayDeck = deckFindResponse.data
+  }
+  if (!deckSlotFindResponse.data.error && deckSlotFindResponse.data.deckslots) {
+    deckSlots = deckSlotFindResponse.data.deckslots
   }
   if (!displayDeck) {
-    // console.log(res.data.error)
+    // console.log(deckFindResponse.data.error)
     return (
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         <div className="w-full">
@@ -41,7 +59,8 @@ export default async function DeckView({ params }: { params: { id: string } }) {
   return (
     <div>
       <DeckInfo displayDeck={displayDeck}/>
-      <CardSearch deckId={displayDeck.id}/>
+      <CardSearch deckId={params.id}/>
+      <DeckSlotDisplay deckslots={deckSlots}/>
     </div>
   );
 }
