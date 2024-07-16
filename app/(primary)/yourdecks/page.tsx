@@ -32,7 +32,7 @@ export default async function YourDecks() {
         data: params
     });
     validate(res.data)
-    let yourDecks: DeckEntity[] | null | undefined = []
+    let yourDecks: DeckEntity[] = []
     if (!res.data.error && res.data.decks) {
         yourDecks = res.data.decks
     }

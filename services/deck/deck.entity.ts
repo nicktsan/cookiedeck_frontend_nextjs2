@@ -1,5 +1,4 @@
 import { z } from "zod"
-
 export const DeckEntitySchema = z.object({
     id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,

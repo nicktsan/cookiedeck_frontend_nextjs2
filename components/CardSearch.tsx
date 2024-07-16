@@ -22,8 +22,14 @@ import { CardFind } from "@/services/card/find/card-find"
 import { ScrollArea } from "./ui/scroll-area"
 import { CardEntity } from "@/services/card/card.entity"
 import { Separator } from "./ui/separator"
+import { CreateDeckSlot } from "@/services/deckslot/create/createDeckSlot";
 
-export function CardSearch() {
+interface DeckIdProps {
+  deckId: string | undefined;
+}
+
+// export default function DeckInfo({displayDeck}: DeckInfoProps) {
+export default function CardSearch({deckId}: DeckIdProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
     // defaultValues: {
@@ -59,29 +65,10 @@ export function CardSearch() {
   }
 
   const handleCardClick = async (card: CardEntity) => {
-    console.log(card);
-    // setSelectedCard(card.id);
-    // try {
-    //   const response = await fetch('your-api-endpoint', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(card),
-    //   });
-    //   if (!response.ok) {
-    //     throw new Error('Network response was not ok');
-    //   }
-    //   const data = await response.json();
-    //   console.log('API response:', data);
-    //   // Handle the API response as needed
-    // } catch (error) {
-    //   console.error('Error posting card data:', error);
-    //   // Handle the error as needed
-    // } 
-    // finally {
-    //   setSelectedCard(null);
-    // }
+    // console.log(card);
+    // const isDeckSlotCreated: boolean = 
+    await CreateDeckSlot(card, deckId)
+    //console.log(isDeckSlotCreated)
   };
 
   return (

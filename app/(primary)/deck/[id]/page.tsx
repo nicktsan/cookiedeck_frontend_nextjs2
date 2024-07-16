@@ -3,7 +3,7 @@ import { IDeckFindRequestDTO, IDeckFindResponseDTO, IDeckFindResponseDataDTO } f
 import { IDeckFindRequestSchema, IDeckFindResponseSchema, IDeckFindResponseDataSchema } from "@/services/deck/find/findDeckSchema";
 import { ValidateSchema } from "@/utils/schemaValidator";
 import DeckInfo from "@/components/DeckInfo";
-import { CardSearch } from "@/components/CardSearch";
+import CardSearch from "@/components/CardSearch";
 
 export default async function DeckView({ params }: { params: { id: string } }) {
   function validate(dto: unknown): IDeckFindResponseDataDTO {
@@ -41,7 +41,7 @@ export default async function DeckView({ params }: { params: { id: string } }) {
   return (
     <div>
       <DeckInfo displayDeck={displayDeck}/>
-      <CardSearch />
+      <CardSearch deckId={displayDeck.id}/>
     </div>
   );
 }
