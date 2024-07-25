@@ -48,7 +48,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
     <div>
       <DeckInfo displayDeck={displayDeck} />
       <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} />
-      <DeckSlotDisplay deckslots={deckSlots} />
+      <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} />
     </div>
   );
 }
