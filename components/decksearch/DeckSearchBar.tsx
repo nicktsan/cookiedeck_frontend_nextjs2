@@ -17,9 +17,12 @@ import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 export function DeckSearchBar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push, replace } = useRouter();
   const form = useForm<DeckSearchBarDTO>({
     resolver: zodResolver(DeckSearchBarSchema),
+    defaultValues: {
+      name: searchParams.get('name') || '',
+    },
   })
 
   async function onSubmit(data: DeckSearchBarDTO) {
@@ -29,7 +32,15 @@ export function DeckSearchBar() {
     } else {
       params.delete('name');
     }
-    replace(`${pathname}?${params.toString()}`);
+    const newUrl = `/decks/public?${params.toString()}`;
+    if (pathname === '/decks/public') {
+      // If already on the search results page, just update the URL
+      replace(`${pathname}?${params.toString()}`);
+      // replace(newUrl);
+    } else {
+      // If not on the search results page, navigate to it
+      push(newUrl);
+    }
   }
 
   return (

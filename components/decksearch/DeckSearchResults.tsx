@@ -1,5 +1,6 @@
 import { DeckEntity } from "@/services/deck/deck.entity";
 import { DeckFindCustom } from "@/services/deck/find/custom/deck-find-custom";
+import Link from "next/link";
 
 export default async function DeckSearchResults({
     name,
@@ -17,12 +18,14 @@ export default async function DeckSearchResults({
             return (
                 <div>
                   {decks.map((deck) => (
-                    <div key={deck.id} className="my-2 outline outline-offset-2 outline-blue-500">
-                      <h2>Deck Name: {deck.name}</h2>
-                      <h2>Creator: {deck.username}</h2>
-                      <p>Views: {deck.views}</p>
-                      <p>Last Updated: {deck.updated_at}</p>
-                    </div>
+                    <Link key={deck.id} href={`/deck/${deck.id}`}>
+                      <div className="my-2 outline outline-offset-2 outline-blue-500 cursor-pointer">
+                        <h2>Deck Name: {deck.name}</h2>
+                        <h2>Creator: {deck.username}</h2>
+                        <p>Views: {deck.views}</p>
+                        <p>Last Updated: {deck.updated_at}</p>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               );
