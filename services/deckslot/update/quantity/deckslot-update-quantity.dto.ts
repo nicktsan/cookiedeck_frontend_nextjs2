@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { IDeckslotUpdateQuantityRequestSchema, IDeckslotUpdateQuantityResponseDataSchema, IDeckslotUpdateQuantityResponseSchema } from "./deckslot-update-quantity.schema";
+import { DeckslotUpdateQuantityRequestSchema, DeckslotUpdateQuantityResponseDataSchema, DeckslotUpdateQuantityResponseSchema } from "./deckslot-update-quantity.schema";
 
-type IDeckslotUpdateQuantityRequestDTO = z.infer<typeof IDeckslotUpdateQuantityRequestSchema>;
-type IDeckslotUpdateQuantityResponseDataDTO = z.infer<typeof IDeckslotUpdateQuantityResponseDataSchema>;
-type IDeckslotUpdateQuantityResponseDTO = z.infer<typeof IDeckslotUpdateQuantityResponseSchema>;
+type DeckslotUpdateQuantityRequestDTO = z.infer<typeof DeckslotUpdateQuantityRequestSchema>;
+type DeckslotUpdateQuantityResponseDataDTO = z.infer<typeof DeckslotUpdateQuantityResponseDataSchema>;
+type DeckslotUpdateQuantityResponseDTO = z.infer<typeof DeckslotUpdateQuantityResponseSchema>;
 
-export type {IDeckslotUpdateQuantityRequestDTO, IDeckslotUpdateQuantityResponseDataDTO, IDeckslotUpdateQuantityResponseDTO}
+export type {DeckslotUpdateQuantityRequestDTO, DeckslotUpdateQuantityResponseDataDTO, DeckslotUpdateQuantityResponseDTO}

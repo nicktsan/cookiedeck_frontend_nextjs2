@@ -2,7 +2,7 @@
 import { DeckslotFindResponseDTO } from "@/services/deckslot/find/deckslot-find.dto";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from 'lucide-react';
-import { IDeckslotUpdateQuantityRequestDTO, IDeckslotUpdateQuantityResponseDataDTO } from "@/services/deckslot/update/quantity/deckslot-update-quantity.dto";
+import { DeckslotUpdateQuantityRequestDTO, DeckslotUpdateQuantityResponseDataDTO } from "@/services/deckslot/update/quantity/deckslot-update-quantity.dto";
 import { UpdateDeckSlotQuantity } from "@/services/deckslot/update/quantity/deckslot-update-quantity";
 
 interface DeckInfoProps {
@@ -13,13 +13,13 @@ interface DeckInfoProps {
 export default function DeckSlotDisplay({deckslots, onUpdate}: DeckInfoProps) {
     const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
         try {
-            const payload: IDeckslotUpdateQuantityRequestDTO = {
+            const payload: DeckslotUpdateQuantityRequestDTO = {
                 deck_id: deckslot.deck_id,
                 card_id: deckslot.card_id,
                 board: deckslot.board,
                 changeValue: change
             }
-            const response: IDeckslotUpdateQuantityResponseDataDTO = await UpdateDeckSlotQuantity(payload)
+            const response: DeckslotUpdateQuantityResponseDataDTO = await UpdateDeckSlotQuantity(payload)
 
             if (response.error) {
                 throw new Error('Failed to update deckslot');

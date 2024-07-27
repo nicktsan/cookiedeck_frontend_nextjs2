@@ -68,21 +68,23 @@ export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cardname</FormLabel>
-                <FormControl>
-                  <Input placeholder="Find and add cards to main deck." {...field} />
-                </FormControl>
+                <div className="flex space-x-2">
+                  <FormControl>
+                    <Input placeholder="Find and add cards to main deck." {...field} />
+                  </FormControl>
+                  <Button type="submit">Submit</Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
         </form>
       </Form>
       <ScrollArea className={scrollAreaClass} style={{ height: `${scrollAreaHeight}px` }}>

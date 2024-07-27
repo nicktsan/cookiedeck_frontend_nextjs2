@@ -1,5 +1,5 @@
 import {z} from "zod";
-export const IDeckslotUpdateQuantityRequestSchema = z.object({
+export const DeckslotUpdateQuantityRequestSchema = z.object({
     deck_id: z.string().uuid({
         message: "deck_id must be a valid UUID."
     }),
@@ -14,7 +14,7 @@ export const IDeckslotUpdateQuantityRequestSchema = z.object({
     }),
 })
 
-export const IDeckslotUpdateQuantityResponseDataSchema = z.object({
+export const DeckslotUpdateQuantityResponseDataSchema = z.object({
     deck_id: z.string().uuid({
         message: "deck_id must be a valid UUID."
     }).optional(),
@@ -31,7 +31,7 @@ export const IDeckslotUpdateQuantityResponseDataSchema = z.object({
     error: z.string().optional(),
 })
 
-export const IDeckslotUpdateQuantityResponseSchema = z.object({
+export const DeckslotUpdateQuantityResponseSchema = z.object({
 	statusCode: z.number().min(100).max(599),
-    data: IDeckslotUpdateQuantityResponseDataSchema
+    data: DeckslotUpdateQuantityResponseDataSchema
 })

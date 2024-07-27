@@ -26,6 +26,12 @@ export default async function Header() {
     isSupabaseConnected = true;
     hidden = "";
   }
+  const explores: { title: string; href: string; }[] = [
+    {
+      title: "Find Deck",
+      href: "/decks/public",
+    },
+  ]
   const creations: { title: string; href: string; }[] = [
     {
       title: "New Deck",
@@ -53,7 +59,19 @@ export default async function Header() {
           <div className={hidden}>
             <NavigationMenu>
               <NavigationMenuList>
-              <NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                      {explores.map((explore) => (
+                        <Button asChild>
+                          <Link href={explore.href}>{explore.title}</Link>
+                        </Button>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
                   <NavigationMenuTrigger>Your Stuff</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">

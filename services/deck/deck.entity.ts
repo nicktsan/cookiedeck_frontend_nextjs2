@@ -7,12 +7,15 @@ export const DeckEntitySchema = z.object({
 	creator_id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,
 	}).optional(),
+	username: z.string({
+		message: `username must be a string`,
+	}).optional(),
 	folder_id: z.string().uuid({
 		message: `creator_id must be a valid UUID`,
 	}).nullable().optional(),
 	banner: z.number().nullable().optional(),
     description: z.string().nullable().optional(),
-	views: z.number().min(1).optional(),
+	views: z.number().optional(),
 	visibility: z.enum(["public", "private", "unlisted"], {
 		message: "Visibility must be a valid value.",
 	  }).optional(),

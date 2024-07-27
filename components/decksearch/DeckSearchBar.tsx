@@ -1,43 +1,35 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
-
-const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+import {DeckSearchBarDTO} from "@/services/deck/find/custom/deck-find-custom.dto"
+import { DeckSearchBarSchema } from "@/services/deck/find/custom/deck-find-custom.schema";
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 export function DeckSearchBar() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+  const form = useForm<DeckSearchBarDTO>({
+    resolver: zodResolver(DeckSearchBarSchema),
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  async function onSubmit(data: DeckSearchBarDTO) {
+    const params = new URLSearchParams(searchParams);
+    if (data.name) {
+      params.set('name', data.name.trim());
+    } else {
+      params.delete('name');
+    }
+    replace(`${pathname}?${params.toString()}`);
   }
 
   return (
@@ -45,13 +37,14 @@ export function DeckSearchBar() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3">
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
               <div className="flex space-x-2">
                 <FormControl className="flex-grow">
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="Search Decks" {...field} 
+                    defaultValue={searchParams.get('name')?.toString()}
+                  />
                 </FormControl>
                 <Button type="submit">Submit</Button>
               </div>
