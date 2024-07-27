@@ -24,8 +24,9 @@ import { CreateDeckSlot } from "@/services/deckslot/create/createDeckSlot";
 interface DeckIdProps {
   deckId: string | undefined;
   onUpdate: () => void;
+  viewMode: 'en' | 'kr';
 }
-export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
+export default function CardSearch({ deckId, onUpdate, viewMode }: DeckIdProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
   })
@@ -90,7 +91,9 @@ export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
       <ScrollArea className={scrollAreaClass} style={{ height: `${scrollAreaHeight}px` }}>
         <div className="p-4">
           {cardSearchResults.length > 0 ? (
-            cardSearchResults.map((cardSearchResult) => (
+            cardSearchResults.map((cardSearchResult) => 
+              viewMode === 'en' ?
+            (
               <React.Fragment key={cardSearchResult.id}>
                 <div 
                   className={`
@@ -104,8 +107,22 @@ export default function CardSearch({ deckId, onUpdate }: DeckIdProps) {
                   {cardSearchResult.color}: {cardSearchResult.name_eng}
                 </div>
               </React.Fragment>
-            ))
-          ) : (
+            ) : (
+              <React.Fragment key={cardSearchResult.id}>
+                <div
+                  className={`
+                    text-sm p-2 rounded cursor-pointer
+                    transition-colors duration-200 ease-in-out
+                    hover:bg-gray-100
+
+                  `}
+                  onClick={() => handleCardClick(cardSearchResult)}
+                >
+                  {cardSearchResult.color}: {cardSearchResult.name_kr}
+                </div>
+              </React.Fragment>
+            )
+          )) : (
             <div className="text-sm text-gray-500">No results found</div>
           )}
         </div>

@@ -8,9 +8,10 @@ import { UpdateDeckSlotQuantity } from "@/services/deckslot/update/quantity/deck
 interface DeckInfoProps {
     deckslots: DeckslotFindResponseDTO[] | undefined | null;
     onUpdate: () => Promise<void>;
+    viewMode: 'en' | 'kr';
 }
 
-export default function DeckSlotDisplay({deckslots, onUpdate}: DeckInfoProps) {
+export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInfoProps) {
     const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
         try {
             const payload: DeckslotUpdateQuantityRequestDTO = {
@@ -35,7 +36,9 @@ export default function DeckSlotDisplay({deckslots, onUpdate}: DeckInfoProps) {
 
     return (
         <div className="flex-1 flex flex-col gap-20 items-center">
-            {deckslots?.map(deckslot => (
+            {deckslots?.map(deckslot => 
+                viewMode ==='en' ?
+            (
                 <div>
                     {deckslot.color}: {deckslot.name_eng} {deckslot.quantity}
                     <Button 
@@ -53,7 +56,27 @@ export default function DeckSlotDisplay({deckslots, onUpdate}: DeckInfoProps) {
                         <Minus className="h-4 w-4" />
                     </Button>
                 </div>
-            ))}
+            ) :
+            (
+                <div>
+                    {deckslot.color}: {deckslot.name_kr} {deckslot.quantity}
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => updateQuantity(deckslot, 1)}
+                    >
+                        <Plus className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => updateQuantity(deckslot, -1)}
+                    >
+                        <Minus className="h-4 w-4" />
+                    </Button>
+                </div>
+            )
+        )}
         </div>
     );
 }

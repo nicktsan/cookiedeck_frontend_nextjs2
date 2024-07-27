@@ -7,10 +7,14 @@ import DeckSlotDisplay from "@/components/deckpage/DeckSlotDisplay";
 import { DeckslotFindResponseDTO } from "@/services/deckslot/find/deckslot-find.dto";
 import { FindDeck } from '@/services/deck/find/findDeck';
 import { DeckSlotFindByDeckId } from '@/services/deckslot/find/bydeckId/deckslot-find-bydeckid';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 export default function DeckView({ params }: { params: { id: string } }) {
   const [displayDeck, setDisplayDeck] = useState<DeckFindResponseDataDTO | undefined>(undefined);
   const [deckSlots, setDeckSlots] = useState<DeckslotFindResponseDTO[] | undefined | null>([]);
+  const [viewMode, setViewMode] = useState<'en' | 'kr'>('en');
+
   const fetchDeckData = useCallback(async () => {
     const deckFindResponse: DeckFindResponseDataDTO = await FindDeck(params.id)
     // console.log("deckFindResponse: ", deckFindResponse);
@@ -31,6 +35,9 @@ export default function DeckView({ params }: { params: { id: string } }) {
     fetchDeckSlots();
   }, [fetchDeckData, fetchDeckSlots]);
   
+  const toggleViewMode = () => {
+    setViewMode(prev => prev === 'en' ? 'kr' : 'en');
+  };
 
   if (!displayDeck) {
     return (
@@ -46,9 +53,15 @@ export default function DeckView({ params }: { params: { id: string } }) {
 
   return (
     <div>
+      <div className="flex items-center space-x-2 mb-4">
+        <Switch id="view-mode" onCheckedChange={toggleViewMode} />
+        <Label htmlFor="view-mode">
+          {viewMode === 'en' ? 'EN' : 'KR'}
+        </Label>
+      </div>
       <DeckInfo displayDeck={displayDeck} />
-      <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} />
-      <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} />
+      <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
+      <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} viewMode={viewMode}/>
     </div>
   );
 }
