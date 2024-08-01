@@ -13,6 +13,7 @@ export default async function PublicDecks({
   const currentPage = Number(searchParams?.page) || 1;
     return (
       <div>
+        Deck Search
         <DeckSearchBar />
         <DeckSearchResults name={name}/>
       </div>

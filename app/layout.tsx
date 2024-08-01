@@ -30,7 +30,7 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
       )}>
-        <main className="min-h-screen flex flex-col items-center">
+        <main className="min-h-screen flex flex-col">
           {children}
         </main>
         <Toaster />
