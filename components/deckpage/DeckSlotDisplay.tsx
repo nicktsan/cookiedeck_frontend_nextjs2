@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Minus } from 'lucide-react';
 import { DeckslotUpdateQuantityRequestDTO, DeckslotUpdateQuantityResponseDataDTO } from "@/services/deckslot/update/quantity/deckslot-update-quantity.dto";
 import { UpdateDeckSlotQuantity } from "@/services/deckslot/update/quantity/deckslot-update-quantity";
+import Image from 'next/image';
+import { useState } from "react";
 
 interface DeckInfoProps {
     deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -12,6 +14,7 @@ interface DeckInfoProps {
 }
 
 export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInfoProps) {
+    const [currentImage, setCurrentImage] = useState<string>("");
     const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
         try {
             const payload: DeckslotUpdateQuantityRequestDTO = {
@@ -34,49 +37,64 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
         }
     };
 
+    const handleMouseEnter = (imageLink: string) => {
+        setCurrentImage(imageLink);
+    };
+
     return (
-        <div className="flex-1 flex flex-col gap-20 items-center">
-            {deckslots?.map(deckslot => 
-                viewMode ==='en' ?
-            (
-                <div>
-                    {deckslot.color}: {deckslot.name_eng} {deckslot.quantity}
-                    <Button 
-                        variant="outline" 
-                        size="icon" 
-                        onClick={() => updateQuantity(deckslot, 1)}
+        <div className="flex">
+            <Image src={currentImage || ""} width={500} height={500} alt="Deckslot Image" />
+            <div className="grid grid-cols-3 gap-20 justify-items-center items-center"
+                // onMouseLeave={() => setCurrentImage("")}
+            >
+                {deckslots?.map(deckslot => 
+                    viewMode ==='en' ?
+                (
+                    <div 
+                        key={deckslot.card_id} 
+                        onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                     >
-                        <Plus className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                        variant="outline" 
-                        size="icon" 
-                        onClick={() => updateQuantity(deckslot, -1)}
+                        {deckslot.color}: {deckslot.name_eng} {deckslot.quantity}
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={() => updateQuantity(deckslot, 1)}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={() => updateQuantity(deckslot, -1)}
+                        >
+                            <Minus className="h-4 w-4" />
+                        </Button>
+                    </div>
+                ) :
+                (
+                    <div 
+                        key={deckslot.card_id} 
+                        onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                     >
-                        <Minus className="h-4 w-4" />
-                    </Button>
-                </div>
-            ) :
-            (
-                <div>
-                    {deckslot.color}: {deckslot.name_kr} {deckslot.quantity}
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateQuantity(deckslot, 1)}
-                    >
-                        <Plus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateQuantity(deckslot, -1)}
-                    >
-                        <Minus className="h-4 w-4" />
-                    </Button>
-                </div>
-            )
-        )}
+                        {deckslot.color}: {deckslot.name_kr} {deckslot.quantity}
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => updateQuantity(deckslot, 1)}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => updateQuantity(deckslot, -1)}
+                        >
+                            <Minus className="h-4 w-4" />
+                        </Button>
+                    </div>
+                )
+            )}
+            </div>
         </div>
     );
 }

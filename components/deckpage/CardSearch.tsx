@@ -9,7 +9,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -67,15 +66,14 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: DeckIdProps) 
   };
 
   return (
-    <div>
+    <div className="w-1/3">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cardname</FormLabel>
                 <div className="flex space-x-2">
                   <FormControl>
                     <Input placeholder="Find and add cards to main deck." {...field} />

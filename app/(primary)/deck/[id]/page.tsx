@@ -53,14 +53,15 @@ export default function DeckView({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <div className="flex items-center space-x-2 mb-4">
+      <DeckInfo displayDeck={displayDeck} />
+      <div className="flex justify-center items-center space-x-2 mb-4">
         <Switch id="view-mode" onCheckedChange={toggleViewMode} />
         <Label htmlFor="view-mode">
           {viewMode === 'en' ? 'EN' : 'KR'}
         </Label>
+      
+        <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
       </div>
-      <DeckInfo displayDeck={displayDeck} />
-      <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
       <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} viewMode={viewMode}/>
     </div>
   );

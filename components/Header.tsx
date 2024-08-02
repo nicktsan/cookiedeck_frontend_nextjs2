@@ -9,6 +9,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { Button } from "./ui/button";
@@ -59,6 +60,13 @@ export default async function Header() {
           <div className={hidden}>
             <NavigationMenu>
               <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Home
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
                   <NavigationMenuContent>
