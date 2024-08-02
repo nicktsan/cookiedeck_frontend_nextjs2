@@ -9,6 +9,7 @@ import { FindDeck } from '@/services/deck/find/findDeck';
 import { DeckSlotFindByDeckId } from '@/services/deckslot/find/bydeckId/deckslot-find-bydeckid';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import DeckPageFooter from '@/components/deckpage/DeckPageFooter';
 
 export default function DeckView({ params }: { params: { id: string } }) {
   const [displayDeck, setDisplayDeck] = useState<DeckFindResponseDataDTO | undefined>(undefined);
@@ -52,17 +53,20 @@ export default function DeckView({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div>
-      <DeckInfo displayDeck={displayDeck} />
-      <div className="flex justify-center items-center space-x-2 mb-4">
-        <Switch id="view-mode" onCheckedChange={toggleViewMode} />
-        <Label htmlFor="view-mode">
-          {viewMode === 'en' ? 'EN' : 'KR'}
-        </Label>
-      
-        <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
+    <div className="flex flex-col min-h-screen"> {/* Add this wrapper */}
+      <div className="flex-grow pb-32"> {/* Add padding-bottom to prevent content from being hidden behind the footer */}
+        <DeckInfo displayDeck={displayDeck} />
+        <div className="flex justify-center items-center space-x-2 mb-4">
+          <Switch id="view-mode" onCheckedChange={toggleViewMode} />
+          <Label htmlFor="view-mode">
+            {viewMode === 'en' ? 'EN' : 'KR'}
+          </Label>
+        
+          <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
+        </div>
+        <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} viewMode={viewMode}/>
+        <DeckPageFooter deckslots={deckSlots}/>
       </div>
-      <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} viewMode={viewMode}/>
     </div>
   );
 }
