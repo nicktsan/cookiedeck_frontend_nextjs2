@@ -43,9 +43,10 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
 
     return (
         <div className="flex">
-            <Image src={currentImage || ""} width={500} height={500} alt="Deckslot Image" />
+            <div className="relative w-96 h-96">
+                <Image src={currentImage || ""} layout="fill" objectFit="contain" alt="Deckslot Image" />
+            </div>
             <div className="grid grid-cols-3 gap-20 justify-items-center items-center"
-                // onMouseLeave={() => setCurrentImage("")}
             >
                 {deckslots?.map(deckslot => 
                     viewMode ==='en' ?
@@ -54,7 +55,7 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
                         key={deckslot.card_id} 
                         onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                     >
-                        {deckslot.color}: {deckslot.name_eng} {deckslot.quantity}
+                        <span className="hover:underline">{deckslot.color}: {deckslot.name_eng} {deckslot.quantity}</span>
                         <Button 
                             variant="outline" 
                             size="icon" 
@@ -76,7 +77,7 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
                         key={deckslot.card_id} 
                         onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                     >
-                        {deckslot.color}: {deckslot.name_kr} {deckslot.quantity}
+                        <span className="hover:underline">{deckslot.color}: {deckslot.name_kr} {deckslot.quantity}</span>
                         <Button
                             variant="outline"
                             size="icon"
