@@ -1,4 +1,4 @@
 export interface IDTO {
-    message?: string;
-    error?: string;
+  message?: string;
+  error?: string;
 }

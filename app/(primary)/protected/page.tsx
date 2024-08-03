@@ -1,5 +1,5 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -9,15 +9,14 @@ export default async function ProtectedPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/login");
+    return redirect('/login');
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
+    <div className="flex w-full flex-1 flex-col items-center gap-20">
       <div className="w-full">
-        <div className="py-6 font-bold bg-purple-950 text-center">
-          This is a protected page that you can only see as an authenticated
-          user
+        <div className="bg-purple-950 py-6 text-center font-bold">
+          This is a protected page that you can only see as an authenticated user
         </div>
       </div>
     </div>

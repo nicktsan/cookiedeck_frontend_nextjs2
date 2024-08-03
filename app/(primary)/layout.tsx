@@ -1,17 +1,11 @@
-import "../globals.css";
-import Header from "@/components/Header";
+import '../globals.css';
+import Header from '@/components/Header';
 
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-        <Header />
-        <main className="min-h-screen flex flex-col">
-            {children}
-        </main>
+      <Header />
+      <main className="flex min-h-screen flex-col">{children}</main>
     </div>
   );
 }

@@ -1,6 +1,6 @@
-"use client";
-import { DeckFindResponseDataDTO } from "@/services/deck/find/findDeckDTO";
-import { FaEye } from "react-icons/fa";
+'use client';
+import { DeckFindResponseDataDTO } from '@/services/deck/find/findDeckDTO';
+import { FaEye } from 'react-icons/fa';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
@@ -20,7 +20,7 @@ export default function DeckInfo({ displayDeck }: DeckInfoProps) {
     days = 0,
     hours = 0,
     minutes = 0,
-    seconds = 0
+    seconds = 0,
   } = displayDeck;
 
   // Create an array of time units for easier iteration and filtering
@@ -30,7 +30,7 @@ export default function DeckInfo({ displayDeck }: DeckInfoProps) {
     { label: 'day', value: days },
     { label: 'hour', value: hours },
     { label: 'minute', value: minutes },
-    { label: 'second', value: seconds }
+    { label: 'second', value: seconds },
   ];
 
   return (
@@ -43,10 +43,11 @@ export default function DeckInfo({ displayDeck }: DeckInfoProps) {
           <FaEye />
           <span className="mx-2">{views}</span>
           {timeUnits
-            .filter(unit => unit.value > 0)
+            .filter((unit) => unit.value > 0)
             .map((unit, index) => (
               <span key={index} className="ml-1">
-                {unit.value} {unit.label}{unit.value > 1 ? 's' : ''}
+                {unit.value} {unit.label}
+                {unit.value > 1 ? 's' : ''}
               </span>
             ))}
           <span className="ml-1">since last update</span>

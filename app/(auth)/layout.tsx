@@ -1,15 +1,9 @@
-import "../globals.css";
+import '../globals.css';
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-        <main className="min-h-screen flex flex-col items-center">
-            {children}
-        </main>
+      <main className="flex min-h-screen flex-col items-center">{children}</main>
     </div>
   );
 }

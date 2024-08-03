@@ -1,5 +1,5 @@
-import { IDTO } from "@/services/baseDTO";
-import { z, ZodIssue, ZodSchema } from "zod";
+import { IDTO } from '@/services/baseDTO';
+import { z, ZodIssue, ZodSchema } from 'zod';
 
 interface ValidateConfig<T extends z.ZodTypeAny> {
   dto: unknown; //res.data
@@ -9,14 +9,12 @@ interface ValidateConfig<T extends z.ZodTypeAny> {
 export function validate<T extends z.ZodTypeAny>(
   dto: unknown,
   schema: T,
-  schemaName: string
+  schemaName: string,
 ): z.infer<T> {
   return ValidateSchema({ dto, schema, schemaName });
 }
 
-export function ValidateSchema<T extends z.ZodTypeAny>(
-  config: ValidateConfig<T>
-): z.infer<T> {
+export function ValidateSchema<T extends z.ZodTypeAny>(config: ValidateConfig<T>): z.infer<T> {
   const { data, success, error } = config.schema.safeParse(config.dto);
 
   if (success) {
@@ -33,7 +31,7 @@ export function ValidateSchema<T extends z.ZodTypeAny>(
 }
 
 function captureError(message: string, extra = {}): void {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     console.error(message, extra);
   } else {
     // TODO: report to Sentry/something else

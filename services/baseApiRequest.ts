@@ -1,7 +1,7 @@
-'use server'
+'use server';
 import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse, Method } from 'axios';
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.ZodType>({
@@ -9,41 +9,46 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   method,
   requestSchema,
   responseSchema,
-  data
+  data,
 }: {
-  url: string,
-  method: Method,
-  requestSchema: TRequest,
-  responseSchema: TResponse,
-  data: z.infer<TRequest>
+  url: string;
+  method: Method;
+  requestSchema: TRequest;
+  responseSchema: TResponse;
+  data: z.infer<TRequest>;
 }): Promise<z.infer<TResponse>> {
   const supabase = createClient();
-  if (method !== "GET") {
+  if (method !== 'GET') {
     const {
       data: { user },
     } = await supabase.auth.getUser(); //Check if there is a valid session
     if (!user) {
-      return redirect("/login");
+      return redirect('/login');
     }
   }
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   // Trim whitespace from all string data
   const trimmedData = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+    Object.entries(data).map(([key, value]) => [
+      key,
+      typeof value === 'string' ? value.trim() : value,
+    ]),
   );
   const validData = requestSchema.parse(trimmedData);
 
   let apiResponse: z.infer<TResponse> = {
     statusCode: 500,
     data: {
-      error: 'Default error'
-    }
+      error: 'Default error',
+    },
   } as z.infer<TResponse>;
 
   try {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
 
     if (session) {
@@ -54,7 +59,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
       method,
       url,
       headers,
-      ...(method === 'GET' ? { params: validData } : { data: validData })
+      ...(method === 'GET' ? { params: validData } : { data: validData }),
     };
 
     const res = await axios(config);
@@ -63,7 +68,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
       // console.log("res.status: ", res.status);
       apiResponse = responseSchema.parse({
         statusCode: res.status,
-        data: res.data
+        data: res.data,
       });
     }
   } catch (error) {
@@ -71,7 +76,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
     const { response } = error as AxiosError;
     apiResponse = responseSchema.parse({
       statusCode: response?.status || 500,
-      data: response?.data || { error: error }
+      data: response?.data || { error: error },
     });
   }
 

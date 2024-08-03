@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
-import { CreateDeckForm } from "../../../components/CreateDeckForm";
-import { createClient } from "@/utils/supabase/server";
+import { redirect } from 'next/navigation';
+import { CreateDeckForm } from '../../../components/CreateDeckForm';
+import { createClient } from '@/utils/supabase/server';
 export default async function CreateDeck() {
   const supabase = createClient();
   const {
@@ -8,13 +8,12 @@ export default async function CreateDeck() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/login");
+    return redirect('/login');
   }
   return (
-    <div className="flex-1 flex flex-col gap-20 items-center">
+    <div className="flex flex-1 flex-col items-center gap-20">
       Create Deck
-      <CreateDeckForm />     
+      <CreateDeckForm />
     </div>
   );
 }
-  

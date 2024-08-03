@@ -1,17 +1,11 @@
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import {DeckSearchBarDTO} from "@/services/deck/find/custom/deck-find-custom.dto"
-import { DeckSearchBarSchema } from "@/services/deck/find/custom/deck-find-custom.schema";
+'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { DeckSearchBarDTO } from '@/services/deck/find/custom/deck-find-custom.dto';
+import { DeckSearchBarSchema } from '@/services/deck/find/custom/deck-find-custom.schema';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 export function DeckSearchBar() {
@@ -23,7 +17,7 @@ export function DeckSearchBar() {
     defaultValues: {
       name: searchParams.get('name') || '',
     },
-  })
+  });
 
   async function onSubmit(data: DeckSearchBarDTO) {
     const params = new URLSearchParams(searchParams);
@@ -53,7 +47,9 @@ export function DeckSearchBar() {
             <FormItem>
               <div className="flex space-x-2">
                 <FormControl className="flex-grow">
-                  <Input placeholder="Search Decks" {...field} 
+                  <Input
+                    placeholder="Search Decks"
+                    {...field}
                     defaultValue={searchParams.get('name')?.toString()}
                   />
                 </FormControl>
@@ -65,5 +61,5 @@ export function DeckSearchBar() {
         />
       </form>
     </Form>
-  )
+  );
 }

@@ -1,10 +1,10 @@
 export interface DeckCreateResponseData {
-	id?: string;
-	message?: string;
-    error?: string;
+  id?: string;
+  message?: string;
+  error?: string;
 }
 
 export interface DeckCreateResponseDto {
-	statusCode: number;
-    data: DeckCreateResponseData;
+  statusCode: number;
+  data: DeckCreateResponseData;
 }

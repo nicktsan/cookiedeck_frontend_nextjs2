@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'cookierunbraverse.com',
-            // port: '',
-            // pathname: '/account123/**',
-          },
-        ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cookierunbraverse.com',
+        // port: '',
+        // pathname: '/account123/**',
       },
+    ],
+  },
 };
 
 module.exports = nextConfig;
