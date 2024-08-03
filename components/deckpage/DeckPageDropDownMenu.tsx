@@ -8,19 +8,23 @@ DropdownMenuSeparator,
 DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { DeleteDeckAlertDialog } from "../deckoptions/DeleteDeckAlertDialog"
-
-export function DeckPageDropDownMenu() {
+interface DeckIdProps {
+    deckId: string;
+}
+export function DeckPageDropDownMenu({deckId}: DeckIdProps) {
     return (
         <div>
             <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline">Open</Button>
+                <Button variant="outline">Options</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
+                {/* marking DropdownMenuItem with asChild prevents DeleteDeckAlertDialog from closing after clicking on it,
+                even if it is inside a DropdownMenuItem*/}
                 <DropdownMenuItem asChild>
-                    <DeleteDeckAlertDialog/>
+                    <DeleteDeckAlertDialog deckId={deckId}/>
                 </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>

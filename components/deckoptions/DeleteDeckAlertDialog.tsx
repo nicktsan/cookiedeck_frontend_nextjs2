@@ -1,3 +1,4 @@
+'use client'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,11 +10,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { DeleteDeck } from "@/services/deck/delete/deck-delete";
+import { useRouter } from "next/navigation";
 
-
-export function DeleteDeckAlertDialog() {
+interface DeckIdProps {
+    deckId: string;
+}
+export function DeleteDeckAlertDialog({deckId}: DeckIdProps) {
+    const router = useRouter();
     const handleDelete = async () => {
         console.log("Delete deck");
+        const deleteResponse = await DeleteDeck(deckId);
+        if (!deleteResponse.error) {
+            router.push('/yourdecks');
+        } else {
+            console.log(deleteResponse.error);
+        }
     }
   return (
       <AlertDialog>

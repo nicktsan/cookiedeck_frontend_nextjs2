@@ -60,7 +60,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
         {/* Add padding-bottom to prevent content from being hidden behind the footer */}
         <DeckInfo displayDeck={displayDeck} />
         <div className="mb-4 flex items-center justify-center space-x-2">
-          <DeckPageDropDownMenu/>
+          <DeckPageDropDownMenu deckId={params.id}/>
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
           <CardSearch
