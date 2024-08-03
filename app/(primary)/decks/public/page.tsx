@@ -10,7 +10,6 @@ export default async function PublicDecks({
   };
 }) {
   const name = searchParams?.name || '';
-  const currentPage = Number(searchParams?.page) || 1;
   return (
     <div>
       Deck Search

@@ -10,6 +10,7 @@ import { DeckSlotFindByDeckId } from '@/services/deckslot/find/bydeckId/deckslot
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import DeckPageFooter from '@/components/deckpage/DeckPageFooter';
+import { DeckPageDropDownMenu } from '@/components/deckpage/DeckPageDropDownMenu';
 
 export default function DeckView({ params }: { params: { id: string } }) {
   const [displayDeck, setDisplayDeck] = useState<DeckFindResponseDataDTO | undefined>(undefined);
@@ -59,9 +60,9 @@ export default function DeckView({ params }: { params: { id: string } }) {
         {/* Add padding-bottom to prevent content from being hidden behind the footer */}
         <DeckInfo displayDeck={displayDeck} />
         <div className="mb-4 flex items-center justify-center space-x-2">
+          <DeckPageDropDownMenu/>
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
-
           <CardSearch
             deckId={params.id}
             onUpdate={() => {
