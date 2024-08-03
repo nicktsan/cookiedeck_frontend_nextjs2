@@ -39,7 +39,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
   const toggleViewMode = () => {
     setViewMode(prev => prev === 'en' ? 'kr' : 'en');
   };
-
+// todo loading state
   if (!displayDeck) {
     return (
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
@@ -55,16 +55,16 @@ export default function DeckView({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col min-h-screen"> {/* Add this wrapper */}
       <div className="flex-grow pb-32"> {/* Add padding-bottom to prevent content from being hidden behind the footer */}
-        <DeckInfo displayDeck={displayDeck} />
+        <DeckInfo displayDeck={displayDeck}/>
         <div className="flex justify-center items-center space-x-2 mb-4">
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">
             {viewMode === 'en' ? 'EN' : 'KR'}
           </Label>
         
-          <CardSearch deckId={params.id} onUpdate={fetchDeckSlots} viewMode={viewMode} />
+          <CardSearch deckId={params.id} onUpdate={() => {fetchDeckSlots(), fetchDeckData()}} viewMode={viewMode} />
         </div>
-        <DeckSlotDisplay deckslots={deckSlots} onUpdate={fetchDeckSlots} viewMode={viewMode}/>
+        <DeckSlotDisplay deckslots={deckSlots} onUpdate={() => {fetchDeckSlots(), fetchDeckData()}} viewMode={viewMode}/>
         <DeckPageFooter deckslots={deckSlots}/>
       </div>
     </div>

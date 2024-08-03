@@ -9,7 +9,7 @@ import { useState } from "react";
 
 interface DeckInfoProps {
     deckslots: DeckslotFindResponseDTO[] | undefined | null;
-    onUpdate: () => Promise<void>;
+    onUpdate: () => void;
     viewMode: 'en' | 'kr';
 }
 
@@ -51,7 +51,7 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
     const handleMouseEnter = (imageLink: string) => {
         setCurrentImage(imageLink);
     };
-
+    // todo add menu to delete or update deckslots
     return (
         <div className="flex">
             <div className="relative w-96 h-96">
@@ -69,7 +69,12 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
                                     className="flex items-center justify-between"
                                     onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                                 >
-                                    <span className="flex-shrink-0 hover:underline">{deckslot.quantity} {deckslot.name_eng}</span>
+                                    <span className="flex-shrink-0 flex items-center">
+                                        <span className="hover:underline">{deckslot.quantity} {deckslot.name_eng}</span>
+                                        {deckslot.plain_text_eng?.includes('[FLIP]') && (
+                                            <span className="ml-2 text-xs font-semibold bg-blue-500 text-white px-2 py-0.5 rounded">FLIP</span>
+                                        )}
+                                    </span>
                                     <div className="flex space-x-2">
                                         <Button 
                                             variant="outline" 
@@ -95,7 +100,12 @@ export default function DeckSlotDisplay({deckslots, onUpdate, viewMode}: DeckInf
                                     className="flex items-center justify-between"
                                     onMouseEnter={() => handleMouseEnter(deckslot.image_link!)}
                                 >
-                                    <span className="flex-shrink-0 hover:underline">{deckslot.quantity} {deckslot.name_kr}</span>
+                                    <span className="flex-shrink-0 flex items-center">
+                                        <span className="hover:underline">{deckslot.quantity} {deckslot.name_kr}</span>
+                                        {deckslot.plain_text_eng?.includes('[FLIP]') && (
+                                            <span className="ml-2 text-xs font-semibold bg-blue-500 text-white px-2 py-0.5 rounded">FLIP</span>
+                                        )}
+                                    </span>
                                     <div className="flex space-x-2">
                                         <Button
                                             variant="outline"

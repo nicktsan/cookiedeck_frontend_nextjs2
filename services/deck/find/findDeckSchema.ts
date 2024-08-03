@@ -22,6 +22,12 @@ export const DeckFindResponseDataSchema = z.object({
         message: `Views must be at least 1`
     }).optional(),
     updated_at: z.string().datetime().optional(),
+    years: z.number().optional(),
+    months: z.number().optional(),
+    days: z.number().optional(),
+    hours: z.number().optional(),
+    minutes: z.number().optional(), 
+    seconds: z.number().optional(),
     message: z.string().optional(),
     error: z.string().optional()
 });
