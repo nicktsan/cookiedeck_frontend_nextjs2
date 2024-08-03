@@ -33,6 +33,13 @@ export default function DeckInfo({ displayDeck }: DeckInfoProps) {
     { label: 'second', value: seconds },
   ];
 
+  let lastUpdated: string = "";
+  timeUnits.filter((unit) => unit.value > 0)
+  .map((unit) => (
+    lastUpdated = lastUpdated + " " + Math.round(unit.value) + " " + unit.label + (Math.round(unit.value) > 1 ? "s" : "" ) + " "
+  ));
+  lastUpdated = lastUpdated + "since last update"
+
   return (
     <div className="flex flex-col items-start px-[1vw] md:px-[10vw] lg:px-[10vw]">
       <div className="py-6 font-bold">
@@ -42,15 +49,7 @@ export default function DeckInfo({ displayDeck }: DeckInfoProps) {
         <p className="flex flex-row items-center">
           <FaEye />
           <span className="mx-2">{views}</span>
-          {timeUnits
-            .filter((unit) => unit.value > 0)
-            .map((unit, index) => (
-              <span key={index} className="ml-1">
-                {unit.value} {unit.label}
-                {unit.value > 1 ? 's' : ''}
-              </span>
-            ))}
-          <span className="ml-1">since last update</span>
+          <span className="ml-1">{lastUpdated}</span>
         </p>
       </div>
     </div>
