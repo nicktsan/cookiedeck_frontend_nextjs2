@@ -10,6 +10,7 @@ import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deck
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { colorMapping } from '@/utils/colorMapping';
+import { Separator } from "@/components/ui/separator"
 
 interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -29,43 +30,47 @@ const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity }: DeckSl
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
     ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
     : '';
-
-  return (
-    <div
-      key={deckslot.card_id}
-      className="flex items-center justify-between"
-      onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
-    >
-      <div className="flex items-center space-x-1">
-        <span className="w-6 text-left">{deckslot.quantity}</span>
-        <span className="inline-flex w-6 items-center justify-center text-base leading-none">
-          {colorEmoji}
-        </span>
-        <span className="hover:underline">{name}</span>
-        {deckslot.plain_text_eng?.includes('[FLIP]') && (
-          <span className="ml-2 rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
-            FLIP
-          </span>
-        )}
-      </div>
-      <div className="ml-1 flex space-x-2">
-        {[
-          { icon: Plus, change: 1 },
-          { icon: Minus, change: -1 },
-        ].map(({ icon: Icon, change }) => (
-          <Button
-            key={change}
-            variant="outline"
-            size="icon"
-            className="flex h-8 w-8 items-center justify-center"
-            onClick={() => onUpdateQuantity(deckslot, change)}
-          >
-            <Icon className="h-4 w-4" />
-          </Button>
-        ))}
-      </div>
-    </div>
-  );
+    return (
+      <>
+        <div
+          key={deckslot.card_id}
+          className="flex items-center justify-between gap-y-1 py-1"
+          onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
+        >
+          <div className="flex items-center flex-grow min-w-0 pr-2">
+            <span className="w-4 text-left flex-shrink-0">{deckslot.quantity}</span>
+            <span className="w-6 flex items-center justify-center text-base flex-shrink-0">
+              {colorEmoji}
+            </span>
+            <div className="flex items-center min-w-0 flex-grow">
+              <span className="hover:underline break-words mr-2">{name}</span>
+              {deckslot.plain_text_eng?.includes('[FLIP]') && (
+                <span className="inline-block rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white flex-shrink-0 whitespace-nowrap">
+                  FLIP
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            {[
+              { icon: Plus, change: 1 },
+              { icon: Minus, change: -1 },
+            ].map(({ icon: Icon, change }) => (
+              <Button
+                key={change}
+                variant="outline"
+                size="icon"
+                className="flex h-8 w-8 items-center justify-center"
+                onClick={() => onUpdateQuantity(deckslot, change)}
+              >
+                <Icon className="h-4 w-4" />
+              </Button>
+            ))}
+          </div>
+        </div>
+        <Separator />
+      </>
+    );
 };
 
 export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckInfoProps) {
@@ -143,10 +148,10 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
       <div className="relative h-96 w-96">
         <Image src={currentImage || ''} layout="fill" objectFit="contain" alt="" />
       </div>
-      <div className="grid grid-cols-3 justify-items-stretch gap-20">
+      <div className="grid grid-cols-3 justify-items-stretch gap-x-20 gap-y-6">
         {Object.entries(sortedGroupedByCardType).map(([card_type, slots]) => (
           <div key={card_type} className="w-full">
-            <h2 className="mb-4 text-xl font-bold">{card_type}</h2>
+            <h2 className="mb-2 text-xl font-bold">{card_type}</h2>
             {slots.map((deckslot) => (
               <DeckSlot
                 key={deckslot.card_id}
