@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { IDeckDeleteRequestSchema, IDeckDeleteResponseDataSchema, IDeckDeleteResponseSchema} from "./deck-delete.schema"
-type IDeckDeleteRequestDTO = z.infer<typeof IDeckDeleteRequestSchema>;
-type IDeckDeleteResponseDataDTO = z.infer<typeof IDeckDeleteResponseDataSchema>;
-type IDeckDeleteResponseDTO = z.infer<typeof IDeckDeleteResponseSchema>;
+import {
+  DeckDeleteRequestSchema,
+  DeckDeleteResponseDataSchema,
+  DeckDeleteResponseSchema,
+} from './deck-delete.schema';
+type DeckDeleteRequestDTO = z.infer<typeof DeckDeleteRequestSchema>;
+type DeckDeleteResponseDataDTO = z.infer<typeof DeckDeleteResponseDataSchema>;
+type DeckDeleteResponseDTO = z.infer<typeof DeckDeleteResponseSchema>;
 
-export type {
-  IDeckDeleteRequestDTO,
-  IDeckDeleteResponseDataDTO,
-  IDeckDeleteResponseDTO,
-};
+export type { DeckDeleteRequestDTO, DeckDeleteResponseDataDTO, DeckDeleteResponseDTO };

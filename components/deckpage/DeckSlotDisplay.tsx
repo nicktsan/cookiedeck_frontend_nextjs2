@@ -9,6 +9,7 @@ import {
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { colorMapping } from '@/utils/colorMapping';
 
 interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -23,21 +24,12 @@ interface DeckSlotProps {
   onUpdateQuantity: (deckslot: DeckslotFindResponseDTO, change: number) => void;
 }
 
-const colorMapping = {
-  red: "🔴",
-  yellow: "🟡",
-  blue: "🔵",
-  purple: "🟣",
-  green: "🟢"
-};
-
-
 const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity }: DeckSlotProps) => {
   const name = viewMode === 'en' ? deckslot.name_eng : deckslot.name_kr;
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
-  ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
-  : '';
-  
+    ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
+    : '';
+
   return (
     <div
       key={deckslot.card_id}
@@ -46,7 +38,9 @@ const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity }: DeckSl
     >
       <div className="flex items-center space-x-1">
         <span className="w-6 text-left">{deckslot.quantity}</span>
-        <span className="inline-flex items-center justify-center w-6 text-base leading-none">{colorEmoji}</span>
+        <span className="inline-flex w-6 items-center justify-center text-base leading-none">
+          {colorEmoji}
+        </span>
         <span className="hover:underline">{name}</span>
         {deckslot.plain_text_eng?.includes('[FLIP]') && (
           <span className="ml-2 rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
@@ -54,16 +48,16 @@ const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity }: DeckSl
           </span>
         )}
       </div>
-      <div className="flex space-x-2 ml-1">
+      <div className="ml-1 flex space-x-2">
         {[
           { icon: Plus, change: 1 },
-          { icon: Minus, change: -1 }
+          { icon: Minus, change: -1 },
         ].map(({ icon: Icon, change }) => (
           <Button
             key={change}
             variant="outline"
             size="icon"
-            className="h-8 w-8 flex items-center justify-center"
+            className="flex h-8 w-8 items-center justify-center"
             onClick={() => onUpdateQuantity(deckslot, change)}
           >
             <Icon className="h-4 w-4" />

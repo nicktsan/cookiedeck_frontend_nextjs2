@@ -1,29 +1,29 @@
 'use server';
 import { MakeApiRequest } from '@/services/baseApiRequest';
-import { IDeckDeleteRequestDTO, IDeckDeleteResponseDataDTO } from './deck-delete.dto';
+import { DeckDeleteRequestDTO, DeckDeleteResponseDataDTO } from './deck-delete.dto';
 import {
-  IDeckDeleteRequestSchema,
-  IDeckDeleteResponseDataSchema,
-  IDeckDeleteResponseSchema,
+  DeckDeleteRequestSchema,
+  DeckDeleteResponseDataSchema,
+  DeckDeleteResponseSchema,
 } from './deck-delete.schema';
 import { validate } from '@/utils/schemaValidator';
 
-export async function DeleteDeck(id: string): Promise<IDeckDeleteResponseDataDTO> {
+export async function DeleteDeck(id: string): Promise<DeckDeleteResponseDataDTO> {
   const deleteDeckUrl = process.env.BACKEND_URL + '/deck/delete';
-  const deleteDeckRequestData: IDeckDeleteRequestDTO = { id: id };
+  const deleteDeckRequestData: DeckDeleteRequestDTO = { id: id };
   // console.log("deleteDeckUrl: ", deleteDeckUrl)
   const deleteDeckResponse = await MakeApiRequest({
     url: deleteDeckUrl,
     method: 'DELETE',
-    requestSchema: IDeckDeleteRequestSchema,
-    responseSchema: IDeckDeleteResponseSchema,
+    requestSchema: DeckDeleteRequestSchema,
+    responseSchema: DeckDeleteResponseSchema,
     data: deleteDeckRequestData,
   });
   // console.log("raw deleteDeckResponse: ", deleteDeckResponse);
-  const validated: IDeckDeleteResponseDataDTO = validate(
+  const validated: DeckDeleteResponseDataDTO = validate(
     deleteDeckResponse.data,
-    IDeckDeleteResponseDataSchema,
-    'IDeckDeleteResponseDataSchema',
+    DeckDeleteResponseDataSchema,
+    'DeckDeleteResponseDataSchema',
   );
   // console.log("validated deleteDeckResponse: ", validated);
   return validated;

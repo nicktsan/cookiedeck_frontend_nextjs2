@@ -52,22 +52,9 @@ export const DeckFindCustomRequestSchema = z.object({
 });
 
 export const DeckFindCustomResponseDataSchema = z.object({
-  decks: z
-    .array(DeckEntitySchema, {
-      message: 'decks is required',
-    })
-    .nullable()
-    .optional(),
-  message: z
-    .string({
-      message: 'message is required',
-    })
-    .optional(),
-  error: z
-    .string({
-      message: 'error is required',
-    })
-    .optional(),
+  decks: z.array(DeckEntitySchema).nullable().optional(),
+  message: z.string().optional(),
+  error: z.string().optional(),
 });
 
 export const DeckFindCustomResponseSchema = z.object({

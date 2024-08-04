@@ -21,7 +21,7 @@ export const CardSearchRequestSchema = z.object({
     )
     .optional(),
   name: z.string().min(3, {
-    message: 'Name must be at least 3 characters.',
+    message: 'Card Name must be at least 3 characters.',
   }),
 });
 
