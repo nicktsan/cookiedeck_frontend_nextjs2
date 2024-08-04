@@ -18,7 +18,11 @@ export interface DeckSlotDropDownProps {
   viewMode: 'en' | 'kr';
 }
 
-export function DeckSlotDropDownMenu({ deckslotUpdateQuantityParams, onUpdate, viewMode }: DeckSlotDropDownProps) {
+export function DeckSlotDropDownMenu({
+  deckslotUpdateQuantityParams,
+  onUpdate,
+  viewMode,
+}: DeckSlotDropDownProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState('auto');
 
@@ -49,11 +53,13 @@ export function DeckSlotDropDownMenu({ deckslotUpdateQuantityParams, onUpdate, v
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <ChangeSlotQuantityDialog deckslotUpdateQuantityParams={deckslotUpdateQuantityParams} onUpdate={onUpdate} viewMode={viewMode}/>
+              <ChangeSlotQuantityDialog
+                deckslotUpdateQuantityParams={deckslotUpdateQuantityParams}
+                onUpdate={onUpdate}
+                viewMode={viewMode}
+              />
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              Delete
-            </DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

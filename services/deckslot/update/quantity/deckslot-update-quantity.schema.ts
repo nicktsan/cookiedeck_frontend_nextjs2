@@ -6,10 +6,9 @@ export const DeckslotUpdateQuantityRequestNoChangeSchema = z.object({
   card_id: z.number({
     message: 'card_id must be a number.',
   }),
-  board: z
-    .enum(['main', 'maybe'], {
-      message: `board must be 'main' or 'maybe'.`,
-    }),
+  board: z.enum(['main', 'maybe'], {
+    message: `board must be 'main' or 'maybe'.`,
+  }),
   card_name_eng: z.string(),
   card_name_kr: z.string(),
 });

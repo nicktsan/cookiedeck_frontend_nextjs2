@@ -11,7 +11,7 @@ import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deck
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { colorMapping } from '@/utils/colorMapping';
-import { Separator } from "@/components/ui/separator";
+import { Separator } from '@/components/ui/separator';
 import { DeckSlotDropDownMenu } from './DeckSlotDropDownMenu';
 
 interface DeckInfoProps {
@@ -28,14 +28,20 @@ interface DeckSlotProps {
   onUpdate: () => void;
 }
 
-const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity, onUpdate }: DeckSlotProps) => {
+const DeckSlot = ({
+  deckslot,
+  viewMode,
+  onMouseEnter,
+  onUpdateQuantity,
+  onUpdate,
+}: DeckSlotProps) => {
   const deckslotUpdateQuantityParams: DeckslotUpdateQuantityRequestNoChangeParams = {
     deck_id: deckslot.deck_id,
     card_id: deckslot.card_id,
     board: deckslot.board,
     card_name_eng: deckslot.name_eng!,
     card_name_kr: deckslot.name_kr!,
-  }
+  };
   const name = viewMode === 'en' ? deckslot.name_eng : deckslot.name_kr;
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
     ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
@@ -47,21 +53,21 @@ const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity, onUpdate
         className="flex items-center justify-between gap-y-1 py-1"
         onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
       >
-        <div className="flex items-center flex-grow min-w-0 pr-2">
-          <span className="w-4 text-left flex-shrink-0">{deckslot.quantity}</span>
-          <span className="w-6 flex items-center justify-center text-base flex-shrink-0">
+        <div className="flex min-w-0 flex-grow items-center pr-2">
+          <span className="w-4 flex-shrink-0 text-left">{deckslot.quantity}</span>
+          <span className="flex w-6 flex-shrink-0 items-center justify-center text-base">
             {colorEmoji}
           </span>
-          <div className="flex items-center min-w-0 flex-grow">
-            <span className="hover:underline break-words mr-2">{name}</span>
+          <div className="flex min-w-0 flex-grow items-center">
+            <span className="mr-2 break-words hover:underline">{name}</span>
             {deckslot.plain_text_eng?.includes('[FLIP]') && (
-              <span className="inline-block rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white flex-shrink-0 whitespace-nowrap">
+              <span className="inline-block flex-shrink-0 whitespace-nowrap rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
                 FLIP
               </span>
             )}
           </div>
         </div>
-        <div className="flex items-center space-x-2 flex-shrink-0">
+        <div className="flex flex-shrink-0 items-center space-x-2">
           {[
             { icon: Plus, change: 1 },
             { icon: Minus, change: -1 },
@@ -77,7 +83,11 @@ const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity, onUpdate
             </Button>
           ))}
         </div>
-        <DeckSlotDropDownMenu deckslotUpdateQuantityParams={deckslotUpdateQuantityParams} onUpdate={onUpdate} viewMode={viewMode}/>
+        <DeckSlotDropDownMenu
+          deckslotUpdateQuantityParams={deckslotUpdateQuantityParams}
+          onUpdate={onUpdate}
+          viewMode={viewMode}
+        />
       </div>
       <Separator />
     </>

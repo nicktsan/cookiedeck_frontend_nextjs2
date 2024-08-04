@@ -6,7 +6,9 @@ import {
   DeckslotUpdateQuantityRequestNoChangeSchema,
 } from './deckslot-update-quantity.schema';
 
-type DeckslotUpdateQuantityRequestNoChangeParams = z.infer<typeof DeckslotUpdateQuantityRequestNoChangeSchema>;
+type DeckslotUpdateQuantityRequestNoChangeParams = z.infer<
+  typeof DeckslotUpdateQuantityRequestNoChangeSchema
+>;
 type DeckslotUpdateQuantityRequestDTO = z.infer<typeof DeckslotUpdateQuantityRequestSchema>;
 type DeckslotUpdateQuantityResponseDataDTO = z.infer<
   typeof DeckslotUpdateQuantityResponseDataSchema
