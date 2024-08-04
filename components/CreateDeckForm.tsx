@@ -115,7 +115,9 @@ export function CreateDeckForm() {
                 </FormControl>
                 <SelectContent>
                   {folders.map((folder) => (
-                    <SelectItem value={folder.value}>{folder.label}</SelectItem>
+                    <SelectItem key={folder.label} value={folder.value}>
+                      {folder.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -138,7 +140,9 @@ export function CreateDeckForm() {
                 </FormControl>
                 <SelectContent>
                   {visibilities.map((visibility) => (
-                    <SelectItem value={visibility.value}>{visibility.label}</SelectItem>
+                    <SelectItem key={visibility.label} value={visibility.value}>
+                      {visibility.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

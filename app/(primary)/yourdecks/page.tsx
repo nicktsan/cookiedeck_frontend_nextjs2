@@ -53,7 +53,7 @@ export default async function YourDecks() {
     <div className="flex flex-1 flex-col items-center gap-20">
       Your Decks
       {yourDecks?.map((yourDeck) => (
-        <div>
+        <div key={yourDeck.id}>
           <Link
             className="text-center text-blue-500 hover:underline"
             key={yourDeck.id}

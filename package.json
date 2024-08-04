@@ -1,10 +1,13 @@
 {
   "private": true,
+  "eslintConfig": {
+    "extends": "next"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "next lint",
     "format": "prettier --write ."
   },
   "dependencies": {

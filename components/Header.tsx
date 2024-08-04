@@ -72,7 +72,7 @@ export default async function Header() {
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {explores.map((explore) => (
-                        <Button asChild>
+                        <Button asChild key={explore.title}>
                           <Link href={explore.href}>{explore.title}</Link>
                         </Button>
                       ))}
@@ -84,7 +84,7 @@ export default async function Header() {
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {yourStuffs.map((yourStuff) => (
-                        <Button asChild>
+                        <Button asChild key={yourStuff.title}>
                           <Link href={yourStuff.href}>{yourStuff.title}</Link>
                         </Button>
                       ))}
@@ -96,7 +96,7 @@ export default async function Header() {
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {creations.map((creation) => (
-                        <Button asChild>
+                        <Button asChild key={creation.title}>
                           <Link href={creation.href}>{creation.title}</Link>
                         </Button>
                       ))}

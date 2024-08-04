@@ -78,7 +78,7 @@ export default function Login({ searchParams }: { searchParams: { message: strin
           </p>
         )}
         <Link className="text-center text-blue-500 hover:underline" href="/signup">
-          Sign up for an account if you don't have one.
+          Sign up for an account if you don&apos;t have one.
         </Link>
       </form>
     </div>
