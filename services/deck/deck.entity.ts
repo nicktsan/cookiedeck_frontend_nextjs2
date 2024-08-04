@@ -35,3 +35,6 @@ export const DeckEntitySchema = z.object({
 });
 
 export type DeckEntity = z.infer<typeof DeckEntitySchema>;
+export interface IDeckIdProps {
+  deckId: string;
+}

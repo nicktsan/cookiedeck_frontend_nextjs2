@@ -7,11 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DeleteDeckAlertDialog } from '../deckoptions/DeleteDeckAlertDialog';
+import { CircleChevronDown } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
-import { IDeckIdProps } from '@/services/deck/deck.entity';
+import { ChangeSlotQuantityDialog } from './ChangeSlotQuantityDialog';
+import { DeckslotUpdateQuantityRequestNoChangeParams } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 
-export function DeckPageDropDownMenu({ deckId }: IDeckIdProps) {
+export interface DeckSlotDropDownProps {
+  deckslotUpdateQuantityParams: DeckslotUpdateQuantityRequestNoChangeParams;
+  onUpdate: () => void;
+  viewMode: 'en' | 'kr';
+}
+
+export function DeckSlotDropDownMenu({ deckslotUpdateQuantityParams, onUpdate, viewMode }: DeckSlotDropDownProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState('auto');
 
@@ -23,10 +30,16 @@ export function DeckPageDropDownMenu({ deckId }: IDeckIdProps) {
   }, []);
 
   return (
-    <div>
+    <div className="mx-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Options</Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="flex h-8 w-8 items-center justify-center"
+          >
+            <CircleChevronDown className="h-4 w-4" />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           ref={contentRef}
@@ -36,7 +49,10 @@ export function DeckPageDropDownMenu({ deckId }: IDeckIdProps) {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <DeleteDeckAlertDialog deckId={deckId} />
+              <ChangeSlotQuantityDialog deckslotUpdateQuantityParams={deckslotUpdateQuantityParams} onUpdate={onUpdate} viewMode={viewMode}/>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

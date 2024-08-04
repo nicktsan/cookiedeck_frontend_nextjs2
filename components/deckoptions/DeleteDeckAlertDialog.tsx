@@ -10,13 +10,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { IDeckIdProps } from '@/services/deck/deck.entity';
 import { DeleteDeck } from '@/services/deck/delete/deck-delete';
 import { useRouter } from 'next/navigation';
 
-interface DeckIdProps {
-  deckId: string;
-}
-export function DeleteDeckAlertDialog({ deckId }: DeckIdProps) {
+export function DeleteDeckAlertDialog({ deckId }: IDeckIdProps) {
   const router = useRouter();
   const handleDelete = async () => {
     console.log('Delete deck');
@@ -30,7 +28,7 @@ export function DeleteDeckAlertDialog({ deckId }: DeckIdProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <div className="cursor-pointer p-2 text-red-500 hover:bg-red-500 hover:text-white">
+        <div className="cursor-pointer p-2 text-red-500 hover:bg-red-500 hover:text-white rounded-sm">
           Delete
         </div>
       </AlertDialogTrigger>

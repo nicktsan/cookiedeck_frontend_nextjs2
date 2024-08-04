@@ -4,13 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Plus, Minus } from 'lucide-react';
 import {
   DeckslotUpdateQuantityRequestDTO,
+  DeckslotUpdateQuantityRequestNoChangeParams,
   DeckslotUpdateQuantityResponseDataDTO,
 } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { colorMapping } from '@/utils/colorMapping';
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
+import { DeckSlotDropDownMenu } from './DeckSlotDropDownMenu';
 
 interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -23,54 +25,63 @@ interface DeckSlotProps {
   viewMode: 'en' | 'kr';
   onMouseEnter: (imageLink: string) => void;
   onUpdateQuantity: (deckslot: DeckslotFindResponseDTO, change: number) => void;
+  onUpdate: () => void;
 }
 
-const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity }: DeckSlotProps) => {
+const DeckSlot = ({ deckslot, viewMode, onMouseEnter, onUpdateQuantity, onUpdate }: DeckSlotProps) => {
+  const deckslotUpdateQuantityParams: DeckslotUpdateQuantityRequestNoChangeParams = {
+    deck_id: deckslot.deck_id,
+    card_id: deckslot.card_id,
+    board: deckslot.board,
+    card_name_eng: deckslot.name_eng!,
+    card_name_kr: deckslot.name_kr!,
+  }
   const name = viewMode === 'en' ? deckslot.name_eng : deckslot.name_kr;
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
     ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
     : '';
-    return (
-      <>
-        <div
-          key={deckslot.card_id}
-          className="flex items-center justify-between gap-y-1 py-1"
-          onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
-        >
-          <div className="flex items-center flex-grow min-w-0 pr-2">
-            <span className="w-4 text-left flex-shrink-0">{deckslot.quantity}</span>
-            <span className="w-6 flex items-center justify-center text-base flex-shrink-0">
-              {colorEmoji}
-            </span>
-            <div className="flex items-center min-w-0 flex-grow">
-              <span className="hover:underline break-words mr-2">{name}</span>
-              {deckslot.plain_text_eng?.includes('[FLIP]') && (
-                <span className="inline-block rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white flex-shrink-0 whitespace-nowrap">
-                  FLIP
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center space-x-2 flex-shrink-0">
-            {[
-              { icon: Plus, change: 1 },
-              { icon: Minus, change: -1 },
-            ].map(({ icon: Icon, change }) => (
-              <Button
-                key={change}
-                variant="outline"
-                size="icon"
-                className="flex h-8 w-8 items-center justify-center"
-                onClick={() => onUpdateQuantity(deckslot, change)}
-              >
-                <Icon className="h-4 w-4" />
-              </Button>
-            ))}
+  return (
+    <>
+      <div
+        key={deckslot.card_id}
+        className="flex items-center justify-between gap-y-1 py-1"
+        onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
+      >
+        <div className="flex items-center flex-grow min-w-0 pr-2">
+          <span className="w-4 text-left flex-shrink-0">{deckslot.quantity}</span>
+          <span className="w-6 flex items-center justify-center text-base flex-shrink-0">
+            {colorEmoji}
+          </span>
+          <div className="flex items-center min-w-0 flex-grow">
+            <span className="hover:underline break-words mr-2">{name}</span>
+            {deckslot.plain_text_eng?.includes('[FLIP]') && (
+              <span className="inline-block rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white flex-shrink-0 whitespace-nowrap">
+                FLIP
+              </span>
+            )}
           </div>
         </div>
-        <Separator />
-      </>
-    );
+        <div className="flex items-center space-x-2 flex-shrink-0">
+          {[
+            { icon: Plus, change: 1 },
+            { icon: Minus, change: -1 },
+          ].map(({ icon: Icon, change }) => (
+            <Button
+              key={change}
+              variant="outline"
+              size="icon"
+              className="flex h-8 w-8 items-center justify-center"
+              onClick={() => onUpdateQuantity(deckslot, change)}
+            >
+              <Icon className="h-4 w-4" />
+            </Button>
+          ))}
+        </div>
+        <DeckSlotDropDownMenu deckslotUpdateQuantityParams={deckslotUpdateQuantityParams} onUpdate={onUpdate} viewMode={viewMode}/>
+      </div>
+      <Separator />
+    </>
+  );
 };
 
 export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckInfoProps) {
@@ -159,6 +170,7 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
                 viewMode={viewMode}
                 onMouseEnter={handleMouseEnter}
                 onUpdateQuantity={updateQuantity}
+                onUpdate={onUpdate}
               />
             ))}
           </div>
