@@ -25,6 +25,7 @@ export function DeckSlotDropDownMenu({
 }: DeckSlotDropDownProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState('auto');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -33,9 +34,14 @@ export function DeckSlotDropDownMenu({
     }
   }, []);
 
+  const handleUpdate = () => {
+    onUpdate();
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div className="mx-2">
-      <DropdownMenu>
+      <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
@@ -55,8 +61,9 @@ export function DeckSlotDropDownMenu({
             <DropdownMenuItem asChild>
               <ChangeSlotQuantityDialog
                 deckslotUpdateQuantityParams={deckslotUpdateQuantityParams}
-                onUpdate={onUpdate}
+                onUpdate={handleUpdate}
                 viewMode={viewMode}
+                closeParentDropdown={() => setIsDropdownOpen(false)}
               />
             </DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
