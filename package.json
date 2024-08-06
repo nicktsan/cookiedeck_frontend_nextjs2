@@ -26,6 +26,8 @@
     "@radix-ui/react-toast": "^1.2.1",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "@tanstack/query-core": "^5.51.21",
+    "@tanstack/react-query": "^5.51.21",
     "autoprefixer": "10.4.17",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
@@ -46,6 +48,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.51.15",
+    "@tanstack/react-query-devtools": "^5.51.21",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
