@@ -3,7 +3,7 @@ import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse, Method } from 'axios';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import { ErrorResponseSchema } from '@/utils/error.schema';
+import { ErrorResponseDTO, ErrorResponseSchema } from '@/utils/error.schema';
 
 async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.ZodType>({
   url,
@@ -17,7 +17,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   requestSchema: TRequest;
   responseSchema: TResponse;
   data: z.infer<TRequest>;
-}): Promise<z.infer<TResponse>> {
+}): Promise<z.infer<TResponse> | ErrorResponseDTO> {
   const supabase = createClient();
   if (method !== 'GET') {
     const {
@@ -73,10 +73,10 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
     // console.log('error: ', error);
     const { response } = error as AxiosError;
     console.log('response data: ', response?.data);
-    apiResponse = ErrorResponseSchema.parse({
+    return ErrorResponseSchema.parse({
       statusCode: response?.status || 500,
       data: response?.data || { error: error },
-    });
+    }) as ErrorResponseDTO;
   }
   return apiResponse;
 }

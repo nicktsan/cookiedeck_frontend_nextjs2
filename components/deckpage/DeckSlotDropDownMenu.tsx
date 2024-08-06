@@ -10,16 +10,16 @@ import {
 import { CircleChevronDown } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import { ChangeSlotQuantityDialog } from './ChangeSlotQuantityDialog';
-import { DeckslotUpdateQuantityRequestNoChangeParams } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
+import { DeckslotParams } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 
 export interface DeckSlotDropDownProps {
-  deckslotUpdateQuantityParams: DeckslotUpdateQuantityRequestNoChangeParams;
+  deckslotParams: DeckslotParams;
   onUpdate: () => void;
   viewMode: 'en' | 'kr';
 }
 
 export function DeckSlotDropDownMenu({
-  deckslotUpdateQuantityParams,
+  deckslotParams,
   onUpdate,
   viewMode,
 }: DeckSlotDropDownProps) {
@@ -60,13 +60,15 @@ export function DeckSlotDropDownMenu({
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <ChangeSlotQuantityDialog
-                deckslotUpdateQuantityParams={deckslotUpdateQuantityParams}
+                deckslotParams={deckslotParams}
                 onUpdate={handleUpdate}
                 viewMode={viewMode}
                 closeParentDropdown={() => setIsDropdownOpen(false)}
               />
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

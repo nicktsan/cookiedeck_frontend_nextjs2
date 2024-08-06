@@ -8,8 +8,9 @@ import {
 } from './deck-delete.schema';
 import { validate } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
+import { ErrorResponseDataDTO, ErrorResponseDataSchema } from '@/utils/error.schema';
 
-export async function DeleteDeck(id: string): Promise<DeckDeleteResponseDataDTO> {
+export async function DeleteDeck(id: string): Promise<DeckDeleteResponseDataDTO | ErrorResponseDataDTO> {
   const deleteDeckUrl = ENV.BACKEND_URL + '/deck/delete';
   const deleteDeckRequestData: DeckDeleteRequestDTO = { id: id };
   // console.log("deleteDeckUrl: ", deleteDeckUrl)
@@ -21,11 +22,20 @@ export async function DeleteDeck(id: string): Promise<DeckDeleteResponseDataDTO>
     data: deleteDeckRequestData,
   });
   // console.log("raw deleteDeckResponse: ", deleteDeckResponse);
-  const validated: DeckDeleteResponseDataDTO = validate(
+  
+  if (deleteDeckResponse.statusCode >= 200 && deleteDeckResponse.statusCode <= 299) {
+    const validated: DeckDeleteResponseDataDTO = validate(
+      deleteDeckResponse.data,
+      DeckDeleteResponseDataSchema,
+      'DeckDeleteResponseDataSchema',
+    );
+    return validated
+  }
+  const validatedError: ErrorResponseDataDTO = validate(
     deleteDeckResponse.data,
-    DeckDeleteResponseDataSchema,
-    'DeckDeleteResponseDataSchema',
+    ErrorResponseDataSchema,
+    'ErrorResponseDataSchema',
   );
   // console.log("validated deleteDeckResponse: ", validated);
-  return validated;
+  return validatedError;
 }

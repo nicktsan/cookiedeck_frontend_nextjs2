@@ -19,3 +19,6 @@ export const ErrorResponseSchema = z.object({
   statusCode: z.number().min(100).max(599),
   data: ErrorResponseDataSchema,
 });
+
+export type ErrorResponseDataDTO = z.infer<typeof ErrorResponseDataSchema>;
+export type ErrorResponseDTO = z.infer<typeof ErrorResponseSchema>;

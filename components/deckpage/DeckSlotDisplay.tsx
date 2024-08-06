@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Minus } from 'lucide-react';
 import {
   DeckslotUpdateQuantityRequestDTO,
-  DeckslotUpdateQuantityRequestNoChangeParams,
+  DeckslotParams,
   DeckslotUpdateQuantityResponseDataDTO,
 } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
@@ -35,7 +35,7 @@ const DeckSlot = ({
   onUpdateQuantity,
   onUpdate,
 }: DeckSlotProps) => {
-  const deckslotUpdateQuantityParams: DeckslotUpdateQuantityRequestNoChangeParams = {
+  const deckslotParams: DeckslotParams = {
     deck_id: deckslot.deck_id,
     card_id: deckslot.card_id,
     board: deckslot.board,
@@ -84,7 +84,7 @@ const DeckSlot = ({
           ))}
         </div>
         <DeckSlotDropDownMenu
-          deckslotUpdateQuantityParams={deckslotUpdateQuantityParams}
+          deckslotParams={deckslotParams}
           onUpdate={onUpdate}
           viewMode={viewMode}
         />

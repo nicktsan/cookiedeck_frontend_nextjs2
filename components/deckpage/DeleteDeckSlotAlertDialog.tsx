@@ -12,23 +12,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeckSlotDropDownProps } from './DeckSlotDropDownMenu';
-import {
-  DeckslotUpdateQuantityRequestDTO,
-  DeckslotParams,
-  DeckslotUpdateQuantityResponseDataDTO,
-} from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
-import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
 
-interface ChangeSlotQuantityDialogProps extends DeckSlotDropDownProps {
+interface DeleteDeckSlotDialogProps extends DeckSlotDropDownProps {
   closeParentDropdown: () => void;
 }
 
-export function ChangeSlotQuantityDialog({
+export function DeleteDeckSlotDialog({
   deckslotParams,
   onUpdate,
   viewMode,
   closeParentDropdown,
-}: ChangeSlotQuantityDialogProps) {
+}: DeleteDeckSlotDialogProps) {
   const [changeValue, setChangeValue] = useState('2');
   const [isValidInput, setIsValidInput] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,53 +31,6 @@ export function ChangeSlotQuantityDialog({
   if (viewMode === 'kr') {
     cardNameDisplay = deckslotParams.card_name_kr;
   }
-
-  const validateInput = useCallback((value: string) => {
-    // Check if the value is a valid integer
-    if (!/^-?\d+$/.test(value)) {
-        return false;
-    }
-
-    // Convert the value to a number
-    const numberValue = Number(value);
-
-    // Check if the value is outside the 32-bit signed integer range or is equal to 0
-    if (numberValue === 0 || numberValue < -2147483647 || numberValue > 2147483647) {
-        return false;
-    }
-
-    return true;
-}, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setChangeValue(newValue);
-    setIsValidInput(validateInput(newValue));
-  };
-
-  const updateQuantity = async (deckslot: DeckslotParams) => {
-    if (!isValidInput) return;
-
-    try {
-      const change = parseInt(changeValue, 10);
-      const payload: DeckslotUpdateQuantityRequestDTO = {
-        deck_id: deckslot.deck_id,
-        card_id: deckslot.card_id,
-        board: deckslot.board,
-        changeValue: change,
-      };
-      const response: DeckslotUpdateQuantityResponseDataDTO = await UpdateDeckSlotQuantity(payload);
-      if (response.error) {
-        throw new Error('Failed to update deckslot');
-      }
-      onUpdate();
-      setIsOpen(false); // Close the dialog
-      closeParentDropdown(); // Close the parent dropdown
-    } catch (error) {
-      console.error('Error updating deckslot:', error);
-      // You might want to show an error message to the user here
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
