@@ -12,7 +12,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeckSlotDropDownProps } from './DeckSlotDropDownMenu';
-import { DeckslotUpdateQuantityRequestDTO, DeckslotUpdateQuantityRequestNoChangeParams, DeckslotUpdateQuantityResponseDataDTO } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
+import {
+  DeckslotUpdateQuantityRequestDTO,
+  DeckslotUpdateQuantityRequestNoChangeParams,
+  DeckslotUpdateQuantityResponseDataDTO,
+} from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
 
 interface ChangeSlotQuantityDialogProps extends DeckSlotDropDownProps {
@@ -86,17 +90,17 @@ export function ChangeSlotQuantityDialog({
           <Label htmlFor="changeValue" className="text-right">
             Change Value
           </Label>
-          <Input 
-            id="changeValue" 
+          <Input
+            id="changeValue"
             value={changeValue}
             onChange={handleInputChange}
-            className="col-span-3" 
+            className="col-span-3"
           />
         </div>
         <DialogFooter>
-          <Button 
-            onClick={() => updateQuantity(deckslotUpdateQuantityParams)} 
-            type="submit" 
+          <Button
+            onClick={() => updateQuantity(deckslotUpdateQuantityParams)}
+            type="submit"
             disabled={!isValidInput}
           >
             Save changes

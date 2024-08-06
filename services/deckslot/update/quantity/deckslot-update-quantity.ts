@@ -15,7 +15,8 @@ export async function UpdateDeckSlotQuantity(
   payload: DeckslotUpdateQuantityRequestDTO,
 ): Promise<DeckslotUpdateQuantityResponseDataDTO> {
   const deckSlotUpdateUrl = process.env.BACKEND_URL + '/deckslot/update/quantity';
-  // console.log("deckSlotUpdateUrl: ", deckSlotUpdateUrl)
+  console.log('deckSlotUpdateUrl: ', deckSlotUpdateUrl);
+  console.log('payload: ', payload);
   const deckSlotUpdateResponse = await MakeApiRequest({
     url: deckSlotUpdateUrl,
     method: 'PATCH',
@@ -23,12 +24,12 @@ export async function UpdateDeckSlotQuantity(
     responseSchema: DeckslotUpdateQuantityResponseSchema,
     data: payload,
   });
-  // console.log("raw deckSlotUpdateResponse: ", deckSlotUpdateResponse.data);
+  console.log('raw deckSlotUpdateResponse: ', deckSlotUpdateResponse.data);
   const validatedRes: DeckslotUpdateQuantityResponseDataDTO = validate(
     deckSlotUpdateResponse.data,
     DeckslotUpdateQuantityResponseDataSchema,
     'DeckslotUpdateQuantityResponseDataSchema',
   );
-  // console.log("validated deckSlotUpdateResponse: ", validatedRes);
+  console.log('validated deckSlotUpdateResponse: ', validatedRes);
   return validatedRes;
 }

@@ -61,11 +61,8 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
       headers,
       ...(method === 'GET' ? { params: validData } : { data: validData }),
     };
-
     const res = await axios(config);
     if (res.data) {
-      // console.log("res.data: ", res.data);
-      // console.log("res.status: ", res.status);
       apiResponse = responseSchema.parse({
         statusCode: res.status,
         data: res.data,
@@ -74,12 +71,12 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   } catch (error) {
     // console.log('error: ', error);
     const { response } = error as AxiosError;
+    console.log('response data: ', response?.data);
     apiResponse = responseSchema.parse({
       statusCode: response?.status || 500,
       data: response?.data || { error: error },
     });
   }
-
   return apiResponse;
 }
 

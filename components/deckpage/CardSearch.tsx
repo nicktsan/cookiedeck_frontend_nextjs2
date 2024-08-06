@@ -14,12 +14,12 @@ import { ScrollArea } from '../ui/scroll-area';
 import { CardEntity } from '@/services/card/card.entity';
 import { CreateDeckSlot } from '@/services/deckslot/create/createDeckSlot';
 
-interface DeckIdProps {
+interface CardSearchProps {
   deckId: string | undefined;
   onUpdate: () => void;
   viewMode: 'en' | 'kr';
 }
-export default function CardSearch({ deckId, onUpdate, viewMode }: DeckIdProps) {
+export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
   });

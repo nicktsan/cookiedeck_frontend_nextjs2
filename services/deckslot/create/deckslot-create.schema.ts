@@ -33,6 +33,17 @@ export const DeckslotCreateResponseDataSchema = z.object({
   quantity: z.number().min(1).optional(),
   message: z.string().nullable().optional(),
   error: z.string().nullable().optional(),
+  //DTO validation failure from the backend
+  errorCode: z.number().min(100).max(599).optional(),
+  errorMessage: z.string().optional(),
+  DTO: z
+    .array(
+      z.object({
+        property: z.string(),
+        messages: z.array(z.string()),
+      }),
+    )
+    .optional(),
 });
 
 export const DeckslotCreateResponseSchema = z.object({
