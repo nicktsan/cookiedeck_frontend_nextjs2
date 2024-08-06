@@ -19,27 +19,29 @@ interface CardSearchProps {
   onUpdate: () => void;
   viewMode: 'en' | 'kr';
 }
+
 export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
   });
   const [cardSearchResults, setCardSearchResults] = useState<CardEntity[]>([]);
-  let scrollAreaClass = 'hidden';
-  if (cardSearchResults.length > 0) {
-    scrollAreaClass = 'h-72 w-72 rounded-md border';
-  }
+  const [searchPerformed, setSearchPerformed] = useState(false);
+
+  const scrollAreaClass = cardSearchResults.length > 0 ? 'h-72 w-72 rounded-md border' : 'hidden';
+
   const scrollAreaHeight = useMemo(() => {
-    // Assuming each item (including separator) is roughly 3rem (48px) tall
-    const itemHeight = 48;
+    const itemHeight = 48; // Assuming each item (including separator) is roughly 3rem (48px) tall
     const maxHeight = 288; // 72 * 4 (assuming 1rem = 4px)
-    const calculatedHeight = Math.min(cardSearchResults.length * itemHeight, maxHeight);
-    return calculatedHeight;
+    return Math.min(cardSearchResults.length * itemHeight, maxHeight);
   }, [cardSearchResults.length]);
+
   async function onSubmit(data: CardSearchRequestDTO) {
-    // console.log(data);
+    setSearchPerformed(true);
     try {
       const res: CardEntity[] = await CardFind(data);
       if (Array.isArray(res)) {
+        // console.log('CardFind returned an array');
+        // console.log(res);
         setCardSearchResults(res);
       } else {
         console.error('CardFind did not return an array');
@@ -52,11 +54,8 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
   }
 
   const handleCardClick = async (card: CardEntity) => {
-    // console.log(card);
-    // const isDeckSlotCreated: boolean =
     await CreateDeckSlot(card, deckId);
     onUpdate();
-    //console.log(isDeckSlotCreated)
   };
 
   return (
@@ -80,14 +79,16 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
           />
         </form>
       </Form>
-      <ScrollArea className={scrollAreaClass} style={{ height: `${scrollAreaHeight}px` }}>
-        <div className="p-4">
-          {cardSearchResults.length > 0 ? (
-            cardSearchResults.map((cardSearchResult) =>
+      {searchPerformed && cardSearchResults.length === 0 ? (
+        <div className="text-sm text-gray-500">No results found</div>
+      ) : (
+        <ScrollArea className={scrollAreaClass} style={{ height: `${scrollAreaHeight}px` }}>
+          <div className="p-4">
+            {cardSearchResults.map((cardSearchResult) =>
               viewMode === 'en' ? (
                 <React.Fragment key={cardSearchResult.id}>
                   <div
-                    className={`cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100`}
+                    className="cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100"
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
                     {cardSearchResult.color}: {cardSearchResult.name_eng}
@@ -96,19 +97,17 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
               ) : (
                 <React.Fragment key={cardSearchResult.id}>
                   <div
-                    className={`cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100`}
+                    className="cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100"
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
                     {cardSearchResult.color}: {cardSearchResult.name_kr}
                   </div>
                 </React.Fragment>
               ),
-            )
-          ) : (
-            <div className="text-sm text-gray-500">No results found</div>
-          )}
-        </div>
-      </ScrollArea>
+            )}
+          </div>
+        </ScrollArea>
+      )}
     </div>
   );
 }
