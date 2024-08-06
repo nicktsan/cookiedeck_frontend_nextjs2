@@ -7,9 +7,10 @@ import {
   DeckDeleteResponseSchema,
 } from './deck-delete.schema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function DeleteDeck(id: string): Promise<DeckDeleteResponseDataDTO> {
-  const deleteDeckUrl = process.env.BACKEND_URL + '/deck/delete';
+  const deleteDeckUrl = ENV.BACKEND_URL + '/deck/delete';
   const deleteDeckRequestData: DeckDeleteRequestDTO = { id: id };
   // console.log("deleteDeckUrl: ", deleteDeckUrl)
   const deleteDeckResponse = await MakeApiRequest({

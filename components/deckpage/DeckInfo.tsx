@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { DeckFindResponseDataDTO } from '@/services/deck/find/findDeckDTO';
 import { FaEye } from 'react-icons/fa';
 import { UpdateDeck } from '@/services/deck/update/updateDeck';
@@ -10,13 +11,13 @@ interface DeckInfoProps {
 }
 
 export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
+  const [reload, setReload] = useState(false); // State to trigger reload
+
   if (!displayDeck) return null;
 
   // Destructure the properties with default values to handle undefined cases
   const {
     creator_username = '',
-    name = '',
-    description = '',
     views = 0,
     years = 0,
     months = 0,
@@ -27,17 +28,17 @@ export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
   } = displayDeck;
 
   const handleChange = async (field: string, value: string) => {
-    // setEditableValues((prevState) => ({
-    //   ...prevState,
-    //   [field]: value,
-    // }));
-    // console.log(field, value)
     const deckUpdateRequestData: DeckUpdateRequestDTO = {
       id: displayDeck.id!,
     };
     (deckUpdateRequestData as any)[field] = value;
-    await UpdateDeck(deckUpdateRequestData);
-    await onUpdate();
+    try {
+      await UpdateDeck(deckUpdateRequestData);
+      await onUpdate();
+    } catch (error) {
+      // If there is an error, trigger a reload
+      setReload(!reload);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, field: string) => {
@@ -78,19 +79,23 @@ export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
       <div className="py-6 font-bold">
         <h2>{creator_username}</h2>
         <h1
+          key={reload ? 'nameReloaded' : 'name'}
           contentEditable
           onBlur={(e) => handleChange('name', e.currentTarget.textContent || '')}
           onKeyDown={(e) => handleKeyDown(e, 'name')}
+          suppressContentEditableWarning={true}
         >
-          {name}
+          {displayDeck.name}
         </h1>
         <p
+          key={reload ? 'descriptionReloaded' : 'description'}
           className="font-normal"
           contentEditable
           onBlur={(e) => handleChange('description', e.currentTarget.textContent || '')}
           onKeyDown={(e) => handleKeyDown(e, 'description')}
+          suppressContentEditableWarning={true}
         >
-          {description}
+          {displayDeck.description}
         </p>
         <p className="flex flex-row items-center">
           <FaEye />

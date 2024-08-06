@@ -10,11 +10,12 @@ import {
   DeckslotUpdateQuantityResponseSchema,
 } from './deckslot-update-quantity.schema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function UpdateDeckSlotQuantity(
   payload: DeckslotUpdateQuantityRequestDTO,
 ): Promise<DeckslotUpdateQuantityResponseDataDTO> {
-  const deckSlotUpdateUrl = process.env.BACKEND_URL + '/deckslot/update/quantity';
+  const deckSlotUpdateUrl = ENV.BACKEND_URL + '/deckslot/update/quantity';
   console.log('deckSlotUpdateUrl: ', deckSlotUpdateUrl);
   console.log('payload: ', payload);
   const deckSlotUpdateResponse = await MakeApiRequest({

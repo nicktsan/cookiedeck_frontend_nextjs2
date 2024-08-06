@@ -5,6 +5,7 @@ import axios, { AxiosError } from 'axios';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { DeckCreateResponseDto, DeckCreateResponseData } from './createDeckDTO';
+import { ENV } from '@/env';
 async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<DeckCreateResponseDto> {
   const supabase = createClient();
   const {
@@ -17,7 +18,7 @@ async function CreateDeck(formData: z.infer<typeof formSchema>): Promise<DeckCre
     data: { session },
   } = await supabase.auth.getSession();
   // console.log('session', session);
-  const url = process.env.BACKEND_URL + '/deck/create';
+  const url = ENV.BACKEND_URL + '/deck/create';
   // Trim whitespace from all string data
   const body = Object.fromEntries(
     Object.entries(formData).map(([key, value]) => [

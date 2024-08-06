@@ -52,7 +52,7 @@ export const DeckslotUpdateQuantityResponseDataSchema = z.object({
     })
     .optional(),
   message: z.string().optional(),
-  
+  error: z.string().optional(),
 });
 
 export const DeckslotUpdateQuantityResponseSchema = z.object({

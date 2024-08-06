@@ -8,6 +8,7 @@ import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { ENV } from '@/env';
 async function FindDeckByCreatorId(
   params: z.infer<typeof DeckFindRequestByCreatorIdSchema>,
 ): Promise<z.infer<typeof DeckFindResponseByCreatorIdSchema>> {
@@ -16,7 +17,7 @@ async function FindDeckByCreatorId(
     data: { session },
   } = await supabase.auth.getSession();
   // console.log('session', session);
-  const url = process.env.BACKEND_URL + '/deck/find/bycreatorid';
+  const url = ENV.BACKEND_URL + '/deck/find/bycreatorid';
   // Trim whitespace from all string data
   const trimmedParams = Object.fromEntries(
     Object.entries(params).map(([key, value]) => [

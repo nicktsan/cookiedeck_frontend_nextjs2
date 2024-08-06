@@ -10,11 +10,12 @@ import {
   DeckslotFindByDeckIdResponseSchema,
 } from './deckslot-find-bydeckid.schema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function DeckSlotFindByDeckId(
   id: string,
 ): Promise<DeckslotFindByDeckIdResponseDataDTO> {
-  const deckSlotFindUrl = process.env.BACKEND_URL + '/deckslot/find/bydeckid';
+  const deckSlotFindUrl = ENV.BACKEND_URL + '/deckslot/find/bydeckid';
   const deckSlotFindRequestData: DeckslotFindByDeckIdRequestDTO = { deck_id: id };
   // console.log("deckSlotFindUrl: ", deckSlotFindUrl)
   const deckSlotFindResponse = await MakeApiRequest({

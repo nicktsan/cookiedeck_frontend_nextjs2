@@ -7,9 +7,10 @@ import {
   DeckFindResponseSchema,
 } from './findDeckSchema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function FindDeck(id: string): Promise<DeckFindResponseDataDTO> {
-  const deckFindUrl = process.env.BACKEND_URL + '/deck/find';
+  const deckFindUrl = ENV.BACKEND_URL + '/deck/find';
   const deckFindRequestData: DeckFindRequestDTO = { id: id };
   // console.log("deckFindUrl: ", deckFindUrl)
   const deckFindResponse = await MakeApiRequest({

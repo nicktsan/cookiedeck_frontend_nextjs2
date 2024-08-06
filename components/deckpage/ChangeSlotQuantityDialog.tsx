@@ -39,8 +39,26 @@ export function ChangeSlotQuantityDialog({
   }
 
   const validateInput = useCallback((value: string) => {
-    return /^-?\d+$/.test(value);
-  }, []);
+    // Check if the value is a valid integer
+    if (!/^-?\d+$/.test(value)) {
+        return false;
+    }
+
+    // Convert the value to a number
+    const numberValue = Number(value);
+
+    // Check if the value is not zero
+    if (numberValue === 0) {
+        return false;
+    }
+
+    // Check if the value is within the 32-bit signed integer range
+    if (numberValue < -2147483647 || numberValue > 2147483647) {
+        return false;
+    }
+
+    return true;
+}, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -83,7 +101,7 @@ export function ChangeSlotQuantityDialog({
         <DialogHeader>
           <DialogTitle>How many {cardNameDisplay} do you want to add/remove?</DialogTitle>
           <DialogDescription>
-            Enter an integer value. Negative values will remove cards from the deck.
+            Enter an non-zero integer value. Negative values will remove cards from the deck.
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-4 items-center gap-4">

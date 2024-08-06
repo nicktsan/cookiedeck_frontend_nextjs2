@@ -12,6 +12,7 @@ import {
 import { ValidateSchema } from '@/utils/schemaValidator';
 import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '../card.entity';
+import { ENV } from '@/env';
 export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEntity[]> {
   function validate(dto: unknown): CardSearchResponseDataDTO {
     return ValidateSchema({
@@ -20,7 +21,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
       schemaName: 'CardSearchResponseDataSchema',
     });
   }
-  const url = process.env.BACKEND_URL + '/card/find';
+  const url = ENV.BACKEND_URL + '/card/find';
   const params: CardSearchRequestDTO = {
     select: ['id', 'name_eng', 'name_kr', 'color'],
     name: formData.name,

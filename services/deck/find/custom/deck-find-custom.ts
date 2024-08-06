@@ -7,9 +7,10 @@ import {
   DeckFindCustomResponseSchema,
 } from './deck-find-custom.schema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function DeckFindCustom(name: string): Promise<DeckFindCustomResponseDataDTO> {
-  const deckFindCustomUrl = process.env.BACKEND_URL + '/deck/find/custom';
+  const deckFindCustomUrl = ENV.BACKEND_URL + '/deck/find/custom';
   const deckFindCustomRequestData: DeckFindCustomRequestDTO = {
     select: ['name', 'views', 'username', 'updated_at'],
     name: name,

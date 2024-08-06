@@ -12,6 +12,7 @@ import {
 import { ValidateSchema } from '@/utils/schemaValidator';
 import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '@/services/card/card.entity';
+import { ENV } from '@/env';
 export async function CreateDeckSlot(
   cardData: CardEntity,
   deckId: string | undefined,
@@ -23,7 +24,7 @@ export async function CreateDeckSlot(
       schemaName: 'DeckslotCreateResponseDataSchema',
     });
   }
-  const url = process.env.BACKEND_URL + '/deckslot/create';
+  const url = ENV.BACKEND_URL + '/deckslot/create';
   if (!deckId) {
     return false;
   }

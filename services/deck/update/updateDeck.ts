@@ -7,11 +7,12 @@ import {
   DeckUpdateResponseSchema,
 } from './deck-update.schema';
 import { validate } from '@/utils/schemaValidator';
+import { ENV } from '@/env';
 
 export async function UpdateDeck(
   deckUpdateRequestData: DeckUpdateRequestDTO,
 ): Promise<DeckUpdateResponseDataDTO> {
-  const deckUpdateUrl = process.env.BACKEND_URL + '/deck/update';
+  const deckUpdateUrl = ENV.BACKEND_URL + '/deck/update';
   // console.log("deckUpdateUrl: ", deckUpdateUrl)
   // console.log('deckUpdateRequestData: ', deckUpdateRequestData);
   const deckUpdateResponse = await MakeApiRequest({

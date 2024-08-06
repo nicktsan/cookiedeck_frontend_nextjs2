@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,//todo revert this to true during testing. Set to false in prod
   images: {
     remotePatterns: [
       {

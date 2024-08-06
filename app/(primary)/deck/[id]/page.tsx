@@ -20,14 +20,14 @@ export default function DeckView({ params }: { params: { id: string } }) {
   const fetchDeckData = useCallback(async () => {
     const deckFindResponse: DeckFindResponseDataDTO = await FindDeck(params.id);
     // console.log("deckFindResponse: ", deckFindResponse);
-    if (!deckFindResponse.error && deckFindResponse.id) {
+    if (deckFindResponse.id) {
       setDisplayDeck(deckFindResponse);
     }
   }, [params.id]);
   const fetchDeckSlots = useCallback(async () => {
     const deckSlotFindResponse = await DeckSlotFindByDeckId(params.id);
     // console.log("deckSlotFindResponse: ", deckSlotFindResponse);
-    if (!deckSlotFindResponse.error && deckSlotFindResponse.deckslots) {
+    if (deckSlotFindResponse.deckslots) {
       setDeckSlots(deckSlotFindResponse.deckslots);
     }
   }, [params.id]);
