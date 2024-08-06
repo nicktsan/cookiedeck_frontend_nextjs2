@@ -34,7 +34,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
   });
   validate(res.data);
   let cards: CardEntity[] = [];
-  if (!res.data.error && res.data.cards) {
+  if (res.data.cards) {
     cards = res.data.cards;
   }
   return cards;

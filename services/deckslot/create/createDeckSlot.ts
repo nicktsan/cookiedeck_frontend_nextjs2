@@ -41,7 +41,7 @@ export async function CreateDeckSlot(
   });
   validate(res.data);
   // console.log('CreateDeckSlot res:', res.data);
-  if (!res.data.error) {
+  if (res.data.deck_id) {
     return true;
   }
   return false;
