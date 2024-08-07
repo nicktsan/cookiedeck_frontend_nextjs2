@@ -118,7 +118,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
 
   const { data: patchResponse, isLoading: isPatchLoading } = useQuery({
     queryKey: ['patchDeck', params.id],
-    queryFn: () => IncrementDeckView({ id: params.id}),
+    queryFn: () => IncrementDeckView({ id: params.id }),
     retry: false, // No retries for PATCH request
     refetchOnWindowFocus: false, // Avoid refetch on window focus
   });
@@ -179,23 +179,26 @@ export default function DeckView({ params }: { params: { id: string } }) {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex-grow pb-32">
-        <DeckInfo
-          displayDeck={displayDeck}
-          onUpdate={() => updateDeckMutation.mutate(params.id)}
-        />
+        <DeckInfo displayDeck={displayDeck} onUpdate={() => updateDeckMutation.mutate(params.id)} />
         <div className="mb-4 flex items-center justify-center space-x-2">
           <DeckPageDropDownMenu deckId={params.id} />
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
           <CardSearch
             deckId={params.id}
-            onUpdate={() => [updateDeckSlotsMutation.mutate(params.id), updateDeckMutation.mutate(params.id)]}
+            onUpdate={() => [
+              updateDeckSlotsMutation.mutate(params.id),
+              updateDeckMutation.mutate(params.id),
+            ]}
             viewMode={viewMode}
           />
         </div>
         <DeckSlotDisplay
           deckslots={deckSlots || []}
-          onUpdate={() => [updateDeckSlotsMutation.mutate(params.id), updateDeckMutation.mutate(params.id)]}
+          onUpdate={() => [
+            updateDeckSlotsMutation.mutate(params.id),
+            updateDeckMutation.mutate(params.id),
+          ]}
           viewMode={viewMode}
         />
         <DeckPageFooter deckslots={deckSlots || []} />

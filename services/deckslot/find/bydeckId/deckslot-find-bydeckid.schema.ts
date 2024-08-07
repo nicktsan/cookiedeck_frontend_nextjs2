@@ -7,7 +7,6 @@ export const DeckslotFindByDeckIdRequestSchema = z.object({
 export const DeckslotFindByDeckIdResponseDataSchema = z.object({
   deckslots: z.array(DeckslotFindResponseSchema).nullable().optional(),
   message: z.string().optional(),
-  
 });
 
 export const DeckslotFindByDeckIdResponseSchema = z.object({

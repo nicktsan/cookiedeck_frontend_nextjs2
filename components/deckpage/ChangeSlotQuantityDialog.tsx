@@ -41,7 +41,7 @@ export function ChangeSlotQuantityDialog({
   const validateInput = useCallback((value: string) => {
     // Check if the value is a valid integer
     if (!/^-?\d+$/.test(value)) {
-        return false;
+      return false;
     }
 
     // Convert the value to a number
@@ -49,11 +49,11 @@ export function ChangeSlotQuantityDialog({
 
     // Check if the value is outside the 32-bit signed integer range or is equal to 0
     if (numberValue === 0 || numberValue < -2147483647 || numberValue > 2147483647) {
-        return false;
+      return false;
     }
 
     return true;
-}, []);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

@@ -34,7 +34,6 @@ export const DeckUpdateRequestSchema = z.object({
 export const DeckUpdateResponseDataSchema = z.object({
   deckEntity: DeckEntitySchema.optional(),
   message: z.string().optional(),
-  
 });
 
 export const DeckUpdateResponseSchema = z.object({

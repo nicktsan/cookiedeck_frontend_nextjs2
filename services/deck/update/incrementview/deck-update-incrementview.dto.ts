@@ -7,6 +7,12 @@ import {
 
 type DeckUpdateIncrementviewRequestDTO = z.infer<typeof DeckUpdateIncrementviewRequestSchema>;
 type DeckUpdateIncrementviewResponseDTO = z.infer<typeof DeckUpdateIncrementviewResponseSchema>;
-type DeckUpdateIncrementviewResponseDataDTO = z.infer<typeof DeckUpdateIncrementviewResponseDataSchema>;
+type DeckUpdateIncrementviewResponseDataDTO = z.infer<
+  typeof DeckUpdateIncrementviewResponseDataSchema
+>;
 
-export type { DeckUpdateIncrementviewRequestDTO, DeckUpdateIncrementviewResponseDTO, DeckUpdateIncrementviewResponseDataDTO };
+export type {
+  DeckUpdateIncrementviewRequestDTO,
+  DeckUpdateIncrementviewResponseDTO,
+  DeckUpdateIncrementviewResponseDataDTO,
+};

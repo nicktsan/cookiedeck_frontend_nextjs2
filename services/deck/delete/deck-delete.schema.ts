@@ -8,7 +8,6 @@ export const DeckDeleteRequestSchema = z.object({
 export const DeckDeleteResponseDataSchema = z.object({
   isDeleted: z.boolean().optional(),
   message: z.string().optional(),
-  
 });
 
 export const DeckDeleteResponseSchema = z.object({

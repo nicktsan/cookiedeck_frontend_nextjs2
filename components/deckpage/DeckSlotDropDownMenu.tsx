@@ -11,6 +11,9 @@ import { CircleChevronDown } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import { ChangeSlotQuantityDialog } from './ChangeSlotQuantityDialog';
 import { DeckslotParams } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
+import { DeleteDeckSlot } from '@/services/deckslot/delete/deleteDeckSlot';
+import { DeckslotDeleteResponseDataDTO } from '@/services/deckslot/delete/deckslot-delete.dto';
+import { ErrorResponseDataDTO } from '@/utils/error.schema';
 
 export interface DeckSlotDropDownProps {
   deckslotParams: DeckslotParams;
@@ -37,6 +40,19 @@ export function DeckSlotDropDownMenu({
   const handleUpdate = () => {
     onUpdate();
     setIsDropdownOpen(false);
+  };
+  const handleDelete = async () => {
+    try {
+      // Adjust the URL and parameters based on your API
+      // await axios.delete(`/api/deckslot/${deckslotParams.id}`);
+      const deleteResponse: DeckslotDeleteResponseDataDTO | ErrorResponseDataDTO =
+        await DeleteDeckSlot(deckslotParams);
+      handleUpdate(); // Update after deletion
+      // todo handle errorresponse
+    } catch (error) {
+      console.error('Error deleting deck slot:', error);
+      // Handle error appropriately
+    }
   };
 
   return (
@@ -66,8 +82,13 @@ export function DeckSlotDropDownMenu({
                 closeParentDropdown={() => setIsDropdownOpen(false)}
               />
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              Delete
+            <DropdownMenuItem>
+              <div
+                className="w-full cursor-pointer rounded-sm p-2 text-red-500 hover:bg-red-500 hover:text-white"
+                onClick={handleDelete}
+              >
+                Delete
+              </div>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

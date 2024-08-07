@@ -1,6 +1,9 @@
 'use server';
 import { MakeApiRequest } from '@/services/baseApiRequest';
-import { DeckUpdateIncrementviewRequestDTO, DeckUpdateIncrementviewResponseDataDTO } from './deck-update-incrementview.dto';
+import {
+  DeckUpdateIncrementviewRequestDTO,
+  DeckUpdateIncrementviewResponseDataDTO,
+} from './deck-update-incrementview.dto';
 import {
   DeckUpdateIncrementviewRequestSchema,
   DeckUpdateIncrementviewResponseDataSchema,

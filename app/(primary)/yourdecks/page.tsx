@@ -14,7 +14,7 @@ import { MakeApiRequest } from '@/services/baseApiRequest';
 import { DeckEntity } from '@/services/deck/deck.entity';
 import Link from 'next/link';
 import { ValidateSchema } from '@/utils/schemaValidator';
-import {ENV} from '@/env';
+import { ENV } from '@/env';
 export default async function YourDecks() {
   //todo revalidate data after a deck is deleted
   function validate(dto: unknown): DeckFindResponseByCreatorIdDataDTO {
@@ -33,8 +33,7 @@ export default async function YourDecks() {
   if (!user) {
     return redirect('/login');
   }
-  const url =
-    ENV.BACKEND_URL + (ENV.PATH.GET_CREATOR_BY_ID_PATH ?? '/deck/find/bycreatorid');
+  const url = ENV.BACKEND_URL + (ENV.PATH.GET_CREATOR_BY_ID_PATH ?? '/deck/find/bycreatorid');
   const params: DeckFindRequestByCreatorIdDTO = {
     creator_id: user.id,
     updatedAtOrderDirection: 'desc',

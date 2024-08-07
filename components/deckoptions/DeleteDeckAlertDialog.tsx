@@ -26,20 +26,15 @@ export function DeleteDeckAlertDialog({ deckId }: IDeckIdProps) {
 
   // Type guard to check if the response is ErrorResponseDataDTO
   function isErrorResponseDataDTO(response: any): response is ErrorResponseDataDTO {
-    if((response as ErrorResponseDataDTO).error !== undefined){
+    if ((response as ErrorResponseDataDTO).error !== undefined) {
       return true;
     }
     return (response as ErrorResponseDataDTO).errorCode !== undefined;
   }
 
   const handleDelete = async () => {
-    // console.log('Delete deck');
-    const deleteResponse: DeckDeleteResponseDataDTO | ErrorResponseDataDTO = await DeleteDeck(deckId);
-    // if (deleteResponse.isDeleted) {
-    //   router.push('/yourdecks');
-    // } else {
-    //   console.log(deleteResponse.error);
-    // }
+    const deleteResponse: DeckDeleteResponseDataDTO | ErrorResponseDataDTO =
+      await DeleteDeck(deckId);
     if (isDeckDeleteResponseDataDTO(deleteResponse)) {
       if (deleteResponse.isDeleted) {
         router.push('/yourdecks');
@@ -47,7 +42,10 @@ export function DeleteDeckAlertDialog({ deckId }: IDeckIdProps) {
         console.error('Unexpected response structure:', deleteResponse);
       }
     } else if (isErrorResponseDataDTO(deleteResponse)) {
-      console.log(deleteResponse.error);
+      console.log(deleteResponse.message || deleteResponse.errorMessage);
+      if (deleteResponse.DTO) {
+        console.log(deleteResponse.DTO);
+      }
     } else {
       console.error('Unknown response type:', deleteResponse);
     }

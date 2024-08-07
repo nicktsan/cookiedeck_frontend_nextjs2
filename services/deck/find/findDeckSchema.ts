@@ -41,7 +41,6 @@ export const DeckFindResponseDataSchema = z.object({
   minutes: z.number().optional(),
   seconds: z.number().optional(),
   message: z.string().optional(),
-  
 });
 
 export const DeckFindResponseSchema = z.object({
