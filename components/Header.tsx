@@ -14,15 +14,16 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 
 export default async function Header() {
+  // fix header when user is not logged in
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   let isSupabaseConnected: boolean = false;
-  let hidden: string = 'hidden';
+  let isHidden: string = 'hidden';
   if (user) {
     isSupabaseConnected = true;
-    hidden = '';
+    isHidden = '';
   }
   const explores: { title: string; href: string }[] = [
     {
@@ -54,7 +55,7 @@ export default async function Header() {
     <div className="mx-auto mb-2 flex max-w-lg flex-1 flex-col items-center gap-20">
       <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
         <div className="flex w-full max-w-4xl items-center justify-between p-3 text-sm">
-          <div className={hidden}>
+          <div className={isHidden}>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>

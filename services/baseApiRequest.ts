@@ -2,7 +2,6 @@
 import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse, Method } from 'axios';
 import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
 import { ErrorResponseDTO, ErrorResponseSchema } from '@/utils/error.schema';
 
 async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.ZodType>({
@@ -64,7 +63,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   } catch (error) {
     // console.log('error: ', error);
     const { response } = error as AxiosError;
-    console.log('response data: ', response?.data);
+    // console.log('error response data: ', response?.data);
     return ErrorResponseSchema.parse({
       statusCode: response?.status || 500,
       data: response?.data || { error: error },

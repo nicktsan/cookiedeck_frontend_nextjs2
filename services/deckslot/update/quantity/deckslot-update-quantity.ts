@@ -15,22 +15,27 @@ import { ENV } from '@/env';
 export async function UpdateDeckSlotQuantity(
   payload: DeckslotUpdateQuantityRequestDTO,
 ): Promise<DeckslotUpdateQuantityResponseDataDTO> {
-  const deckSlotUpdateUrl = ENV.BACKEND_URL + '/deckslot/update/quantity';
-  // console.log('deckSlotUpdateUrl: ', deckSlotUpdateUrl);
-  // console.log('payload: ', payload);
-  const deckSlotUpdateResponse = await MakeApiRequest({
-    url: deckSlotUpdateUrl,
-    method: 'PATCH',
-    requestSchema: DeckslotUpdateQuantityRequestSchema,
-    responseSchema: DeckslotUpdateQuantityResponseSchema,
-    data: payload,
-  });
-  // console.log('raw deckSlotUpdateResponse: ', deckSlotUpdateResponse.data);
-  const validatedRes: DeckslotUpdateQuantityResponseDataDTO = validate(
-    deckSlotUpdateResponse.data,
-    DeckslotUpdateQuantityResponseDataSchema,
-    'DeckslotUpdateQuantityResponseDataSchema',
-  );
-  // console.log('validated deckSlotUpdateResponse: ', validatedRes);
-  return validatedRes;
+  try {
+    const deckSlotUpdateUrl = ENV.BACKEND_URL + '/deckslot/update/quantity';
+    // console.log('deckSlotUpdateUrl: ', deckSlotUpdateUrl);
+    // console.log('payload: ', payload);
+    const deckSlotUpdateResponse = await MakeApiRequest({
+      url: deckSlotUpdateUrl,
+      method: 'PATCH',
+      requestSchema: DeckslotUpdateQuantityRequestSchema,
+      responseSchema: DeckslotUpdateQuantityResponseSchema,
+      data: payload,
+    });
+    // console.log('raw deckSlotUpdateResponse: ', deckSlotUpdateResponse.data);
+    const validatedRes: DeckslotUpdateQuantityResponseDataDTO = validate(
+      deckSlotUpdateResponse.data,
+      DeckslotUpdateQuantityResponseDataSchema,
+      'DeckslotUpdateQuantityResponseDataSchema',
+    );
+    // console.log('validated deckSlotUpdateResponse: ', validatedRes);
+    return validatedRes;
+  } catch (error) {
+    console.error('Error updating deckslot:', error);
+    throw error
+  }
 }

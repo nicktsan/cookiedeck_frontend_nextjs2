@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { colorMapping } from '@/utils/colorMapping';
 import { Separator } from '@/components/ui/separator';
 import { DeckSlotDropDownMenu } from './DeckSlotDropDownMenu';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -102,6 +103,43 @@ const DeckSlot = ({
 };
 
 export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner }: DeckInfoProps) {
+  const queryClient = useQueryClient();
+
+  const updateQuantityMutation = useMutation({
+    mutationFn: UpdateDeckSlotQuantity,
+    onMutate: async (payload: DeckslotUpdateQuantityRequestDTO) => {
+      // Optimistically update the deckslot quantity
+      await queryClient.cancelQueries({ queryKey: ['deckSlots'] });
+      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
+        'deckSlots',
+        payload.deck_id,
+      ]);
+
+      if (previousDeckSlots) {
+        const updatedDeckSlots = previousDeckSlots.map((slot) => {
+          if (slot.card_id === payload.card_id && slot.board === payload.board) {
+            return {
+              ...slot,
+              quantity: slot.quantity! + payload.changeValue,
+            };
+          }
+          return slot;
+        });
+        queryClient.setQueryData(['deckSlots', payload.deck_id], updatedDeckSlots);
+      }
+
+      return { previousDeckSlots };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousDeckSlots) {
+        queryClient.setQueryData(['deckSlots', _variables.deck_id], context.previousDeckSlots);
+      }
+    },
+    onSuccess: () => {
+      onUpdate();
+    },
+  });
+
   // Group the objects by card_type
   const groupedByCardType = deckslots?.reduce(
     (acc, deckslot) => {
@@ -152,25 +190,13 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner
   }, [deckslots]);
 
   const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
-    try {
-      const payload: DeckslotUpdateQuantityRequestDTO = {
-        deck_id: deckslot.deck_id,
-        card_id: deckslot.card_id,
-        board: deckslot.board,
-        changeValue: change,
-      };
-      const response: DeckslotUpdateQuantityResponseDataDTO = await UpdateDeckSlotQuantity(payload);
-
-      if (response.error) {
-        throw new Error('Failed to update deckslot');
-      }
-
-      // Call the onUpdate function to refresh the deckslots in the parent component
-      await onUpdate();
-    } catch (error) {
-      console.error('Error updating deckslot:', error);
-      // You might want to show an error message to the user here
-    }
+    const payload: DeckslotUpdateQuantityRequestDTO = {
+      deck_id: deckslot.deck_id,
+      card_id: deckslot.card_id,
+      board: deckslot.board,
+      changeValue: change,
+    };
+    await updateQuantityMutation.mutateAsync(payload);
   };
 
   const handleMouseEnter = (imageLink: string) => {
