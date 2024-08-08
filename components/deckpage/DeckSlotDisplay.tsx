@@ -109,7 +109,7 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner
     mutationFn: UpdateDeckSlotQuantity,
     onMutate: async (payload: DeckslotUpdateQuantityRequestDTO) => {
       // Optimistically update the deckslot quantity
-      await queryClient.cancelQueries({ queryKey: ['deckSlots'] });
+      await queryClient.cancelQueries({ queryKey: ['deckSlots', payload.deck_id] });
       const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
         'deckSlots',
         payload.deck_id,

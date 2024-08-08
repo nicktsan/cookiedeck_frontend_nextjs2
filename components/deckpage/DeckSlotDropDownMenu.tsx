@@ -12,8 +12,8 @@ import { useRef, useEffect, useState } from 'react';
 import { ChangeSlotQuantityDialog } from './ChangeSlotQuantityDialog';
 import { DeckslotParams } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { DeleteDeckSlot } from '@/services/deckslot/delete/deleteDeckSlot';
-import { DeckslotDeleteResponseDataDTO } from '@/services/deckslot/delete/deckslot-delete.dto';
-import { ErrorResponseDataDTO } from '@/utils/error.schema';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
 
 export interface DeckSlotDropDownProps {
   deckslotParams: DeckslotParams;
@@ -26,6 +26,7 @@ export function DeckSlotDropDownMenu({
   onUpdate,
   viewMode,
 }: DeckSlotDropDownProps) {
+  const queryClient = useQueryClient();
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState('auto');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,14 +42,40 @@ export function DeckSlotDropDownMenu({
     onUpdate();
     setIsDropdownOpen(false);
   };
+
+  const deleteDeckSlotMutation = useMutation({
+    mutationFn: DeleteDeckSlot,
+    onMutate: async (deckslotParams: DeckslotParams) => {
+      // Optimistically remove the deckslot from the display
+      await queryClient.cancelQueries({ queryKey: ['deckSlots', deckslotParams.deck_id] });
+      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
+        'deckSlots',
+        deckslotParams.deck_id,
+      ]);
+
+      if (previousDeckSlots) {
+        const updatedDeckSlots = previousDeckSlots.filter(
+          (slot) =>
+            !(slot.card_id === deckslotParams.card_id && slot.board === deckslotParams.board),
+        );
+        queryClient.setQueryData(['deckSlots', deckslotParams.deck_id], updatedDeckSlots);
+      }
+
+      return { previousDeckSlots };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousDeckSlots) {
+        queryClient.setQueryData(['deckSlots', _variables.deck_id], context.previousDeckSlots);
+      }
+    },
+    onSuccess: () => {
+      handleUpdate();
+    },
+  });
+
   const handleDelete = async () => {
     try {
-      // Adjust the URL and parameters based on your API
-      // await axios.delete(`/api/deckslot/${deckslotParams.id}`);
-      const deleteResponse: DeckslotDeleteResponseDataDTO | ErrorResponseDataDTO =
-        await DeleteDeckSlot(deckslotParams);
-      handleUpdate(); // Update after deletion
-      // todo handle errorresponse
+      await deleteDeckSlotMutation.mutateAsync(deckslotParams);
     } catch (error) {
       console.error('Error deleting deck slot:', error);
       // Handle error appropriately

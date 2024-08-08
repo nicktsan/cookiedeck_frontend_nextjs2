@@ -36,6 +36,6 @@ export async function UpdateDeckSlotQuantity(
     return validatedRes;
   } catch (error) {
     console.error('Error updating deckslot:', error);
-    throw error
+    throw error;
   }
 }

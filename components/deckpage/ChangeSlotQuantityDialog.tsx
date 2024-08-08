@@ -12,12 +12,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeckSlotDropDownProps } from './DeckSlotDropDownMenu';
-import {
-  DeckslotUpdateQuantityRequestDTO,
-  DeckslotParams,
-  DeckslotUpdateQuantityResponseDataDTO,
-} from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
+import { DeckslotUpdateQuantityRequestDTO } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
 
 interface ChangeSlotQuantityDialogProps extends DeckSlotDropDownProps {
   closeParentDropdown: () => void;
@@ -29,6 +27,7 @@ export function ChangeSlotQuantityDialog({
   viewMode,
   closeParentDropdown,
 }: ChangeSlotQuantityDialogProps) {
+  const queryClient = useQueryClient();
   const [changeValue, setChangeValue] = useState('2');
   const [isValidInput, setIsValidInput] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +36,46 @@ export function ChangeSlotQuantityDialog({
   if (viewMode === 'kr') {
     cardNameDisplay = deckslotParams.card_name_kr;
   }
+
+  const updateQuantityMutation = useMutation({
+    mutationFn: UpdateDeckSlotQuantity,
+    onMutate: async (payload: DeckslotUpdateQuantityRequestDTO) => {
+      console.log('Mutating deckslot quantity');
+      // Optimistically update the deckslot quantity
+      await queryClient.cancelQueries({ queryKey: ['deckSlots', payload.deck_id] });
+      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
+        'deckSlots',
+        payload.deck_id,
+      ]);
+
+      if (previousDeckSlots) {
+        const updatedDeckSlots = previousDeckSlots.map((slot) => {
+          if (slot.card_id === payload.card_id && slot.board === payload.board) {
+            return {
+              ...slot,
+              quantity: slot.quantity! + payload.changeValue,
+            };
+          }
+          return slot;
+        });
+        queryClient.setQueryData(['deckSlots', payload.deck_id], updatedDeckSlots);
+      }
+
+      return { previousDeckSlots };
+    },
+    onError: (_error, _variables, context) => {
+      console.log('Error updating deckslot quantity');
+      if (context?.previousDeckSlots) {
+        queryClient.setQueryData(['deckSlots', _variables.deck_id], context.previousDeckSlots);
+      }
+    },
+    onSuccess: () => {
+      console.log('Deckslot quantity updated successfully');
+      onUpdate();
+      setIsOpen(false); // Close the dialog
+      closeParentDropdown(); // Close the parent dropdown
+    },
+  });
 
   const validateInput = useCallback((value: string) => {
     // Check if the value is a valid integer
@@ -61,28 +100,18 @@ export function ChangeSlotQuantityDialog({
     setIsValidInput(validateInput(newValue));
   };
 
-  const updateQuantity = async (deckslot: DeckslotParams) => {
+  const updateQuantity = async () => {
+    console.log('triggered updateQuantity in ChangeSlotQuantityDialog');
     if (!isValidInput) return;
-
-    try {
-      const change = parseInt(changeValue, 10);
-      const payload: DeckslotUpdateQuantityRequestDTO = {
-        deck_id: deckslot.deck_id,
-        card_id: deckslot.card_id,
-        board: deckslot.board,
-        changeValue: change,
-      };
-      const response: DeckslotUpdateQuantityResponseDataDTO = await UpdateDeckSlotQuantity(payload);
-      if (response.error) {
-        throw new Error('Failed to update deckslot');
-      }
-      onUpdate();
-      setIsOpen(false); // Close the dialog
-      closeParentDropdown(); // Close the parent dropdown
-    } catch (error) {
-      console.error('Error updating deckslot:', error);
-      // You might want to show an error message to the user here
-    }
+    const change = parseInt(changeValue, 10);
+    const payload: DeckslotUpdateQuantityRequestDTO = {
+      deck_id: deckslotParams.deck_id,
+      card_id: deckslotParams.card_id,
+      board: deckslotParams.board,
+      changeValue: change,
+    };
+    console.log('payload in ChangeSlotQuantityDialog updateQuantity: ', payload);
+    await updateQuantityMutation.mutateAsync(payload);
   };
 
   return (
@@ -111,11 +140,7 @@ export function ChangeSlotQuantityDialog({
           />
         </div>
         <DialogFooter>
-          <Button
-            onClick={() => updateQuantity(deckslotParams)}
-            type="submit"
-            disabled={!isValidInput}
-          >
+          <Button onClick={updateQuantity} type="submit" disabled={!isValidInput}>
             Save changes
           </Button>
         </DialogFooter>
