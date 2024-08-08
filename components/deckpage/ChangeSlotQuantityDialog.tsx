@@ -87,8 +87,8 @@ export function ChangeSlotQuantityDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <div className="w-full cursor-pointer rounded-sm px-2 py-2 text-black hover:bg-gray-200">
+      <DialogTrigger className="w-full">
+        <div className="w-full cursor-pointer rounded-sm px-2 py-2 text-sm text-black hover:bg-gray-200">
           Add/Remove one or more
         </div>
       </DialogTrigger>

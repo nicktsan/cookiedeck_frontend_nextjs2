@@ -165,7 +165,7 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
   };
 
   return (
-    <div className="flex">
+    <div className="flex pt-5">
       <div className="relative h-96 w-96">
         <Image src={currentImage || ''} layout="fill" objectFit="contain" alt="" />
       </div>

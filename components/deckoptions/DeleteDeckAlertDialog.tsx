@@ -52,8 +52,8 @@ export function DeleteDeckAlertDialog({ deckId }: IDeckIdProps) {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <div className="cursor-pointer rounded-sm p-2 text-red-500 hover:bg-red-500 hover:text-white">
+      <AlertDialogTrigger className="w-full" asChild>
+        <div className="w-full cursor-pointer rounded-sm px-2 py-2 text-sm text-red-500 hover:bg-red-500 hover:text-white">
           Delete
         </div>
       </AlertDialogTrigger>

@@ -72,9 +72,8 @@ export function DeckSlotDropDownMenu({
           style={{ width: contentWidth }}
           className="inline-block"
         >
-          <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem className="p-0" asChild>
               <ChangeSlotQuantityDialog
                 deckslotParams={deckslotParams}
                 onUpdate={handleUpdate}
@@ -82,9 +81,10 @@ export function DeckSlotDropDownMenu({
                 closeParentDropdown={() => setIsDropdownOpen(false)}
               />
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
               <div
-                className="w-full cursor-pointer rounded-sm p-2 text-red-500 hover:bg-red-500 hover:text-white"
+                className="w-full cursor-pointer rounded-sm px-2 py-2 text-sm text-red-500 hover:bg-red-500 hover:text-white"
                 onClick={handleDelete}
               >
                 Delete

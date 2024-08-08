@@ -4,7 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DeleteDeckAlertDialog } from '../deckoptions/DeleteDeckAlertDialog';
@@ -33,9 +32,8 @@ export function DeckPageDropDownMenu({ deckId }: IDeckIdProps) {
           style={{ width: contentWidth }}
           className="inline-block"
         >
-          <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem className="p-0" asChild>
               <DeleteDeckAlertDialog deckId={deckId} />
             </DropdownMenuItem>
           </DropdownMenuGroup>
