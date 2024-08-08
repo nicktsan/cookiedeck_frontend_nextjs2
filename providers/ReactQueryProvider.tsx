@@ -5,13 +5,15 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 
 function ReactQueryProvider({ children }: React.PropsWithChildren) {
-  const [client] = useState(new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false, // default: true
+  const [client] = useState(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false, // default: true
+        },
       },
-    },
-  }));
+    }),
+  );
 
   return (
     <QueryClientProvider client={client}>

@@ -8,9 +8,10 @@ import { DeckUpdateRequestDTO } from '@/services/deck/update/deck-update.dto';
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
   onUpdate: () => void;
+  isOwner: boolean | null | undefined;
 }
 
-export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
+export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoProps) {
   const [reload, setReload] = useState(false); // State to trigger reload
 
   if (!displayDeck) return null;
@@ -80,9 +81,9 @@ export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
         <h2>{creator_username}</h2>
         <h1
           key={reload ? 'nameReloaded' : 'name'}
-          contentEditable
-          onBlur={(e) => handleChange('name', e.currentTarget.textContent || '')}
-          onKeyDown={(e) => handleKeyDown(e, 'name')}
+          contentEditable={isOwner ? 'true' : 'false'}
+          onBlur={(e) => isOwner && handleChange('name', e.currentTarget.textContent || '')}
+          onKeyDown={(e) => isOwner && handleKeyDown(e, 'name')}
           suppressContentEditableWarning={true}
         >
           {displayDeck.name}
@@ -90,9 +91,9 @@ export default function DeckInfo({ displayDeck, onUpdate }: DeckInfoProps) {
         <p
           key={reload ? 'descriptionReloaded' : 'description'}
           className="font-normal"
-          contentEditable
-          onBlur={(e) => handleChange('description', e.currentTarget.textContent || '')}
-          onKeyDown={(e) => handleKeyDown(e, 'description')}
+          contentEditable={isOwner ? 'true' : 'false'}
+          onBlur={(e) => isOwner && handleChange('description', e.currentTarget.textContent || '')}
+          onKeyDown={(e) => isOwner && handleKeyDown(e, 'description')}
           suppressContentEditableWarning={true}
         >
           {displayDeck.description}

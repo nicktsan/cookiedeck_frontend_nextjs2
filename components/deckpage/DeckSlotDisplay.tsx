@@ -18,6 +18,7 @@ interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
   onUpdate: () => void;
   viewMode: 'en' | 'kr';
+  isOwner: boolean | null | undefined;
 }
 
 interface DeckSlotProps {
@@ -26,6 +27,7 @@ interface DeckSlotProps {
   onMouseEnter: (imageLink: string) => void;
   onUpdateQuantity: (deckslot: DeckslotFindResponseDTO, change: number) => void;
   onUpdate: () => void;
+  isOwner: boolean | null | undefined;
 }
 
 const DeckSlot = ({
@@ -34,6 +36,7 @@ const DeckSlot = ({
   onMouseEnter,
   onUpdateQuantity,
   onUpdate,
+  isOwner,
 }: DeckSlotProps) => {
   const deckslotParams: DeckslotParams = {
     deck_id: deckslot.deck_id,
@@ -67,34 +70,38 @@ const DeckSlot = ({
             )}
           </div>
         </div>
-        <div className="flex flex-shrink-0 items-center space-x-2">
-          {[
-            { icon: Plus, change: 1 },
-            { icon: Minus, change: -1 },
-          ].map(({ icon: Icon, change }) => (
-            <Button
-              key={change}
-              variant="outline"
-              size="icon"
-              className="flex h-8 w-8 items-center justify-center"
-              onClick={() => onUpdateQuantity(deckslot, change)}
-            >
-              <Icon className="h-4 w-4" />
-            </Button>
-          ))}
-        </div>
-        <DeckSlotDropDownMenu
-          deckslotParams={deckslotParams}
-          onUpdate={onUpdate}
-          viewMode={viewMode}
-        />
+        {isOwner && (
+          <div className="flex flex-shrink-0 items-center space-x-2">
+            {[
+              { icon: Plus, change: 1 },
+              { icon: Minus, change: -1 },
+            ].map(({ icon: Icon, change }) => (
+              <Button
+                key={change}
+                variant="outline"
+                size="icon"
+                className="flex h-8 w-8 items-center justify-center"
+                onClick={() => onUpdateQuantity(deckslot, change)}
+              >
+                <Icon className="h-4 w-4" />
+              </Button>
+            ))}
+          </div>
+        )}
+        {isOwner && (
+          <DeckSlotDropDownMenu
+            deckslotParams={deckslotParams}
+            onUpdate={onUpdate}
+            viewMode={viewMode}
+          />
+        )}
       </div>
       <Separator />
     </>
   );
 };
 
-export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckInfoProps) {
+export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner }: DeckInfoProps) {
   // Group the objects by card_type
   const groupedByCardType = deckslots?.reduce(
     (acc, deckslot) => {
@@ -186,6 +193,7 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
                 onMouseEnter={handleMouseEnter}
                 onUpdateQuantity={updateQuantity}
                 onUpdate={onUpdate}
+                isOwner={isOwner}
               />
             ))}
           </div>

@@ -19,14 +19,6 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   data: z.infer<TRequest>;
 }): Promise<z.infer<TResponse> | ErrorResponseDTO> {
   const supabase = createClient();
-  if (method !== 'GET') {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser(); //Check if there is a valid session
-    if (!user) {
-      return redirect('/login');
-    }
-  }
   const {
     data: { session },
   } = await supabase.auth.getSession();

@@ -4,16 +4,13 @@ import React from 'react';
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-  NavigationMenuViewport,
 } from '@/components/ui/navigation-menu';
 import { Button } from './ui/button';
-import { SupabaseClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 
 export default async function Header() {

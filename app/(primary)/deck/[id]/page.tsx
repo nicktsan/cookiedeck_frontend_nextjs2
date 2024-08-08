@@ -13,10 +13,24 @@ import { Label } from '@/components/ui/label';
 import DeckPageFooter from '@/components/deckpage/DeckPageFooter';
 import { DeckPageDropDownMenu } from '@/components/deckpage/DeckPageDropDownMenu';
 import { IncrementDeckView } from '@/services/deck/update/incrementview/incrementDeckView';
+import { createClient } from '@/utils/supabase/client';
 
 export default function DeckView({ params }: { params: { id: string } }) {
+  const supabase = createClient();
   const [viewMode, setViewMode] = useState<'en' | 'kr'>('en');
   const queryClient = useQueryClient();
+
+  const { data: userData, isLoading: isUserAuthenticated } = useQuery({
+    queryKey: ['getUser'],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user;
+    },
+    retry: false, // No retries for PATCH request
+    refetchOnWindowFocus: false, // Avoid refetch on window focus
+  });
 
   const { data: patchResponse, isLoading: isPatchLoading } = useQuery({
     queryKey: ['patchDeck', params.id],
@@ -62,7 +76,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
     setViewMode((prev) => (prev === 'en' ? 'kr' : 'en'));
   };
 
-  if (isPatchLoading || isDeckLoading || isDeckSlotsLoading) {
+  if (isPatchLoading || isDeckLoading || isDeckSlotsLoading || isUserAuthenticated) {
     return (
       <div className="flex w-full flex-1 flex-col items-center gap-20">
         <div className="w-full">
@@ -82,22 +96,30 @@ export default function DeckView({ params }: { params: { id: string } }) {
     );
   }
 
+  const isOwner: boolean | null | undefined = userData && userData.id === displayDeck.creator_id;
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex-grow pb-32">
-        <DeckInfo displayDeck={displayDeck} onUpdate={() => updateDeckMutation.mutate(params.id)} />
+        <DeckInfo
+          displayDeck={displayDeck}
+          onUpdate={() => updateDeckMutation.mutate(params.id)}
+          isOwner={isOwner}
+        />
         <div className="mb-4 flex items-center justify-center space-x-2">
-          <DeckPageDropDownMenu deckId={params.id} />
+          {isOwner && <DeckPageDropDownMenu deckId={params.id} />}
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
-          <CardSearch
-            deckId={params.id}
-            onUpdate={() => [
-              updateDeckSlotsMutation.mutate(params.id),
-              updateDeckMutation.mutate(params.id),
-            ]}
-            viewMode={viewMode}
-          />
+          {isOwner && (
+            <CardSearch
+              deckId={params.id}
+              onUpdate={() => [
+                updateDeckSlotsMutation.mutate(params.id),
+                updateDeckMutation.mutate(params.id),
+              ]}
+              viewMode={viewMode}
+            />
+          )}
         </div>
         <DeckSlotDisplay
           deckslots={deckSlots || []}
@@ -106,6 +128,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
             updateDeckMutation.mutate(params.id),
           ]}
           viewMode={viewMode}
+          isOwner={isOwner}
         />
         <DeckPageFooter deckslots={deckSlots || []} />
       </div>

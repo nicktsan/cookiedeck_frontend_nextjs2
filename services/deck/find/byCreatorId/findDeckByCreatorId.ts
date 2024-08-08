@@ -7,7 +7,6 @@ import {
 import { z } from 'zod';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
 import { ENV } from '@/env';
 async function FindDeckByCreatorId(
   params: z.infer<typeof DeckFindRequestByCreatorIdSchema>,
