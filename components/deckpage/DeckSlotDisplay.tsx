@@ -114,11 +114,17 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
   );
   const sortedGroupedByCardType = sortedGroups.reduce(
     (acc, [card_type, slots]) => {
-      // Sort the slots within each group by name
+      // Sort the slots within each group by name and then by color
       const sortedSlots = slots.sort((a, b) => {
         const nameA = viewMode === 'en' ? a.name_eng : a.name_kr;
         const nameB = viewMode === 'en' ? b.name_eng : b.name_kr;
-        return nameA!.localeCompare(nameB!);
+        const colorA = a.color || '';
+        const colorB = b.color || '';
+
+        if (nameA !== nameB) {
+          return nameA!.localeCompare(nameB!);
+        }
+        return colorA.localeCompare(colorB);
       });
       acc[card_type] = sortedSlots;
       return acc;
@@ -163,7 +169,6 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode }: DeckI
   const handleMouseEnter = (imageLink: string) => {
     setCurrentImage(imageLink);
   };
-
   return (
     <div className="flex pt-5">
       <div className="relative h-96 w-96">
