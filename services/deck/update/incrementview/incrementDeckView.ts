@@ -15,6 +15,7 @@ import { ENV } from '@/env';
 export async function IncrementDeckView(
   deckUpdateIncrementviewRequestData: DeckUpdateIncrementviewRequestDTO,
 ): Promise<DeckUpdateIncrementviewResponseDataDTO> {
+  // console.log("IncrementDeckView triggered.")
   const deckUpdateIncrementviewUrl = ENV.BACKEND_URL + '/deck/update/incrementview';
   // console.log("deckUpdateIncrementviewUrl: ", deckUpdateIncrementviewUrl)
   // console.log('deckUpdateIncrementviewRequestData: ', deckUpdateIncrementviewRequestData);

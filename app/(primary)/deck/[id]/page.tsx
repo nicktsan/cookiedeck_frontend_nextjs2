@@ -28,6 +28,8 @@ export default function DeckView({ params }: { params: { id: string } }) {
   const { data: displayDeck, isLoading: isDeckLoading } = useQuery<DeckFindResponseDataDTO>({
     queryKey: ['deck', params.id],
     queryFn: () => FindDeck(params.id),
+    retry: 3,
+    refetchOnWindowFocus: false, // Avoid refetch on window focus
     enabled: !!patchResponse, // Only run if PATCH request is successful
   });
 
@@ -37,6 +39,8 @@ export default function DeckView({ params }: { params: { id: string } }) {
       const response = await DeckSlotFindByDeckId(params.id);
       return response.deckslots || [];
     },
+    retry: 3,
+    refetchOnWindowFocus: false, // Avoid refetch on window focus
     enabled: !!patchResponse, // Only run if PATCH request is successful
   });
 

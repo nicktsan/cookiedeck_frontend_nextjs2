@@ -10,6 +10,7 @@ import { validate } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
 
 export async function FindDeck(id: string): Promise<DeckFindResponseDataDTO> {
+  // console.log('FindDeck triggered');
   const deckFindUrl = ENV.BACKEND_URL + '/deck/find';
   const deckFindRequestData: DeckFindRequestDTO = { id: id };
   // console.log("deckFindUrl: ", deckFindUrl)

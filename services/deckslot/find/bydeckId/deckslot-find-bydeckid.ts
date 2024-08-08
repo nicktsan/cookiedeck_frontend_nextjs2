@@ -15,6 +15,7 @@ import { ENV } from '@/env';
 export async function DeckSlotFindByDeckId(
   id: string,
 ): Promise<DeckslotFindByDeckIdResponseDataDTO> {
+  // console.log('DeckSlotFindByDeckId triggered');
   const deckSlotFindUrl = ENV.BACKEND_URL + '/deckslot/find/bydeckid';
   const deckSlotFindRequestData: DeckslotFindByDeckIdRequestDTO = { deck_id: id };
   // console.log("deckSlotFindUrl: ", deckSlotFindUrl)

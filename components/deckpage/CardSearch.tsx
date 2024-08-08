@@ -35,7 +35,7 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
     queryKey: ['cardFind', watchedValues], // Use watchedValues for the queryKey
     queryFn: () => CardFind(watchedValues), // Use watchedValues for the query function
     enabled: false, // Disable the query from automatically running
-    retry: false, // No retries for PATCH request
+    retry: 3, // 3 retries for request
     refetchOnWindowFocus: false, // Avoid refetch on window focus
   });
 
