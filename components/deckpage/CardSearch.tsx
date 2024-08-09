@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CardSearchRequestDTO } from '@/services/card/find/card-findDTO';
 import { CardSearchRequestSchema } from '@/services/card/find/card-find.schema';
 import { CardFind } from '@/services/card/find/card-find';
@@ -15,6 +15,8 @@ import { CardEntity } from '@/services/card/card.entity';
 import { CreateDeckSlot } from '@/services/deckslot/create/createDeckSlot';
 
 import { useQuery } from '@tanstack/react-query';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
+import { colorMapping } from '@/utils/colorMapping';
 
 interface CardSearchProps {
   deckId: string | undefined;
@@ -26,6 +28,7 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
   });
+  const queryClient = useQueryClient();
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [scrollAreaVisible, setScrollAreaVisible] = useState(false);
 
@@ -39,13 +42,65 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
     refetchOnWindowFocus: false, // Avoid refetch on window focus
   });
 
+  const createDeckSlotMutation = useMutation({
+    mutationFn: (card: CardEntity) => CreateDeckSlot(card, deckId),
+    onMutate: async (card: CardEntity) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({queryKey: ['deckSlots', deckId]});
+
+      // Snapshot the previous value
+      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>(['deckSlots', deckId]);
+
+      // Optimistically update to the new value
+      if (previousDeckSlots) {
+        queryClient.setQueryData<DeckslotFindResponseDTO[]>(['deckSlots', deckId], old => {
+          const existingSlot = old?.find(slot => slot.card_id === card.id && slot.board === 'main');
+          if (existingSlot) {
+            // If the card already exists, increase its quantity
+            return old?.map(slot => 
+              slot.card_id === card.id && slot.board === 'main' 
+                ? { ...slot, quantity: (slot.quantity || 0) + 1 }
+                : slot
+            );
+          } else {
+            // If it's a new card, add it to the deck
+            const newSlot: DeckslotFindResponseDTO = {
+              deck_id: deckId!,
+              card_id: card.id,
+              board: 'main',
+              quantity: 1,
+              name_eng: card.name_eng,
+              name_kr: card.name_kr,
+              color: card.color,
+              card_type: card.card_type,
+              image_link: card.image_link,
+              plain_text_eng: card.plain_text_eng,
+            };
+            return [...(old || []), newSlot];
+          }
+        });
+      }
+
+      return { previousDeckSlots };
+    },
+    onError: (err, newCard, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      queryClient.setQueryData(['deckSlots', deckId], context?.previousDeckSlots);
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the correct data
+      queryClient.invalidateQueries({ queryKey: ['deckSlots', deckId]});
+      onUpdate();
+    },
+  });
+
   const handleInputChange = () => {
     setScrollAreaVisible(false);
   };
 
+
   const handleCardClick = async (card: CardEntity) => {
-    await CreateDeckSlot(card, deckId);
-    onUpdate();
+    createDeckSlotMutation.mutate(card);
   };
 
   const onSubmit = async () => {
@@ -121,7 +176,10 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
                     className="cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100"
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
-                    {cardSearchResult.color}: {cardSearchResult.name_eng}
+                    {Object.keys(colorMapping).includes(cardSearchResult.color!.toLowerCase())
+                      ? colorMapping[cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping]
+                      : ''}
+                     {cardSearchResult.name_eng} [{cardSearchResult.code}]
                   </div>
                 ) : (
                   <div
@@ -129,7 +187,10 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
                     className="cursor-pointer rounded p-2 text-sm transition-colors duration-200 ease-in-out hover:bg-gray-100"
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
-                    {cardSearchResult.color}: {cardSearchResult.name_kr}
+                    {Object.keys(colorMapping).includes(cardSearchResult.color!.toLowerCase())
+                      ? colorMapping[cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping]
+                      : ''}
+                     {cardSearchResult.name_kr} [{cardSearchResult.code}]
                   </div>
                 ),
               )}

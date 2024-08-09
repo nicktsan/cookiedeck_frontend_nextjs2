@@ -63,7 +63,7 @@ const DeckSlot = ({
             {colorEmoji}
           </span>
           <div className="flex min-w-0 flex-grow items-center">
-            <span className="mr-2 break-words hover:underline">{name}</span>
+            <span className="mr-2 break-words hover:underline">{name} {deckslot.code}</span>
             {deckslot.plain_text_eng?.includes('[FLIP]') && (
               <span className="inline-block flex-shrink-0 whitespace-nowrap rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
                 FLIP

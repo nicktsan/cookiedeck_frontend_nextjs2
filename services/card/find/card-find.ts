@@ -23,7 +23,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
   }
   const url = ENV.BACKEND_URL + '/card/find';
   const params: CardSearchRequestDTO = {
-    select: ['id', 'name_eng', 'name_kr', 'color'],
+    select: ['id', 'name_eng', 'name_kr', 'color', 'card_type', 'plain_text_eng', 'code'],
     name: formData.name,
   };
   const res: CardSearchResponseDTO = await MakeApiRequest({
