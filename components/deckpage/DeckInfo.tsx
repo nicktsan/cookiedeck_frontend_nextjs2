@@ -18,6 +18,8 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
 
   // Destructure the properties with default values to handle undefined cases
   const {
+    name,
+    description,
     creator_username = '',
     views = 0,
     years = 0,
@@ -29,6 +31,12 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
   } = displayDeck;
 
   const handleChange = async (field: string, value: string) => {
+    if (
+      (field === 'description' && value.trim() === description?.trim()) ||
+      (field === 'name' && value.trim() === name?.trim())
+    ) {
+      return;
+    }
     const deckUpdateRequestData: DeckUpdateRequestDTO = {
       id: displayDeck.id!,
     };

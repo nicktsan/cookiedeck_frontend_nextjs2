@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -49,15 +49,22 @@ export function ChangeSlotQuantityDialog({
       ]);
 
       if (previousDeckSlots) {
-        const updatedDeckSlots = previousDeckSlots.map((slot) => {
+        const updatedDeckSlots = previousDeckSlots.reduce((acc, slot) => {
           if (slot.card_id === payload.card_id && slot.board === payload.board) {
-            return {
-              ...slot,
-              quantity: slot.quantity! + payload.changeValue,
-            };
+            const newQuantity = slot.quantity! + payload.changeValue;
+            if (newQuantity > 0) {
+              acc.push({
+                ...slot,
+                quantity: newQuantity,
+              });
+            }
+            // If newQuantity <= 0, we don't add this slot to the accumulator
+          } else {
+            acc.push(slot);
           }
-          return slot;
-        });
+          return acc;
+        }, [] as DeckslotFindResponseDTO[]);
+
         queryClient.setQueryData(['deckSlots', payload.deck_id], updatedDeckSlots);
       }
 
@@ -93,6 +100,13 @@ export function ChangeSlotQuantityDialog({
 
     return true;
   }, []);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && isValidInput) {
+      e.preventDefault();
+      updateQuantity();
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -136,6 +150,7 @@ export function ChangeSlotQuantityDialog({
             id="changeValue"
             value={changeValue}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             className="col-span-3"
           />
         </div>
