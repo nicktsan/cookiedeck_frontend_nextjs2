@@ -1,23 +1,22 @@
-import { Copy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
+import Image from 'next/image';
+import React from 'react';
+import { Switch } from '@/components/ui/switch';
 
 interface DeckSlotDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   selectedDeckSlot: DeckslotFindResponseDTO | null;
   viewMode: 'en' | 'kr';
+  setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
 }
 
 export function DeckSlotDialog({
@@ -25,47 +24,50 @@ export function DeckSlotDialog({
   onOpenChange,
   selectedDeckSlot,
   viewMode,
+  setViewMode,
 }: DeckSlotDialogProps) {
   if (!selectedDeckSlot) return null;
-
-  const name = viewMode === 'en' ? selectedDeckSlot.name_eng : selectedDeckSlot.name_kr;
+  const toggleViewMode = () => {
+    setViewMode((prev) => (prev === 'en' ? 'kr' : 'en'));
+  };
+  const displayName = viewMode === 'en' ? selectedDeckSlot.name_eng : selectedDeckSlot.name_kr;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            {name} {selectedDeckSlot.code}
-          </DialogTitle>
-          <DialogDescription>Card details</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="cardType" className="text-right">
-              Card Type
+      <DialogContent className="flex min-w-[65vw] sm:max-w-md">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center">
+            <Switch
+              id="language-toggle"
+              checked={viewMode === 'kr'}
+              onCheckedChange={toggleViewMode}
+            />
+            <Label htmlFor="language-toggle" className="ml-2">
+              {viewMode === 'en' ? 'EN' : 'KR'}
             </Label>
-            <Input
-              id="cardType"
-              value={selectedDeckSlot.card_type}
-              className="col-span-3"
-              readOnly
+          </div>
+          <div className="relative h-96 w-96">
+            <Image
+              src={selectedDeckSlot.image_link || ''}
+              layout="fill"
+              objectFit="contain"
+              alt=""
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="color" className="text-right">
-              Color
-            </Label>
-            <Input id="color" value={selectedDeckSlot.color} className="col-span-3" readOnly />
-          </div>
-          {/* Add more fields as needed */}
         </div>
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+        <div className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {displayName} {selectedDeckSlot.code}
+            </DialogTitle>
+            <DialogDescription>{selectedDeckSlot.card_type}</DialogDescription>
+          </DialogHeader>
+          {selectedDeckSlot.card_level ? <div>Level: {selectedDeckSlot.card_level}</div> : null}
+          <div className="mt-6">
+            {viewMode === 'en' ? selectedDeckSlot.plain_text_eng : selectedDeckSlot.plain_text}
+          </div>
+          <div className="mt-6">{selectedDeckSlot.rarity}</div>
+        </div>
       </DialogContent>
     </Dialog>
   );

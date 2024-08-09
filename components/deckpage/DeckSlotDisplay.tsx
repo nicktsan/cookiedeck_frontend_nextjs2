@@ -5,7 +5,6 @@ import { Plus, Minus } from 'lucide-react';
 import {
   DeckslotUpdateQuantityRequestDTO,
   DeckslotParams,
-  DeckslotUpdateQuantityResponseDataDTO,
 } from '@/services/deckslot/update/quantity/deckslot-update-quantity.dto';
 import { UpdateDeckSlotQuantity } from '@/services/deckslot/update/quantity/deckslot-update-quantity';
 import Image from 'next/image';
@@ -20,6 +19,7 @@ interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
   onUpdate: () => void;
   viewMode: 'en' | 'kr';
+  setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
   isOwner: boolean | null | undefined;
 }
 
@@ -110,7 +110,13 @@ const DeckSlot = ({
   );
 };
 
-export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner }: DeckInfoProps) {
+export default function DeckSlotDisplay({
+  deckslots,
+  onUpdate,
+  viewMode,
+  setViewMode,
+  isOwner,
+}: DeckInfoProps) {
   const queryClient = useQueryClient();
   const [selectedDeckSlot, setSelectedDeckSlot] = useState<DeckslotFindResponseDTO | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -226,10 +232,10 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner
   };
   return (
     <div className="flex pt-5">
-      <div className="relative h-96 w-96">
+      <div className="relative size-96 flex-shrink-0">
         <Image src={currentImage || ''} layout="fill" objectFit="contain" alt="" />
       </div>
-      <div className="grid grid-cols-3 justify-items-stretch gap-x-20 gap-y-6">
+      <div className="grid grid-cols-3 justify-items-stretch gap-x-5 gap-y-6">
         {Object.entries(sortedGroupedByCardType).map(([card_type, slots]) => (
           <div key={card_type} className="w-full">
             <h2 className="mb-2 text-xl font-bold">{card_type}</h2>
@@ -253,6 +259,7 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner
         onOpenChange={setIsDialogOpen}
         selectedDeckSlot={selectedDeckSlot}
         viewMode={viewMode}
+        setViewMode={setViewMode}
       />
     </div>
   );

@@ -119,6 +119,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
             updateDeckMutation.mutate(params.id),
           ]}
           viewMode={viewMode}
+          setViewMode={setViewMode}
           isOwner={isOwner}
         />
         <DeckPageFooter deckslots={deckSlots || []} />
