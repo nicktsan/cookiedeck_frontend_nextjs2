@@ -20,11 +20,10 @@ import { colorMapping } from '@/utils/colorMapping';
 
 interface CardSearchProps {
   deckId: string | undefined;
-  onUpdate: () => void;
   viewMode: 'en' | 'kr';
 }
 
-export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchProps) {
+export default function CardSearch({ deckId, viewMode }: CardSearchProps) {
   const form = useForm<CardSearchRequestDTO>({
     resolver: zodResolver(CardSearchRequestSchema),
   });
@@ -46,21 +45,26 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
     mutationFn: (card: CardEntity) => CreateDeckSlot(card, deckId),
     onMutate: async (card: CardEntity) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({queryKey: ['deckSlots', deckId]});
+      await queryClient.cancelQueries({ queryKey: ['deckSlots', deckId] });
 
       // Snapshot the previous value
-      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>(['deckSlots', deckId]);
+      const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
+        'deckSlots',
+        deckId,
+      ]);
 
       // Optimistically update to the new value
       if (previousDeckSlots) {
-        queryClient.setQueryData<DeckslotFindResponseDTO[]>(['deckSlots', deckId], old => {
-          const existingSlot = old?.find(slot => slot.card_id === card.id && slot.board === 'main');
+        queryClient.setQueryData<DeckslotFindResponseDTO[]>(['deckSlots', deckId], (old) => {
+          const existingSlot = old?.find(
+            (slot) => slot.card_id === card.id && slot.board === 'main',
+          );
           if (existingSlot) {
             // If the card already exists, increase its quantity
-            return old?.map(slot => 
-              slot.card_id === card.id && slot.board === 'main' 
+            return old?.map((slot) =>
+              slot.card_id === card.id && slot.board === 'main'
                 ? { ...slot, quantity: (slot.quantity || 0) + 1 }
-                : slot
+                : slot,
             );
           } else {
             // If it's a new card, add it to the deck
@@ -75,6 +79,7 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
               card_type: card.card_type,
               image_link: card.image_link,
               plain_text_eng: card.plain_text_eng,
+              code: card.code,
             };
             return [...(old || []), newSlot];
           }
@@ -89,15 +94,14 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
     },
     onSettled: () => {
       // Always refetch after error or success to ensure we have the correct data
-      queryClient.invalidateQueries({ queryKey: ['deckSlots', deckId]});
-      onUpdate();
+      queryClient.invalidateQueries({ queryKey: ['deckSlots', deckId] });
+      queryClient.invalidateQueries({ queryKey: ['deck', deckId] });
     },
   });
 
   const handleInputChange = () => {
     setScrollAreaVisible(false);
   };
-
 
   const handleCardClick = async (card: CardEntity) => {
     createDeckSlotMutation.mutate(card);
@@ -177,9 +181,11 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
                     {Object.keys(colorMapping).includes(cardSearchResult.color!.toLowerCase())
-                      ? colorMapping[cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping]
+                      ? colorMapping[
+                          cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping
+                        ]
                       : ''}
-                     {cardSearchResult.name_eng} [{cardSearchResult.code}]
+                    {cardSearchResult.name_eng} [{cardSearchResult.code}]
                   </div>
                 ) : (
                   <div
@@ -188,9 +194,11 @@ export default function CardSearch({ deckId, onUpdate, viewMode }: CardSearchPro
                     onClick={() => handleCardClick(cardSearchResult)}
                   >
                     {Object.keys(colorMapping).includes(cardSearchResult.color!.toLowerCase())
-                      ? colorMapping[cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping]
+                      ? colorMapping[
+                          cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping
+                        ]
                       : ''}
-                     {cardSearchResult.name_kr} [{cardSearchResult.code}]
+                    {cardSearchResult.name_kr} [{cardSearchResult.code}]
                   </div>
                 ),
               )}

@@ -14,6 +14,7 @@ import { colorMapping } from '@/utils/colorMapping';
 import { Separator } from '@/components/ui/separator';
 import { DeckSlotDropDownMenu } from './DeckSlotDropDownMenu';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { DeckSlotDialog } from './DeckSlotDialog';
 
 interface DeckInfoProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
@@ -29,6 +30,7 @@ interface DeckSlotProps {
   onUpdateQuantity: (deckslot: DeckslotFindResponseDTO, change: number) => void;
   onUpdate: () => void;
   isOwner: boolean | null | undefined;
+  onDeckSlotClick: (deckslot: DeckslotFindResponseDTO) => void;
 }
 
 const DeckSlot = ({
@@ -38,6 +40,7 @@ const DeckSlot = ({
   onUpdateQuantity,
   onUpdate,
   isOwner,
+  onDeckSlotClick,
 }: DeckSlotProps) => {
   const deckslotParams: DeckslotParams = {
     deck_id: deckslot.deck_id,
@@ -63,7 +66,12 @@ const DeckSlot = ({
             {colorEmoji}
           </span>
           <div className="flex min-w-0 flex-grow items-center">
-            <span className="mr-2 break-words hover:underline">{name} {deckslot.code}</span>
+            <span
+              className="mr-2 break-words hover:cursor-pointer hover:underline"
+              onClick={() => onDeckSlotClick(deckslot)}
+            >
+              {name} {deckslot.code}
+            </span>
             {deckslot.plain_text_eng?.includes('[FLIP]') && (
               <span className="inline-block flex-shrink-0 whitespace-nowrap rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
                 FLIP
@@ -104,6 +112,13 @@ const DeckSlot = ({
 
 export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner }: DeckInfoProps) {
   const queryClient = useQueryClient();
+  const [selectedDeckSlot, setSelectedDeckSlot] = useState<DeckslotFindResponseDTO | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDeckSlotClick = (deckslot: DeckslotFindResponseDTO) => {
+    setSelectedDeckSlot(deckslot);
+    setIsDialogOpen(true);
+  };
 
   const updateQuantityMutation = useMutation({
     mutationFn: UpdateDeckSlotQuantity,
@@ -227,11 +242,18 @@ export default function DeckSlotDisplay({ deckslots, onUpdate, viewMode, isOwner
                 onUpdateQuantity={updateQuantity}
                 onUpdate={onUpdate}
                 isOwner={isOwner}
+                onDeckSlotClick={handleDeckSlotClick}
               />
             ))}
           </div>
         ))}
       </div>
+      <DeckSlotDialog
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        selectedDeckSlot={selectedDeckSlot}
+        viewMode={viewMode}
+      />
     </div>
   );
 }

@@ -110,16 +110,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
           {isOwner && <DeckPageDropDownMenu deckId={params.id} />}
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
-          {isOwner && (
-            <CardSearch
-              deckId={params.id}
-              onUpdate={() => [
-                updateDeckSlotsMutation.mutate(params.id),
-                updateDeckMutation.mutate(params.id),
-              ]}
-              viewMode={viewMode}
-            />
-          )}
+          {isOwner && <CardSearch deckId={params.id} viewMode={viewMode} />}
         </div>
         <DeckSlotDisplay
           deckslots={deckSlots || []}
