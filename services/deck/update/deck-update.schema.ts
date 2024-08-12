@@ -32,7 +32,7 @@ export const DeckUpdateRequestSchema = z.object({
 });
 
 export const DeckUpdateResponseDataSchema = z.object({
-  deckEntity: DeckEntitySchema.optional(),
+  deckEntity: DeckEntitySchema,
   message: z.string().optional(),
 });
 

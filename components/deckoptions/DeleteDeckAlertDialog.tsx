@@ -42,9 +42,9 @@ export function DeleteDeckAlertDialog({ deckId }: IDeckIdProps) {
         console.error('Unexpected response structure:', deleteResponse);
       }
     } else if (isErrorResponseDataDTO(deleteResponse)) {
-      console.log(deleteResponse.message || deleteResponse.errorMessage);
+      // console.log(deleteResponse.message || deleteResponse.errorMessage);
       if (deleteResponse.DTO) {
-        console.log(deleteResponse.DTO);
+        // console.log(deleteResponse.DTO);
       }
     } else {
       console.error('Unknown response type:', deleteResponse);

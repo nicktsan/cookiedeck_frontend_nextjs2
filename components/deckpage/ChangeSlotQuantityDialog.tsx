@@ -40,7 +40,7 @@ export function ChangeSlotQuantityDialog({
   const updateQuantityMutation = useMutation({
     mutationFn: UpdateDeckSlotQuantity,
     onMutate: async (payload: DeckslotUpdateQuantityRequestDTO) => {
-      console.log('Mutating deckslot quantity');
+      // console.log('Mutating deckslot quantity');
       // Optimistically update the deckslot quantity
       await queryClient.cancelQueries({ queryKey: ['deckSlots', payload.deck_id] });
       const previousDeckSlots = queryClient.getQueryData<DeckslotFindResponseDTO[]>([
@@ -77,7 +77,7 @@ export function ChangeSlotQuantityDialog({
       }
     },
     onSuccess: () => {
-      console.log('Deckslot quantity updated successfully');
+      // console.log('Deckslot quantity updated successfully');
       onUpdate();
       setIsOpen(false); // Close the dialog
       closeParentDropdown(); // Close the parent dropdown
@@ -115,7 +115,7 @@ export function ChangeSlotQuantityDialog({
   };
 
   const updateQuantity = async () => {
-    console.log('triggered updateQuantity in ChangeSlotQuantityDialog');
+    // console.log('triggered updateQuantity in ChangeSlotQuantityDialog');
     if (!isValidInput) return;
     const change = parseInt(changeValue, 10);
     const payload: DeckslotUpdateQuantityRequestDTO = {
@@ -124,7 +124,7 @@ export function ChangeSlotQuantityDialog({
       board: deckslotParams.board,
       changeValue: change,
     };
-    console.log('payload in ChangeSlotQuantityDialog updateQuantity: ', payload);
+    // console.log('payload in ChangeSlotQuantityDialog updateQuantity: ', payload);
     await updateQuantityMutation.mutateAsync(payload);
   };
 

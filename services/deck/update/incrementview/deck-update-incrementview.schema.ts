@@ -7,12 +7,9 @@ export const DeckUpdateIncrementviewRequestSchema = z.object({
 });
 
 export const DeckUpdateIncrementviewResponseDataSchema = z.object({
-  id: z
-    .string()
-    .uuid({
-      message: 'id must be a valid UUID.',
-    })
-    .optional(),
+  id: z.string().uuid({
+    message: 'id must be a valid UUID.',
+  }),
   message: z.string().optional(),
 });
 

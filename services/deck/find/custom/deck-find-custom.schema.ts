@@ -52,7 +52,7 @@ export const DeckFindCustomRequestSchema = z.object({
 });
 
 export const DeckFindCustomResponseDataSchema = z.object({
-  decks: z.array(DeckEntitySchema).nullable().optional(),
+  decks: z.array(DeckEntitySchema).nullable(),
   message: z.string().optional(),
 });
 

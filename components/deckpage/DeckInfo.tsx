@@ -17,7 +17,6 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
   const [reload, setReload] = useState(false); // State to trigger reload
 
   if (!displayDeck) return null;
-  //todo update deck visibility
   // Destructure the properties with default values to handle undefined cases
   const {
     name,
@@ -117,7 +116,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
               onVisibilityChange={(value) => handleChange('visibility', value)}
             />
           ) : (
-            <span>{capitalizeFirstLetter(visibility!)}</span>
+            <span>{capitalizeFirstLetter(visibility ?? '')}</span>
           )}
           <FaEye className="ml-2" />
           <span className="mx-2">{views}</span>

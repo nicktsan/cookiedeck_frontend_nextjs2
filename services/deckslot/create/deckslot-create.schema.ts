@@ -14,12 +14,9 @@ export const DeckslotCreateRequestSchema = z.object({
 });
 
 export const DeckslotCreateResponseDataSchema = z.object({
-  deck_id: z
-    .string()
-    .uuid({
-      message: `deck_id must be a valid UUID`,
-    })
-    .optional(),
+  deck_id: z.string().uuid({
+    message: `deck_id must be a valid UUID`,
+  }),
   card_id: z
     .number({
       message: `card_id must be a number`,

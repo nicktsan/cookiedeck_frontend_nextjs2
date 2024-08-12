@@ -19,7 +19,7 @@ export function VisibilitySelect({ visibility, onVisibilityChange }: VisibilityS
   return (
     <Select onValueChange={(value) => onVisibilityChange(value)}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={capitalizeFirstLetter(visibility)} />
+        <SelectValue placeholder={capitalizeFirstLetter(visibility ?? '')} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

@@ -6,12 +6,9 @@ export const DeckFindRequestSchema = z.object({
 });
 
 export const DeckFindResponseDataSchema = z.object({
-  id: z
-    .string()
-    .uuid({
-      message: `Id must be a valid UUID`,
-    })
-    .optional(),
+  id: z.string().uuid({
+    message: `Id must be a valid UUID`,
+  }),
   name: z
     .string()
     .min(3, {

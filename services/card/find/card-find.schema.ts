@@ -26,7 +26,7 @@ export const CardSearchRequestSchema = z.object({
 });
 
 export const CardSearchResponseDataSchema = z.object({
-  cards: z.array(CardEntitySchema).nullable().optional(),
+  cards: z.array(CardEntitySchema).nullable(),
   message: z.string().optional(),
 });
 

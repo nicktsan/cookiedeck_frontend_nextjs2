@@ -10,9 +10,9 @@ export const DeckslotDeleteRequestSchema = z.object({
 });
 
 export const DeckslotDeleteResponseDataSchema = z.object({
-  deck_id: z.string().uuid().optional(),
-  card_id: z.number().optional(),
-  board: z.string().optional(),
+  deck_id: z.string().uuid(),
+  card_id: z.number(),
+  board: z.string(),
   quantity: z.number().optional(),
   message: z.string().optional(),
 });

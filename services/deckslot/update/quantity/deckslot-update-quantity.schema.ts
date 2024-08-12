@@ -30,22 +30,15 @@ export const DeckslotUpdateQuantityRequestSchema = z.object({
 });
 
 export const DeckslotUpdateQuantityResponseDataSchema = z.object({
-  deck_id: z
-    .string()
-    .uuid({
-      message: 'deck_id must be a valid UUID.',
-    })
-    .optional(),
-  card_id: z
-    .number({
-      message: 'card_id must be a number.',
-    })
-    .optional(),
-  board: z
-    .enum(['main', 'maybe'], {
-      message: `board must be 'main' or 'maybe'.`,
-    })
-    .optional(),
+  deck_id: z.string().uuid({
+    message: 'deck_id must be a valid UUID.',
+  }),
+  card_id: z.number({
+    message: 'card_id must be a number.',
+  }),
+  board: z.enum(['main', 'maybe'], {
+    message: `board must be 'main' or 'maybe'.`,
+  }),
   quantity: z
     .number({
       message: 'quantity must be a number.',
