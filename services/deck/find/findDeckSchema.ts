@@ -27,6 +27,11 @@ export const DeckFindResponseDataSchema = z.object({
   creator_username: z.string().optional(),
   banner_url: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
+  visibility: z
+    .enum(['public', 'private', 'unlisted'], {
+      message: 'Visibility must be a public, private, or unlisted.',
+    })
+    .optional(),
   views: z
     .number()
     .min(1, {

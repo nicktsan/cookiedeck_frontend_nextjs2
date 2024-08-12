@@ -4,6 +4,8 @@ import { DeckFindResponseDataDTO } from '@/services/deck/find/findDeckDTO';
 import { FaEye } from 'react-icons/fa';
 import { UpdateDeck } from '@/services/deck/update/updateDeck';
 import { DeckUpdateRequestDTO } from '@/services/deck/update/deck-update.dto';
+import { VisibilitySelect } from './VisibilitySelect';
+import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
@@ -15,12 +17,13 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
   const [reload, setReload] = useState(false); // State to trigger reload
 
   if (!displayDeck) return null;
-
+  //todo update deck visibility
   // Destructure the properties with default values to handle undefined cases
   const {
     name,
     description,
     creator_username = '',
+    visibility,
     views = 0,
     years = 0,
     months = 0,
@@ -33,7 +36,8 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
   const handleChange = async (field: string, value: string) => {
     if (
       (field === 'description' && value.trim() === description?.trim()) ||
-      (field === 'name' && value.trim() === name?.trim())
+      (field === 'name' && value.trim() === name?.trim()) ||
+      (field === 'visibility' && value.toLowerCase().trim() === visibility?.trim())
     ) {
       return;
     }
@@ -106,8 +110,16 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
         >
           {displayDeck.description}
         </p>
-        <p className="flex flex-row items-center">
-          <FaEye />
+        <p className="mt-1 flex flex-row items-center">
+          {isOwner ? (
+            <VisibilitySelect
+              visibility={visibility!}
+              onVisibilityChange={(value) => handleChange('visibility', value)}
+            />
+          ) : (
+            <span>{capitalizeFirstLetter(visibility!)}</span>
+          )}
+          <FaEye className="ml-2" />
           <span className="mx-2">{views}</span>
           <span className="ml-1">{lastUpdated}</span>
         </p>
