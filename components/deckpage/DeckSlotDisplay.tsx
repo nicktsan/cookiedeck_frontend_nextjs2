@@ -123,6 +123,8 @@ export default function DeckSlotDisplay({
   const queryClient = useQueryClient();
   const [selectedDeckSlot, setSelectedDeckSlot] = useState<DeckslotFindResponseDTO | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string>('');
+  const [currentCardId, setCurrentCardId] = useState<number | null>(null);
 
   const handleDeckSlotClick = (deckslot: DeckslotFindResponseDTO) => {
     setSelectedDeckSlot(deckslot);
@@ -208,23 +210,18 @@ export default function DeckSlotDisplay({
     {} as Record<string, DeckslotFindResponseDTO[]>,
   );
 
-  const [currentImage, setCurrentImage] = useState<string>('');
+  // Set default image when component mounts or viewMode changes
   useEffect(() => {
-    if (!currentImage) {
-      if (sortedGroupedByCardType) {
-        // Find the first deckslot in the sortedGroupedByCardType
-        const firstDeckslot = Object.values(sortedGroupedByCardType).flat()[0];
-        if (firstDeckslot) {
-          // Set the image link of the first deckslot as the default image
-          if (viewMode === 'en'){
-            setCurrentImage(firstDeckslot.image_link_en || '');
-          } else {
-            setCurrentImage(firstDeckslot.image_link || '');
-          } 
-        }
+    if (deckslots && deckslots.length > 0) {
+      let cardToDisplay = deckslots.find(slot => slot.card_id === currentCardId);
+      if (!cardToDisplay) {
+        cardToDisplay = deckslots[0];
+        setCurrentCardId(cardToDisplay.card_id);
       }
+      setCurrentImage(viewMode === 'en' ? cardToDisplay.image_link_en! : cardToDisplay.image_link!);
     }
-  }, [deckslots, viewMode]);
+  }, [deckslots, viewMode, currentCardId]);
+
 
   const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
     const payload: DeckslotUpdateQuantityRequestDTO = {
@@ -236,8 +233,10 @@ export default function DeckSlotDisplay({
     await updateQuantityMutation.mutateAsync(payload);
   };
 
-  const handleMouseEnter = (imageLink: string) => {
-    setCurrentImage(imageLink);
+
+  const handleMouseEnter = (deckslot: DeckslotFindResponseDTO) => {
+    setCurrentCardId(deckslot.card_id);
+    setCurrentImage(viewMode === 'en' ? deckslot.image_link_en || '' : deckslot.image_link || '');
   };
   return (
     <div className="flex pt-5">
@@ -253,7 +252,7 @@ export default function DeckSlotDisplay({
                 key={deckslot.card_id}
                 deckslot={deckslot}
                 viewMode={viewMode}
-                onMouseEnter={handleMouseEnter}
+                onMouseEnter={() => handleMouseEnter(deckslot)}
                 onUpdateQuantity={updateQuantity}
                 onUpdate={onUpdate}
                 isOwner={isOwner}
