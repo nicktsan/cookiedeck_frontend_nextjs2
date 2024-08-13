@@ -6,8 +6,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cookierunbraverse.com',
-        // port: '',
-        // pathname: '/account123/**',
+      },
+      {
+        protocol: 'https',
+        hostname: `${process.env.SUPABASE_STORAGE_PROJECT_ID}.supabase.co`,
       },
     ],
   },

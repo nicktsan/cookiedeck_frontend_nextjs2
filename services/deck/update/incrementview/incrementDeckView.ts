@@ -15,23 +15,28 @@ import { ENV } from '@/env';
 export async function IncrementDeckView(
   deckUpdateIncrementviewRequestData: DeckUpdateIncrementviewRequestDTO,
 ): Promise<DeckUpdateIncrementviewResponseDataDTO> {
-  // console.log("IncrementDeckView triggered.")
-  const deckUpdateIncrementviewUrl = ENV.BACKEND_URL + '/deck/update/incrementview';
-  // console.log("deckUpdateIncrementviewUrl: ", deckUpdateIncrementviewUrl)
-  // console.log('deckUpdateIncrementviewRequestData: ', deckUpdateIncrementviewRequestData);
-  const deckUpdateIncrementviewResponse = await MakeApiRequest({
-    url: deckUpdateIncrementviewUrl,
-    method: 'PATCH',
-    requestSchema: DeckUpdateIncrementviewRequestSchema,
-    responseSchema: DeckUpdateIncrementviewResponseSchema,
-    data: deckUpdateIncrementviewRequestData,
-  });
-  // console.log("raw deckUpdateIncrementviewResponse: ", deckUpdateIncrementviewResponse);
-  const validated: DeckUpdateIncrementviewResponseDataDTO = validate(
-    deckUpdateIncrementviewResponse.data,
-    DeckUpdateIncrementviewResponseDataSchema,
-    'DeckUpdateIncrementviewResponseDataSchema',
-  );
-  // console.log("validated deckUpdateIncrementviewResponse: ", validated);
-  return validated;
+  try {
+    // console.log("IncrementDeckView triggered.")
+    const deckUpdateIncrementviewUrl = ENV.BACKEND_URL + '/deck/update/incrementview';
+    // console.log("deckUpdateIncrementviewUrl: ", deckUpdateIncrementviewUrl)
+    // console.log('deckUpdateIncrementviewRequestData: ', deckUpdateIncrementviewRequestData);
+    const deckUpdateIncrementviewResponse = await MakeApiRequest({
+      url: deckUpdateIncrementviewUrl,
+      method: 'PATCH',
+      requestSchema: DeckUpdateIncrementviewRequestSchema,
+      responseSchema: DeckUpdateIncrementviewResponseSchema,
+      data: deckUpdateIncrementviewRequestData,
+    });
+    // console.log("raw deckUpdateIncrementviewResponse: ", deckUpdateIncrementviewResponse);
+    const validated: DeckUpdateIncrementviewResponseDataDTO = validate(
+      deckUpdateIncrementviewResponse.data,
+      DeckUpdateIncrementviewResponseDataSchema,
+      'DeckUpdateIncrementviewResponseDataSchema',
+    );
+    // console.log("validated deckUpdateIncrementviewResponse: ", validated);
+    return validated;
+  } catch (error) {
+    console.error('Error incrementing deck view:', error);
+    throw error;
+  }
 }

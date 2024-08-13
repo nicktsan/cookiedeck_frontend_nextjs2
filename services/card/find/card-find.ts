@@ -14,6 +14,7 @@ import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '../card.entity';
 import { ENV } from '@/env';
 export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEntity[]> {
+
   function validate(dto: unknown): CardSearchResponseDataDTO {
     return ValidateSchema({
       dto,
@@ -21,22 +22,27 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
       schemaName: 'CardSearchResponseDataSchema',
     });
   }
-  const url = ENV.BACKEND_URL + '/card/find';
-  const params: CardSearchRequestDTO = {
-    select: ['id', 'name_eng', 'name_kr', 'color', 'card_type', 'plain_text_eng', 'code'],
-    name: formData.name,
-  };
-  const res: CardSearchResponseDTO = await MakeApiRequest({
-    url,
-    method: 'POST',
-    requestSchema: CardSearchRequestSchema,
-    responseSchema: CardSearchResponseSchema,
-    data: params,
-  });
-  validate(res.data);
-  let cards: CardEntity[] = [];
-  if (res.data.cards) {
-    cards = res.data.cards;
+  try {
+    const url = ENV.BACKEND_URL + '/card/find';
+    const params: CardSearchRequestDTO = {
+      select: ['id', 'name_eng', 'name_kr', 'color', 'card_type', 'plain_text_eng', 'code'],
+      name: formData.name,
+    };
+    const res: CardSearchResponseDTO = await MakeApiRequest({
+      url,
+      method: 'POST',
+      requestSchema: CardSearchRequestSchema,
+      responseSchema: CardSearchResponseSchema,
+      data: params,
+    });
+    validate(res.data);
+    let cards: CardEntity[] = [];
+    if (res.data.cards) {
+      cards = res.data.cards;
+    }
+    return cards;
+  } catch (error) {
+    console.error('Error searching for cards:', error);
+    throw error;
   }
-  return cards;
 }

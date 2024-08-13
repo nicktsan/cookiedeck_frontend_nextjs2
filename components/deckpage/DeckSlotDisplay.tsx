@@ -53,12 +53,15 @@ const DeckSlot = ({
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
     ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
     : '';
+  const imgLink = viewMode === 'en' ? deckslot.image_link_en || '': deckslot.image_link || '';
   return (
     <>
       <div
         key={deckslot.card_id}
         className="flex items-center justify-between gap-y-1 py-1"
-        onMouseEnter={() => onMouseEnter(deckslot.image_link!)}
+        onMouseEnter={() => 
+          onMouseEnter(imgLink)
+        }
       >
         <div className="flex min-w-0 flex-grow items-center pr-2">
           <span className="w-4 flex-shrink-0 text-left">{deckslot.quantity}</span>
@@ -207,15 +210,21 @@ export default function DeckSlotDisplay({
 
   const [currentImage, setCurrentImage] = useState<string>('');
   useEffect(() => {
-    if (sortedGroupedByCardType) {
-      // Find the first deckslot in the sortedGroupedByCardType
-      const firstDeckslot = Object.values(sortedGroupedByCardType).flat()[0];
-      if (firstDeckslot) {
-        // Set the image link of the first deckslot as the default image
-        setCurrentImage(firstDeckslot.image_link || '');
+    if (!currentImage) {
+      if (sortedGroupedByCardType) {
+        // Find the first deckslot in the sortedGroupedByCardType
+        const firstDeckslot = Object.values(sortedGroupedByCardType).flat()[0];
+        if (firstDeckslot) {
+          // Set the image link of the first deckslot as the default image
+          if (viewMode === 'en'){
+            setCurrentImage(firstDeckslot.image_link_en || '');
+          } else {
+            setCurrentImage(firstDeckslot.image_link || '');
+          } 
+        }
       }
     }
-  }, [deckslots]);
+  }, [deckslots, viewMode]);
 
   const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
     const payload: DeckslotUpdateQuantityRequestDTO = {

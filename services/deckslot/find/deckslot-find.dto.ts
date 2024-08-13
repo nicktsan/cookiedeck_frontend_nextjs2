@@ -13,6 +13,7 @@ export const DeckslotFindResponseSchema = z.object({
   name_kr: z.string().optional(),
   code: z.string().optional(),
   rarity: z.string().optional(),
+  // rarity_abb: z.string().optional(),
   card_type: z.string().optional(),
   color: z.string().optional(),
   card_level: z.number().nullable().optional(),
@@ -21,6 +22,7 @@ export const DeckslotFindResponseSchema = z.object({
   expansion: z.string().nullable().optional(),
   illustrator: z.string().optional(),
   image_link: z.string().optional(),
+  image_link_en: z.string().optional(),
 });
 
 export type DeckslotFindResponseDTO = z.infer<typeof DeckslotFindResponseSchema>;

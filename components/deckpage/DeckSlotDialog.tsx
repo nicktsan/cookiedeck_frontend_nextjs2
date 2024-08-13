@@ -31,6 +31,7 @@ export function DeckSlotDialog({
     setViewMode((prev) => (prev === 'en' ? 'kr' : 'en'));
   };
   const displayName = viewMode === 'en' ? selectedDeckSlot.name_eng : selectedDeckSlot.name_kr;
+  const displayImg = viewMode === 'en' ? selectedDeckSlot.image_link_en : selectedDeckSlot.image_link;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -48,7 +49,8 @@ export function DeckSlotDialog({
           </div>
           <div className="relative h-96 w-96">
             <Image
-              src={selectedDeckSlot.image_link || ''}
+              // src={selectedDeckSlot.image_link || ''}
+              src={displayImg || ''}
               layout="fill"
               objectFit="contain"
               alt=""

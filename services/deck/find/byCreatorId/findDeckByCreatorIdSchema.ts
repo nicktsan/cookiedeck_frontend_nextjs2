@@ -17,7 +17,7 @@ export const DeckFindRequestByCreatorIdSchema = z.object({
 });
 
 export const DeckFindResponseByCreatorIdDataSchema = z.object({
-  decks: z.array(DeckEntitySchema).nullable(),
+  decks: z.array(DeckEntitySchema).nullable().optional(),
   message: z.string().optional(),
 });
 

@@ -20,27 +20,32 @@ import {
 export async function DeleteDeckSlot(
   deleteDeckRequest: DeckslotDeleteRequestDTO,
 ): Promise<DeckslotDeleteResponseDataDTO | ErrorResponseDataDTO> {
-  const url = ENV.BACKEND_URL + '/deckslot/delete';
-  const res: DeckslotDeleteResponseDTO | ErrorResponseDTO = await MakeApiRequest({
-    url,
-    method: 'DELETE',
-    requestSchema: DeckslotDeleteRequestSchema,
-    responseSchema: DeckslotDeleteResponseSchema,
-    data: deleteDeckRequest,
-  });
-  if (res.statusCode >= 200 && res.statusCode <= 299) {
-    const validated: DeckslotDeleteResponseDataDTO = validate(
+  try {
+    const url = ENV.BACKEND_URL + '/deckslot/delete';
+    const res: DeckslotDeleteResponseDTO | ErrorResponseDTO = await MakeApiRequest({
+      url,
+      method: 'DELETE',
+      requestSchema: DeckslotDeleteRequestSchema,
+      responseSchema: DeckslotDeleteResponseSchema,
+      data: deleteDeckRequest,
+    });
+    if (res.statusCode >= 200 && res.statusCode <= 299) {
+      const validated: DeckslotDeleteResponseDataDTO = validate(
+        res.data,
+        DeckslotDeleteResponseDataSchema,
+        'DeckslotDeleteResponseDataSchema',
+      );
+      return validated;
+    }
+    const validatedError: ErrorResponseDataDTO = validate(
       res.data,
-      DeckslotDeleteResponseDataSchema,
-      'DeckslotDeleteResponseDataSchema',
+      ErrorResponseDataSchema,
+      'ErrorResponseDataSchema',
     );
-    return validated;
+    // console.log("validated res: ", validated);
+    return validatedError;
+  } catch (error) {
+    console.error('Error deleting deck:', error);
+    throw error;
   }
-  const validatedError: ErrorResponseDataDTO = validate(
-    res.data,
-    ErrorResponseDataSchema,
-    'ErrorResponseDataSchema',
-  );
-  // console.log("validated res: ", validated);
-  return validatedError;
 }
