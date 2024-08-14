@@ -11,7 +11,7 @@ export default async function PublicDecks({
 }) {
   const name = searchParams?.name || '';
   return (
-    <div>
+    <div className="flex flex-1 flex-col items-center gap-y-4">
       Deck Search
       <DeckSearchBar />
       <DeckSearchResults name={name} />

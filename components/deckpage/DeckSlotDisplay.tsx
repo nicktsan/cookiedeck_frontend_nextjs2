@@ -53,15 +53,13 @@ const DeckSlot = ({
   const colorEmoji = Object.keys(colorMapping).includes(deckslot.color!.toLowerCase())
     ? colorMapping[deckslot.color?.toLowerCase() as keyof typeof colorMapping]
     : '';
-  const imgLink = viewMode === 'en' ? deckslot.image_link_en || '': deckslot.image_link || '';
+  const imgLink = viewMode === 'en' ? deckslot.image_link_en || '' : deckslot.image_link || '';
   return (
     <>
       <div
         key={deckslot.card_id}
         className="flex items-center justify-between gap-y-1 py-1"
-        onMouseEnter={() => 
-          onMouseEnter(imgLink)
-        }
+        onMouseEnter={() => onMouseEnter(imgLink)}
       >
         <div className="flex min-w-0 flex-grow items-center pr-2">
           <span className="w-4 flex-shrink-0 text-left">{deckslot.quantity}</span>
@@ -213,7 +211,7 @@ export default function DeckSlotDisplay({
   // Set default image when component mounts or viewMode changes
   useEffect(() => {
     if (deckslots && deckslots.length > 0) {
-      let cardToDisplay = deckslots.find(slot => slot.card_id === currentCardId);
+      let cardToDisplay = deckslots.find((slot) => slot.card_id === currentCardId);
       if (!cardToDisplay) {
         cardToDisplay = deckslots[0];
         setCurrentCardId(cardToDisplay.card_id);
@@ -221,7 +219,6 @@ export default function DeckSlotDisplay({
       setCurrentImage(viewMode === 'en' ? cardToDisplay.image_link_en! : cardToDisplay.image_link!);
     }
   }, [deckslots, viewMode, currentCardId]);
-
 
   const updateQuantity = async (deckslot: DeckslotFindResponseDTO, change: number) => {
     const payload: DeckslotUpdateQuantityRequestDTO = {
@@ -232,7 +229,6 @@ export default function DeckSlotDisplay({
     };
     await updateQuantityMutation.mutateAsync(payload);
   };
-
 
   const handleMouseEnter = (deckslot: DeckslotFindResponseDTO) => {
     setCurrentCardId(deckslot.card_id);

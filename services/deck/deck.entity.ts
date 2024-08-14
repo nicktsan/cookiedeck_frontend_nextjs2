@@ -1,5 +1,6 @@
 import { z } from 'zod';
 export const DeckEntitySchema = z.object({
+  //todo add years, days, hours, minutes, seconds
   id: z.string().uuid({
     message: `creator_id must be a valid UUID`,
   }),

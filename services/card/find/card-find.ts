@@ -14,7 +14,6 @@ import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '../card.entity';
 import { ENV } from '@/env';
 export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEntity[]> {
-
   function validate(dto: unknown): CardSearchResponseDataDTO {
     return ValidateSchema({
       dto,

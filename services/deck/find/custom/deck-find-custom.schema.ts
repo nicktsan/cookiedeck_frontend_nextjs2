@@ -3,7 +3,7 @@ import { DeckEntitySchema } from '../../deck.entity';
 
 export const DeckSearchBarSchema = z.object({
   name: z.string().min(2, {
-    message: 'name must be a string of at least 2 length.',
+    message: 'Name must be a string of at least 2 length.',
   }),
 });
 
