@@ -1,6 +1,10 @@
 'use server';
 import { MakeApiRequest } from '@/services/baseApiRequest';
-import { DeckFindCustomRequestDTO, DeckFindCustomResponseDataDTO } from './deck-find-custom.dto';
+import {
+  DeckFindCustomRequestDTO,
+  DeckFindCustomResponseDataDTO,
+  DeckFindCustomResponseDTO,
+} from './deck-find-custom.dto';
 import {
   DeckFindCustomRequestSchema,
   DeckFindCustomResponseDataSchema,
@@ -8,7 +12,11 @@ import {
 } from './deck-find-custom.schema';
 import { validate } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
-import { ErrorResponseDataDTO, ErrorResponseDataSchema } from '@/utils/error.schema';
+import {
+  ErrorResponseDataDTO,
+  ErrorResponseDataSchema,
+  ErrorResponseDTO,
+} from '@/utils/error.schema';
 
 export async function DeckFindCustom(
   name: string,
@@ -16,17 +24,18 @@ export async function DeckFindCustom(
   try {
     const deckFindCustomUrl = ENV.BACKEND_URL + '/deck/find/custom';
     const deckFindCustomRequestData: DeckFindCustomRequestDTO = {
-      select: ['name', 'views', 'username', 'updated_at'],
+      select: ['name', 'views', 'username'],
       name: name,
     };
     // console.log("deckFindCustomUrl: ", deckFindCustomUrl)
-    const deckFindCustomResponse = await MakeApiRequest({
-      url: deckFindCustomUrl,
-      method: 'POST',
-      requestSchema: DeckFindCustomRequestSchema,
-      responseSchema: DeckFindCustomResponseSchema,
-      data: deckFindCustomRequestData,
-    });
+    const deckFindCustomResponse: DeckFindCustomResponseDTO | ErrorResponseDTO =
+      await MakeApiRequest({
+        url: deckFindCustomUrl,
+        method: 'POST',
+        requestSchema: DeckFindCustomRequestSchema,
+        responseSchema: DeckFindCustomResponseSchema,
+        data: deckFindCustomRequestData,
+      });
     // console.log("raw deckFindCustomResponse: ", deckFindCustomResponse);
 
     if (deckFindCustomResponse.statusCode >= 200 && deckFindCustomResponse.statusCode <= 299) {

@@ -6,6 +6,7 @@ import { UpdateDeck } from '@/services/deck/update/updateDeck';
 import { DeckUpdateRequestDTO } from '@/services/deck/update/deck-update.dto';
 import { VisibilitySelect } from './VisibilitySelect';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
+import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
@@ -18,19 +19,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
 
   if (!displayDeck) return null;
   // Destructure the properties with default values to handle undefined cases
-  const {
-    name,
-    description,
-    creator_username = '',
-    visibility,
-    views = 0,
-    years = 0,
-    months = 0,
-    days = 0,
-    hours = 0,
-    minutes = 0,
-    seconds = 0,
-  } = displayDeck;
+  const { name, description, creator_username = '', visibility, views = 0 } = displayDeck;
 
   const handleChange = async (field: string, value: string) => {
     if (
@@ -59,32 +48,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
       e.currentTarget.blur(); // Remove focus from the editable element
     }
   };
-
-  // Create an array of time units for easier iteration and filtering
-  const timeUnits = [
-    { label: 'year', value: years },
-    { label: 'month', value: months },
-    { label: 'day', value: days },
-    { label: 'hour', value: hours },
-    { label: 'minute', value: minutes },
-    { label: 'second', value: seconds },
-  ];
-
-  let lastUpdated: string = '';
-  timeUnits
-    .filter((unit) => unit.value > 0)
-    .map(
-      (unit) =>
-        (lastUpdated =
-          lastUpdated +
-          ' ' +
-          Math.round(unit.value) +
-          ' ' +
-          unit.label +
-          (Math.round(unit.value) > 1 ? 's' : '') +
-          ' '),
-    );
-  lastUpdated = lastUpdated + 'since last update';
+  const lastUpdated = calculateSinceLastUpdate(displayDeck);
 
   return (
     <div className="flex flex-col items-start px-[1vw] md:px-[10vw] lg:px-[10vw]">

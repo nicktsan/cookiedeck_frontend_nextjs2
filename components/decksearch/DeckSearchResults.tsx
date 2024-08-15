@@ -1,6 +1,7 @@
 import { DeckEntity } from '@/services/deck/deck.entity';
 import { DeckFindCustom } from '@/services/deck/find/custom/deck-find-custom';
 import { DeckFindCustomResponseDataDTO } from '@/services/deck/find/custom/deck-find-custom.dto';
+import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
 import { ErrorResponseDataDTO } from '@/utils/error.schema';
 import Link from 'next/link';
 import { FaEye } from 'react-icons/fa';
@@ -38,16 +39,34 @@ export default async function DeckSearchResults({
       if (deckFindRes.decks) {
         decks = deckFindRes.decks as DeckEntity[];
         return (
-          <div className="grid grid-cols-4 gap-4">
+          // <div className="grid grid-cols-4 gap-4 w-11/12">
+          //   {decks.map((deck) => (
+          //     <Link key={deck.id} href={`/deck/${deck.id}`}>
+          //       <div className="cursor-pointer outline outline-offset-2 outline-blue-500">
+          //         <h2>{deck.name}</h2>
+          //         <h2>{deck.username}</h2>
+          //         <div className="flex items-center gap-x-1">
+          //           <FaEye /> <p>{deck.views}</p>
+          //         </div>
+          //         <p>{calculateSinceLastUpdate(deck)}</p>
+          //       </div>
+          //     </Link>
+          //   ))}
+          // </div>
+          <div className="grid w-11/12 grid-cols-4 gap-4">
             {decks.map((deck) => (
-              <Link key={deck.id} href={`/deck/${deck.id}`}>
-                <div className="cursor-pointer outline outline-offset-2 outline-blue-500">
-                  <h2>{deck.name}</h2>
-                  <h2>{deck.username}</h2>
-                  <div className="flex items-center gap-x-1">
-                    <FaEye /> <p>{deck.views}</p>
+              <Link key={deck.id} href={`/deck/${deck.id}`} className="h-full">
+                <div className="flex h-full cursor-pointer flex-col justify-between outline outline-offset-2 outline-blue-500">
+                  <div>
+                    <h2>{deck.name}</h2>
+                    <h2>{deck.username}</h2>
                   </div>
-                  <p>Last Updated: {deck.updated_at}</p>
+                  <div>
+                    <div className="flex items-center gap-x-1">
+                      <FaEye /> <p>{deck.views}</p>
+                    </div>
+                    <p>{calculateSinceLastUpdate(deck)}</p>
+                  </div>
                 </div>
               </Link>
             ))}

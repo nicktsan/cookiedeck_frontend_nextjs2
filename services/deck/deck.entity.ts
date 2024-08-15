@@ -33,6 +33,12 @@ export const DeckEntitySchema = z.object({
     .optional(),
   created_at: z.string().datetime().optional(),
   updated_at: z.string().datetime().optional(),
+  years: z.number().optional(),
+  months: z.number().optional(),
+  days: z.number().optional(),
+  hours: z.number().optional(),
+  minutes: z.number().optional(),
+  seconds: z.number().optional(),
 });
 
 export type DeckEntity = z.infer<typeof DeckEntitySchema>;
