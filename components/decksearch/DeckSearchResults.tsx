@@ -39,20 +39,6 @@ export default async function DeckSearchResults({
       if (deckFindRes.decks) {
         decks = deckFindRes.decks as DeckEntity[];
         return (
-          // <div className="grid grid-cols-4 gap-4 w-11/12">
-          //   {decks.map((deck) => (
-          //     <Link key={deck.id} href={`/deck/${deck.id}`}>
-          //       <div className="cursor-pointer outline outline-offset-2 outline-blue-500">
-          //         <h2>{deck.name}</h2>
-          //         <h2>{deck.username}</h2>
-          //         <div className="flex items-center gap-x-1">
-          //           <FaEye /> <p>{deck.views}</p>
-          //         </div>
-          //         <p>{calculateSinceLastUpdate(deck)}</p>
-          //       </div>
-          //     </Link>
-          //   ))}
-          // </div>
           <div className="grid w-11/12 grid-cols-4 gap-4">
             {decks.map((deck) => (
               <Link key={deck.id} href={`/deck/${deck.id}`} className="h-full">
