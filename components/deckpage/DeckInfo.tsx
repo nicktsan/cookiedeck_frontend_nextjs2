@@ -7,14 +7,16 @@ import { DeckUpdateRequestDTO } from '@/services/deck/update/deck-update.dto';
 import { VisibilitySelect } from './VisibilitySelect';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
+  deckslots: DeckslotFindResponseDTO[] | undefined | null;
   onUpdate: () => void;
   isOwner: boolean | null | undefined;
 }
 
-export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoProps) {
+export default function DeckInfo({ displayDeck, deckslots, onUpdate, isOwner }: DeckInfoProps) {
   const [reload, setReload] = useState(false); // State to trigger reload
 
   if (!displayDeck) return null;
@@ -48,44 +50,54 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
       e.currentTarget.blur(); // Remove focus from the editable element
     }
   };
-  const lastUpdated = calculateSinceLastUpdate(displayDeck);
-
+  const lastUpdated: string = calculateSinceLastUpdate(displayDeck);
+  const defaultImgURL: string = '/images/cookieruntcg.PNG';
+  let bgImage: string = `url(${displayDeck.banner_url || defaultImgURL})`;
+  if (deckslots && deckslots[0]) {
+    bgImage = `url(${displayDeck.banner_url || deckslots[0].image_link || defaultImgURL})`;
+  }
   return (
-    <div className="flex flex-col items-start px-[1vw] md:px-[10vw] lg:px-[10vw]">
-      <div className="py-6 font-bold">
-        <h2>{creator_username}</h2>
-        <h1
-          key={reload ? 'nameReloaded' : 'name'}
-          contentEditable={isOwner ? 'true' : 'false'}
-          onBlur={(e) => isOwner && handleChange('name', e.currentTarget.textContent || '')}
-          onKeyDown={(e) => isOwner && handleKeyDown(e, 'name')}
-          suppressContentEditableWarning={true}
-        >
-          {displayDeck.name}
-        </h1>
-        <p
-          key={reload ? 'descriptionReloaded' : 'description'}
-          className="font-normal"
-          contentEditable={isOwner ? 'true' : 'false'}
-          onBlur={(e) => isOwner && handleChange('description', e.currentTarget.textContent || '')}
-          onKeyDown={(e) => isOwner && handleKeyDown(e, 'description')}
-          suppressContentEditableWarning={true}
-        >
-          {displayDeck.description}
-        </p>
-        <p className="mt-1 flex flex-row items-center">
-          {isOwner ? (
-            <VisibilitySelect
-              visibility={visibility!}
-              onVisibilityChange={(value) => handleChange('visibility', value)}
-            />
-          ) : (
-            <span>{capitalizeFirstLetter(visibility ?? '')}</span>
-          )}
-          <FaEye className="ml-2" />
-          <span className="mx-2">{views}</span>
-          <span className="ml-1">{lastUpdated}</span>
-        </p>
+    <div
+      className="relative h-[50vh] w-full bg-cover bg-center"
+      style={{ backgroundImage: bgImage }}
+    >
+      <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-50">
+        <div className="p-6 text-white md:p-10 lg:p-12">
+          <h2 className="text-sm md:text-base">{creator_username}</h2>
+          <h1
+            className="mb-2 text-2xl font-bold md:text-3xl lg:text-4xl"
+            contentEditable={isOwner ? 'true' : 'false'}
+            onBlur={(e) => isOwner && handleChange('name', e.currentTarget.textContent || '')}
+            onKeyDown={(e) => isOwner && handleKeyDown(e, 'name')}
+            suppressContentEditableWarning={true}
+          >
+            {displayDeck.name}
+          </h1>
+          <p
+            className="mb-4 text-sm md:text-base"
+            contentEditable={isOwner ? 'true' : 'false'}
+            onBlur={(e) =>
+              isOwner && handleChange('description', e.currentTarget.textContent || '')
+            }
+            onKeyDown={(e) => isOwner && handleKeyDown(e, 'description')}
+            suppressContentEditableWarning={true}
+          >
+            {displayDeck.description}
+          </p>
+          <div className="flex flex-row items-center text-sm">
+            {isOwner ? (
+              <VisibilitySelect
+                visibility={visibility!}
+                onVisibilityChange={(value) => handleChange('visibility', value)}
+              />
+            ) : (
+              <span>{capitalizeFirstLetter(visibility ?? '')}</span>
+            )}
+            <FaEye className="ml-2" />
+            <span className="mx-2">{views}</span>
+            <span className="ml-1">{lastUpdated}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

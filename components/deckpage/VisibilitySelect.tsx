@@ -17,18 +17,20 @@ interface VisibilitySelectProps {
 
 export function VisibilitySelect({ visibility, onVisibilityChange }: VisibilitySelectProps) {
   return (
-    <Select onValueChange={(value) => onVisibilityChange(value)}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={capitalizeFirstLetter(visibility ?? '')} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Visibility</SelectLabel>
-          <SelectItem value="public">Public</SelectItem>
-          <SelectItem value="unlisted">Unlisted</SelectItem>
-          <SelectItem value="private">Private</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div className="text-black">
+      <Select onValueChange={(value) => onVisibilityChange(value)}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={capitalizeFirstLetter(visibility ?? '')} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Visibility</SelectLabel>
+            <SelectItem value="public">Public</SelectItem>
+            <SelectItem value="unlisted">Unlisted</SelectItem>
+            <SelectItem value="private">Private</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

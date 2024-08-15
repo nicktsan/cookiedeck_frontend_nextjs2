@@ -77,6 +77,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
   };
 
   if (isPatchLoading || isDeckLoading || isDeckSlotsLoading || isUserAuthenticated) {
+    //todo allow child components to load separately if they are successfully found
     return (
       <div className="flex w-full flex-1 flex-col items-center gap-20">
         <div className="w-full">
@@ -103,10 +104,11 @@ export default function DeckView({ params }: { params: { id: string } }) {
       <div className="flex-grow pb-32">
         <DeckInfo
           displayDeck={displayDeck}
+          deckslots={deckSlots || []}
           onUpdate={() => updateDeckMutation.mutate(params.id)}
           isOwner={isOwner}
         />
-        <div className="mb-4 flex items-center justify-center space-x-2">
+        <div className="my-4 flex items-center justify-center space-x-2">
           {isOwner && <DeckPageDropDownMenu deckId={params.id} />}
           <Switch id="view-mode" onCheckedChange={toggleViewMode} />
           <Label htmlFor="view-mode">{viewMode === 'en' ? 'EN' : 'KR'}</Label>
