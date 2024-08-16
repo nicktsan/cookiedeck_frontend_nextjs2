@@ -17,6 +17,7 @@ interface DeckInfoProps {
 
 export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoProps) {
   const [localDeck, setLocalDeck] = useState(displayDeck);
+  const [nameErrorClass, setNameErrorClass] = useState("hidden");
 
   useEffect(() => {
     setLocalDeck(displayDeck);
@@ -31,6 +32,9 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
     onError: () => {
       // If the mutation fails, revert to the previous value
       setLocalDeck(displayDeck);
+    },
+    onSuccess: () => {
+      setNameErrorClass("hidden");
     },
     onSettled: () => {
       // Always call onUpdate after error or success
@@ -49,7 +53,9 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
       ) {
         return;
       }
-
+      if (field === 'name' && value.trim().length < 3) {
+        setNameErrorClass("text-red-500");
+      }
       const deckUpdateRequestData: DeckUpdateRequestDTO = {
         id: displayDeck.id,
         [field]: value,
@@ -93,6 +99,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
           >
             {name}
           </h1>
+          <p className={nameErrorClass}>Name must be at least 3 characters long.</p>
           <p
             className="mb-4 text-sm md:text-base"
             contentEditable={isOwner ? 'true' : 'false'}
