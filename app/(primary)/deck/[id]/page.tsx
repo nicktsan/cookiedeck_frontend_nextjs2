@@ -104,7 +104,6 @@ export default function DeckView({ params }: { params: { id: string } }) {
       <div className="flex-grow pb-32">
         <DeckInfo
           displayDeck={displayDeck}
-          deckslots={deckSlots || []}
           onUpdate={() => updateDeckMutation.mutate(params.id)}
           isOwner={isOwner}
         />

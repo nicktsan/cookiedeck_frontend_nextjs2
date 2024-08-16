@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { DeckFindResponseDataDTO } from '@/services/deck/find/findDeckDTO';
 import { FaEye } from 'react-icons/fa';
 import { UpdateDeck } from '@/services/deck/update/updateDeck';
@@ -7,55 +6,76 @@ import { DeckUpdateRequestDTO } from '@/services/deck/update/deck-update.dto';
 import { VisibilitySelect } from './VisibilitySelect';
 import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
-import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
+import { useMutation } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
-  deckslots: DeckslotFindResponseDTO[] | undefined | null;
   onUpdate: () => void;
   isOwner: boolean | null | undefined;
 }
 
-export default function DeckInfo({ displayDeck, deckslots, onUpdate, isOwner }: DeckInfoProps) {
-  const [reload, setReload] = useState(false); // State to trigger reload
+export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoProps) {
+  const [localDeck, setLocalDeck] = useState(displayDeck);
 
-  if (!displayDeck) return null;
-  // Destructure the properties with default values to handle undefined cases
-  const { name, description, creator_username = '', visibility, views = 0 } = displayDeck;
+  useEffect(() => {
+    setLocalDeck(displayDeck);
+  }, [displayDeck]);
 
-  const handleChange = async (field: string, value: string) => {
-    if (
-      (field === 'description' && value.trim() === description?.trim()) ||
-      (field === 'name' && value.trim() === name?.trim()) ||
-      (field === 'visibility' && value.toLowerCase().trim() === visibility?.trim())
-    ) {
-      return;
-    }
-    const deckUpdateRequestData: DeckUpdateRequestDTO = {
-      id: displayDeck.id!,
-    };
-    (deckUpdateRequestData as any)[field] = value;
-    try {
-      await UpdateDeck(deckUpdateRequestData);
-      await onUpdate();
-    } catch (error) {
-      // If there is an error, trigger a reload
-      setReload(!reload);
-    }
-  };
+  const updateDeckMutation = useMutation({
+    mutationFn: UpdateDeck,
+    onMutate: async (updatedDeck) => {
+      // Optimistically update to the new value
+      setLocalDeck((current) => ({ ...current, ...updatedDeck }));
+    },
+    onError: () => {
+      // If the mutation fails, revert to the previous value
+      setLocalDeck(displayDeck);
+    },
+    onSettled: () => {
+      // Always call onUpdate after error or success
+      onUpdate();
+    },
+  });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>, field: string) => {
-    if (e.key === 'Enter') {
-      handleChange(field, e.currentTarget.textContent || '');
-      e.currentTarget.blur(); // Remove focus from the editable element
-    }
-  };
-  const lastUpdated: string = calculateSinceLastUpdate(displayDeck);
+  const handleChange = useCallback(
+    async (field: string, value: string) => {
+      if (!displayDeck || !displayDeck.id) return;
+
+      if (
+        (field === 'description' && value.trim() === localDeck?.description?.trim()) ||
+        (field === 'name' && value.trim() === localDeck?.name?.trim()) ||
+        (field === 'visibility' && value.toLowerCase().trim() === localDeck?.visibility?.trim())
+      ) {
+        return;
+      }
+
+      const deckUpdateRequestData: DeckUpdateRequestDTO = {
+        id: displayDeck.id,
+        [field]: value,
+      };
+
+      updateDeckMutation.mutate(deckUpdateRequestData);
+    },
+    [displayDeck, localDeck, updateDeckMutation],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLElement>, field: string) => {
+      if (e.key === 'Enter') {
+        handleChange(field, e.currentTarget.textContent || '');
+        e.currentTarget.blur(); // Remove focus from the editable element
+      }
+    },
+    [handleChange],
+  );
+
+  if (!localDeck) return null;
+
+  const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
+  const lastUpdated: string = calculateSinceLastUpdate(localDeck);
   const defaultImgURL: string = '/images/cookieruntcg.PNG';
-  let bgImage: string = `url(${displayDeck.banner_url || defaultImgURL})`;
-  if (deckslots && deckslots[0]) {
-    bgImage = `url(${displayDeck.banner_url || deckslots[0].image_link || defaultImgURL})`;
-  }
+  let bgImage: string = `url(${localDeck.banner_url || defaultImgURL})`;
   return (
     <div
       className="relative h-[50vh] w-full bg-cover bg-center"
@@ -71,7 +91,7 @@ export default function DeckInfo({ displayDeck, deckslots, onUpdate, isOwner }: 
             onKeyDown={(e) => isOwner && handleKeyDown(e, 'name')}
             suppressContentEditableWarning={true}
           >
-            {displayDeck.name}
+            {name}
           </h1>
           <p
             className="mb-4 text-sm md:text-base"
@@ -82,20 +102,23 @@ export default function DeckInfo({ displayDeck, deckslots, onUpdate, isOwner }: 
             onKeyDown={(e) => isOwner && handleKeyDown(e, 'description')}
             suppressContentEditableWarning={true}
           >
-            {displayDeck.description}
+            {description}
           </p>
-          <div className="flex flex-row items-center text-sm">
-            {isOwner ? (
-              <VisibilitySelect
-                visibility={visibility!}
-                onVisibilityChange={(value) => handleChange('visibility', value)}
-              />
-            ) : (
-              <span>{capitalizeFirstLetter(visibility ?? '')}</span>
-            )}
-            <FaEye className="ml-2" />
-            <span className="mx-2">{views}</span>
-            <span className="ml-1">{lastUpdated}</span>
+          <div className="flex w-full flex-row items-center justify-between text-sm">
+            <div className="flex items-center">
+              {isOwner ? (
+                <VisibilitySelect
+                  visibility={visibility!}
+                  onVisibilityChange={(value) => handleChange('visibility', value)}
+                />
+              ) : (
+                <span>{capitalizeFirstLetter(visibility ?? '')}</span>
+              )}
+              <FaEye className="ml-2" />
+              <span className="mx-2">{views}</span>
+              <span className="ml-1">{lastUpdated}</span>
+            </div>
+            <span className="items-end">Change card image</span>
           </div>
         </div>
       </div>

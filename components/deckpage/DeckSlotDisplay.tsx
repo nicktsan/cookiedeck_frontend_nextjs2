@@ -239,7 +239,7 @@ export default function DeckSlotDisplay({
       <div className="relative size-96 flex-shrink-0">
         <Image src={currentImage || ''} layout="fill" objectFit="contain" alt="" />
       </div>
-      <div className="grid grid-cols-3 justify-items-stretch gap-x-5 gap-y-6">
+      <div className="grid grid-cols-1 justify-items-stretch gap-x-5 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
         {Object.entries(sortedGroupedByCardType).map(([card_type, slots]) => (
           <div key={card_type} className="w-full">
             <h2 className="mb-2 text-xl font-bold">{card_type}</h2>
