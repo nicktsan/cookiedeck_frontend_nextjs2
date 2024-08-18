@@ -8,6 +8,7 @@ import { capitalizeFirstLetter } from '@/utils/capitalizeFirstLetter';
 import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
+import { ChangeCardImageDialog } from './ChangeCardImageDialog';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
@@ -125,7 +126,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
               <span className="mx-2">{views}</span>
               <span className="ml-1">{lastUpdated}</span>
             </div>
-            <span className="items-end">Change card image</span>
+            {isOwner ? (<ChangeCardImageDialog />) : null }
           </div>
         </div>
       </div>

@@ -77,7 +77,6 @@ export default function DeckView({ params }: { params: { id: string } }) {
   };
 
   if (isPatchLoading || isDeckLoading || isDeckSlotsLoading || isUserAuthenticated) {
-    //todo allow child components to load separately if they are successfully found
     return (
       <div className="flex w-full flex-1 flex-col items-center gap-20">
         <div className="w-full">
