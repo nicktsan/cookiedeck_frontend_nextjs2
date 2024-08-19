@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,53 +7,88 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import Image from 'next/image';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Pencil } from 'lucide-react';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
 
-export function ChangeCardImageDialog() {
+interface IChangeCardImageDialogProps {
+  deckslots: DeckslotFindResponseDTO[] | undefined | null;
+  displayDeckId: string | undefined;
+  displayDeckBanner: string | null | undefined;
+  defaultImgURL: string;
+  viewMode: 'en' | 'kr';
+  setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
+}
+export function ChangeCardImageDialog({
+  deckslots,
+  displayDeckId,
+  displayDeckBanner,
+  defaultImgURL,
+  viewMode,
+  setViewMode,
+}: IChangeCardImageDialogProps) {
+  //todo add card image change functionality
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="flex space-x-2 items-end hover:underline">
-            <span>Change card image</span>
-            <Pencil />
+        <div className="flex items-end space-x-2 hover:underline">
+          <span>Change card image</span>
+          <Pencil />
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Change banner</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when youre done.
+            Change your deck&apos;s banner here. Click save when youre done.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
-        </div>
+        {/* todo make Image Preview change to the url of the selected card */}
+        {/* todo add language toggle */}
+        <Image
+          src={displayDeckBanner || defaultImgURL}
+          width={500}
+          height={500}
+          alt="Uses default image if none selected."
+        />
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a fruit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Cards</SelectLabel>
+              {/* todo Dynamically generate SelectItems from deckslots with 
+              value={deckslots[i].id + " " + deckslots[i].image_link/deckslots[i].image_link_en
+              and Text={deckslots[i].name_eng/name_kr}}*/}
+              {/* todo change displayed information based on language toggle*/}
+              {deckslots?.map((deckslot) => (
+                <SelectItem
+                  key={deckslot.card_id.toString().concat(deckslot.board)}
+                  value={[deckslot.deck_id, deckslot.image_link].join('|')}
+                >
+                  {deckslot.name_eng}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <DialogFooter>
           <Button type="submit">Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

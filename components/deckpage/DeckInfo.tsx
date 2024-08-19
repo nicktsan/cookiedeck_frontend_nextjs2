@@ -9,16 +9,27 @@ import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate'
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { ChangeCardImageDialog } from './ChangeCardImageDialog';
+import { DeckslotFindResponseDTO } from '@/services/deckslot/find/deckslot-find.dto';
 
 interface DeckInfoProps {
   displayDeck: DeckFindResponseDataDTO | undefined;
+  deckslots: DeckslotFindResponseDTO[] | undefined | null;
   onUpdate: () => void;
   isOwner: boolean | null | undefined;
+  viewMode: 'en' | 'kr';
+  setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
 }
 
-export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoProps) {
+export default function DeckInfo({
+  displayDeck,
+  deckslots,
+  onUpdate,
+  isOwner,
+  viewMode,
+  setViewMode,
+}: DeckInfoProps) {
   const [localDeck, setLocalDeck] = useState(displayDeck);
-  const [nameErrorClass, setNameErrorClass] = useState("hidden");
+  const [nameErrorClass, setNameErrorClass] = useState('hidden');
 
   useEffect(() => {
     setLocalDeck(displayDeck);
@@ -35,7 +46,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
       setLocalDeck(displayDeck);
     },
     onSuccess: () => {
-      setNameErrorClass("hidden");
+      setNameErrorClass('hidden');
     },
     onSettled: () => {
       // Always call onUpdate after error or success
@@ -55,7 +66,7 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
         return;
       }
       if (field === 'name' && value.trim().length < 3) {
-        setNameErrorClass("text-red-500");
+        setNameErrorClass('text-red-500');
       }
       const deckUpdateRequestData: DeckUpdateRequestDTO = {
         id: displayDeck.id,
@@ -126,7 +137,16 @@ export default function DeckInfo({ displayDeck, onUpdate, isOwner }: DeckInfoPro
               <span className="mx-2">{views}</span>
               <span className="ml-1">{lastUpdated}</span>
             </div>
-            {isOwner ? (<ChangeCardImageDialog />) : null }
+            {isOwner ? (
+              <ChangeCardImageDialog
+                deckslots={deckslots}
+                displayDeckId={displayDeck?.id}
+                displayDeckBanner={displayDeck?.banner_url}
+                defaultImgURL={defaultImgURL}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+              />
+            ) : null}
           </div>
         </div>
       </div>
