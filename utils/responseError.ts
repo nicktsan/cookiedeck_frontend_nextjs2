@@ -1,4 +1,4 @@
-import { BaseError } from "./baseError";
-import { ErrorName } from "./baseError";
+import { BaseError } from './baseError';
+import { ErrorName } from './baseError';
 
-export class ResponseError extends BaseError<ErrorName>{}
+export class ResponseError extends BaseError<ErrorName> {}

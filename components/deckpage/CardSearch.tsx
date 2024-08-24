@@ -183,7 +183,8 @@ export default function CardSearch({ deckId, viewMode }: CardSearchProps) {
                       ? colorMapping[
                           cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping
                         ]
-                      : ''} {cardSearchResult.name_eng} [{cardSearchResult.code}]
+                      : ''}{' '}
+                    {cardSearchResult.name_eng} [{cardSearchResult.code}]
                   </div>
                 ) : (
                   <div

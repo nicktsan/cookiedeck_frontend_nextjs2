@@ -17,7 +17,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   requestSchema: TRequest;
   responseSchema: TResponse;
   data: z.infer<TRequest>;
-}): Promise<z.infer<TResponse> | ResponseError | ZodError | Error> {
+}): Promise<z.infer<TResponse> | ResponseError | AxiosError | ZodError | Error> {
   const supabase = createClient();
   const {
     data: { session },
@@ -63,7 +63,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
     }
   } catch (error) {
     // console.log('error: ', error);
-    if (axios.isAxiosError(error)){
+    if (axios.isAxiosError(error)) {
       const { response } = error as AxiosError;
       // console.log('error response data: ', response?.data);
       const errorParse = ErrorResponseSchema.safeParse({
@@ -75,14 +75,14 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
           name: 'RESPONSE_ERROR',
           message: errorParse.data.data.error || errorParse.data.data.errorMessage || error.message,
           cause: error,
-        })
+        });
       }
+      return error as AxiosError;
     }
     if (error instanceof ZodError) {
       return error as ZodError;
     }
-    return error as Error
-    
+    return error as Error;
   }
   return apiResponse;
 }

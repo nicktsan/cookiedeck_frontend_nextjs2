@@ -9,7 +9,11 @@ import {
 import { validate } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
 import { ZodError } from 'zod';
-import { ErrorResponseDataDTO, ErrorResponseDataSchema, ErrorResponseDTO } from '@/utils/error.schema';
+import {
+  ErrorResponseDataDTO,
+  ErrorResponseDataSchema,
+  ErrorResponseDTO,
+} from '@/utils/error.schema';
 
 const isDeckFindResponseDTO = (obj: any): obj is DeckFindResponseDTO => {
   return (
@@ -30,14 +34,15 @@ export async function FindDeck(id: string): Promise<DeckFindResponseDataDTO> {
     const deckFindUrl = ENV.BACKEND_URL + '/deck/find';
     const deckFindRequestData: DeckFindRequestDTO = { id: id };
     // console.log("deckFindUrl: ", deckFindUrl)
-    const deckFindResponse: DeckFindResponseDTO | ErrorResponseDTO | ZodError | Error = await MakeApiRequest({
-      url: deckFindUrl,
-      method: 'GET',
-      requestSchema: DeckFindRequestSchema,
-      responseSchema: DeckFindResponseSchema,
-      data: deckFindRequestData,
-    });
-    if (isDeckFindResponseDTO(deckFindResponse)){
+    const deckFindResponse: DeckFindResponseDTO | ErrorResponseDTO | ZodError | Error =
+      await MakeApiRequest({
+        url: deckFindUrl,
+        method: 'GET',
+        requestSchema: DeckFindRequestSchema,
+        responseSchema: DeckFindResponseSchema,
+        data: deckFindRequestData,
+      });
+    if (isDeckFindResponseDTO(deckFindResponse)) {
       const validated: DeckFindResponseDataDTO = validate(
         deckFindResponse.data,
         DeckFindResponseDataSchema,
@@ -47,7 +52,7 @@ export async function FindDeck(id: string): Promise<DeckFindResponseDataDTO> {
     }
     if (deckFindResponse instanceof ZodError || deckFindResponse instanceof Error) {
       throw deckFindResponse;
-    } 
+    }
 
     const validatedError: ErrorResponseDataDTO = validate(
       deckFindResponse.data,
@@ -58,6 +63,6 @@ export async function FindDeck(id: string): Promise<DeckFindResponseDataDTO> {
     // console.log("validated deckFindResponse: ", validated);
   } catch (error) {
     console.error('Error finding deck:');
-    throw error
+    throw error;
   }
 }

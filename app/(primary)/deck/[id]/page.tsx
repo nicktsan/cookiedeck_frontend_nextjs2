@@ -32,7 +32,11 @@ export default function DeckView({ params }: { params: { id: string } }) {
     refetchOnWindowFocus: false, // Avoid refetch on window focus
   });
 
-  const { data: patchResponse, isLoading: isPatchLoading, error: incrementViewError  } = useQuery({
+  const {
+    data: patchResponse,
+    isLoading: isPatchLoading,
+    error: incrementViewError,
+  } = useQuery({
     queryKey: ['patchDeck', params.id],
     queryFn: () => IncrementDeckView({ id: params.id }),
     retry: false, // No retries for PATCH request

@@ -145,6 +145,7 @@ export default function DeckInfo({
                 deckslots={deckslots}
                 displayDeckId={displayDeck?.id}
                 displayDeckBanner={displayDeck?.kr_banner_url}
+                displayDeckBannerId={displayDeck?.banner}
                 defaultImgURL={defaultImgURL}
                 viewMode={viewMode}
                 setViewMode={setViewMode}

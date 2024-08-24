@@ -44,7 +44,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
     }
     return cards;
   } catch (error) {
-    if(error instanceof Error){
+    if (error instanceof Error) {
       //todo handle generic Error
     }
     //todo additional error handling can be added based on error class
