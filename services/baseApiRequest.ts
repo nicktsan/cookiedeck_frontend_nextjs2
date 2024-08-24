@@ -1,8 +1,9 @@
 'use server';
-import { z } from 'zod';
-import axios, { AxiosError, AxiosResponse, Method } from 'axios';
+import { z, ZodError } from 'zod';
+import axios, { AxiosError, /*AxiosResponse,*/ Method } from 'axios';
 import { createClient } from '@/utils/supabase/server';
-import { ErrorResponseDTO, ErrorResponseSchema } from '@/utils/error.schema';
+import { /*ErrorResponseDTO,*/ ErrorResponseSchema } from '@/utils/error.schema';
+import { ResponseError } from '@/utils/responseError';
 
 async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.ZodType>({
   url,
@@ -16,7 +17,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   requestSchema: TRequest;
   responseSchema: TResponse;
   data: z.infer<TRequest>;
-}): Promise<z.infer<TResponse> | ErrorResponseDTO> {
+}): Promise<z.infer<TResponse> | ResponseError | ZodError | Error> {
   const supabase = createClient();
   const {
     data: { session },
@@ -62,12 +63,26 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
     }
   } catch (error) {
     // console.log('error: ', error);
-    const { response } = error as AxiosError;
-    // console.log('error response data: ', response?.data);
-    return ErrorResponseSchema.parse({
-      statusCode: response?.status || 500,
-      data: response?.data || { error: error },
-    }) as ErrorResponseDTO;
+    if (axios.isAxiosError(error)){
+      const { response } = error as AxiosError;
+      // console.log('error response data: ', response?.data);
+      const errorParse = ErrorResponseSchema.safeParse({
+        statusCode: response?.status || 500,
+        data: response?.data || { error: error },
+      });
+      if (errorParse.success) {
+        return new ResponseError({
+          name: 'RESPONSE_ERROR',
+          message: errorParse.data.data.error || errorParse.data.data.errorMessage || error.message,
+          cause: error,
+        })
+      }
+    }
+    if (error instanceof ZodError) {
+      return error as ZodError;
+    }
+    return error as Error
+    
   }
   return apiResponse;
 }

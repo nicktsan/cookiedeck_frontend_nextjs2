@@ -15,6 +15,8 @@ export default async function DeckSearchResults({
 }) {
   let decks: DeckEntity[] = [];
   // Type guard to check if the response is DeckFindCustomResponseDataDTO
+  //todo add deck classifications/tags for users to search up.
+  //Add filter/sorting options for viewing, updated_at, rating, etc.
   function isDeckFindCustomResponseDataDTO(
     response: any,
   ): response is DeckFindCustomResponseDataDTO {

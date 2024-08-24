@@ -190,17 +190,22 @@ export default function DeckSlotDisplay({
   );
   const sortedGroupedByCardType = sortedGroups.reduce(
     (acc, [card_type, slots]) => {
-      // Sort the slots within each group by name and then by color
+      // Sort the slots within each group by name and then by color then by code
       const sortedSlots = slots.sort((a, b) => {
         const nameA = viewMode === 'en' ? a.name_eng : a.name_kr;
         const nameB = viewMode === 'en' ? b.name_eng : b.name_kr;
         const colorA = a.color || '';
         const colorB = b.color || '';
+        const codeA = a.code || '';
+        const codeB = b.code || '';
 
         if (nameA !== nameB) {
           return nameA!.localeCompare(nameB!);
         }
-        return colorA.localeCompare(colorB);
+        if (colorA !== colorB) {
+          return colorA.localeCompare(colorB);
+        }
+        return codeA.localeCompare(codeB);
       });
       acc[card_type] = sortedSlots;
       return acc;

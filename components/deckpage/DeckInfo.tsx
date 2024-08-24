@@ -61,7 +61,8 @@ export default function DeckInfo({
       if (
         (field === 'description' && value.trim() === localDeck?.description?.trim()) ||
         (field === 'name' && value.trim() === localDeck?.name?.trim()) ||
-        (field === 'visibility' && value.toLowerCase().trim() === localDeck?.visibility?.trim())
+        (field === 'visibility' && value.toLowerCase().trim() === localDeck?.visibility?.trim()) ||
+        (field === 'banner' && Number(value) === localDeck?.banner)
       ) {
         return;
       }
@@ -93,7 +94,9 @@ export default function DeckInfo({
   const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
   const lastUpdated: string = calculateSinceLastUpdate(localDeck);
   const defaultImgURL: string = '/images/cookieruntcg.PNG';
-  let bgImage: string = `url(${localDeck.banner_url || defaultImgURL})`;
+  let bgImage: string = `url(${localDeck.kr_banner_url || defaultImgURL})`;
+  // console.log("localDeck.en_banner_url", localDeck.en_banner_url)
+  // console.log("localDeck.kr_banner_url", localDeck.kr_banner_url)
   return (
     <div
       className="relative h-[50vh] w-full bg-cover bg-center"
@@ -141,7 +144,7 @@ export default function DeckInfo({
               <ChangeCardImageDialog
                 deckslots={deckslots}
                 displayDeckId={displayDeck?.id}
-                displayDeckBanner={displayDeck?.banner_url}
+                displayDeckBanner={displayDeck?.kr_banner_url}
                 defaultImgURL={defaultImgURL}
                 viewMode={viewMode}
                 setViewMode={setViewMode}

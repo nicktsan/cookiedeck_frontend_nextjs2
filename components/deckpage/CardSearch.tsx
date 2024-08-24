@@ -32,7 +32,6 @@ export default function CardSearch({ deckId, viewMode }: CardSearchProps) {
   const [scrollAreaVisible, setScrollAreaVisible] = useState(false);
 
   const watchedValues = form.watch(); // Use watch to get the latest form values
-
   const { data: cardSearchResults = [], refetch } = useQuery<CardEntity[], Error>({
     queryKey: ['cardFind', watchedValues], // Use watchedValues for the queryKey
     queryFn: () => CardFind(watchedValues), // Use watchedValues for the query function
@@ -184,8 +183,7 @@ export default function CardSearch({ deckId, viewMode }: CardSearchProps) {
                       ? colorMapping[
                           cardSearchResult.color?.toLowerCase() as keyof typeof colorMapping
                         ]
-                      : ''}
-                    {cardSearchResult.name_eng} [{cardSearchResult.code}]
+                      : ''} {cardSearchResult.name_eng} [{cardSearchResult.code}]
                   </div>
                 ) : (
                   <div

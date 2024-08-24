@@ -32,7 +32,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
     refetchOnWindowFocus: false, // Avoid refetch on window focus
   });
 
-  const { data: patchResponse, isLoading: isPatchLoading } = useQuery({
+  const { data: patchResponse, isLoading: isPatchLoading, error: incrementViewError  } = useQuery({
     queryKey: ['patchDeck', params.id],
     queryFn: () => IncrementDeckView({ id: params.id }),
     retry: false, // No retries for PATCH request
@@ -42,7 +42,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
   const { data: displayDeck, isLoading: isDeckLoading } = useQuery<DeckFindResponseDataDTO>({
     queryKey: ['deck', params.id],
     queryFn: () => FindDeck(params.id),
-    retry: 3,
+    retry: false,
     refetchOnWindowFocus: false, // Avoid refetch on window focus
     enabled: !!patchResponse, // Only run if PATCH request is successful
   });
@@ -53,7 +53,7 @@ export default function DeckView({ params }: { params: { id: string } }) {
       const response = await DeckSlotFindByDeckId(params.id);
       return response.deckslots || [];
     },
-    retry: 3,
+    retry: false,
     refetchOnWindowFocus: false, // Avoid refetch on window focus
     enabled: !!patchResponse, // Only run if PATCH request is successful
   });
@@ -86,17 +86,17 @@ export default function DeckView({ params }: { params: { id: string } }) {
     );
   }
 
-  if (!displayDeck) {
+  if (incrementViewError) {
     return (
       <div className="flex w-full flex-1 flex-col items-center gap-20">
         <div className="w-full">
-          <div className="py-6 text-center font-bold">Deck not found for {params.id}</div>
+          <div className="py-6 text-center font-bold">{incrementViewError.message}</div>
         </div>
       </div>
     );
   }
 
-  const isOwner: boolean | null | undefined = userData && userData.id === displayDeck.creator_id;
+  const isOwner: boolean | null | undefined = userData && userData.id === displayDeck?.creator_id;
 
   return (
     <div className="flex min-h-screen flex-col">

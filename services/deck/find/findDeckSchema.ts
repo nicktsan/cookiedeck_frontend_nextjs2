@@ -22,7 +22,9 @@ export const DeckFindResponseDataSchema = z.object({
     })
     .optional(),
   creator_username: z.string().optional(),
-  banner_url: z.string().nullable().optional(),
+  banner: z.number().nullable().optional(),
+  kr_banner_url: z.string().nullable().optional(),
+  en_banner_url: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   visibility: z
     .enum(['public', 'private', 'unlisted'], {
