@@ -86,7 +86,6 @@ export default function DeckInfo({
 
       updateDeckMutation.mutate(deckUpdateRequestData);
     },
-    // [displayDeck, localDeck, updateDeckMutation],
     [
       displayDeck,
       deckslots,
@@ -100,9 +99,11 @@ export default function DeckInfo({
   );
 
   useEffect(() => {
-    setLocalDeck(displayDeck);
-    setOptimisticBannerUrl(null);
-  }, [displayDeck]);
+    // Only reset optimisticBannerUrl if there's no optimistic update happening
+    if (!optimisticBannerUrl) {
+      setLocalDeck(displayDeck);
+    }
+  }, [displayDeck, optimisticBannerUrl]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLElement>, field: string) => {
@@ -119,10 +120,8 @@ export default function DeckInfo({
   const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
   const lastUpdated: string = calculateSinceLastUpdate(localDeck);
   const defaultImgURL: string = '/images/cookieruntcg.PNG';
-  // let bgImage: string = `url(${localDeck.kr_banner_url || defaultImgURL})`;
-  let bgImage: string = `url(${optimisticBannerUrl || localDeck.kr_banner_url || defaultImgURL})`;
-  // console.log("localDeck.en_banner_url", localDeck.en_banner_url)
-  // console.log("localDeck.kr_banner_url", localDeck.kr_banner_url)
+  const bgImage: string = `url(${optimisticBannerUrl || localDeck.kr_banner_url || defaultImgURL})`;
+
   return (
     <div
       className="relative h-[50vh] w-full bg-cover bg-center"
