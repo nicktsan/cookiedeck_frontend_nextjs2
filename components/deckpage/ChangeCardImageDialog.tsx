@@ -28,36 +28,28 @@ import { useState, useEffect } from 'react';
 
 interface IChangeCardImageDialogProps {
   deckslots: DeckslotFindResponseDTO[] | undefined | null;
-  displayDeckId: string | undefined;
   displayDeckBanner: string | null | undefined;
   displayDeckBannerId: number | null | undefined;
   defaultImgURL: string;
   viewMode: 'en' | 'kr';
   setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
+  onBannerChange: (value: number) => void;
 }
 
 export function ChangeCardImageDialog({
   deckslots,
-  displayDeckId,
   displayDeckBanner,
   displayDeckBannerId,
   defaultImgURL,
   viewMode,
   setViewMode,
+  onBannerChange,
 }: IChangeCardImageDialogProps) {
   const [selectedImageLink, setSelectedImageLink] = useState<string>(
     displayDeckBanner || defaultImgURL,
   );
   const [bannerId, setBannerId] = useState(displayDeckBannerId);
   const [isValidBannerId, setIsValidBannerId] = useState(false);
-  // useEffect(() => {
-  //   if (deckslots) {
-  //     const selectedDeckslot = deckslots.find((slot) => slot.deck_id === displayDeckId);
-  //     setSelectedImageLink(
-  //       viewMode === 'en' ? selectedDeckslot?.image_link_en || defaultImgURL : selectedDeckslot?.image_link || defaultImgURL
-  //     );
-  //   }
-  // }, [deckslots, displayDeckId, defaultImgURL, viewMode]);
 
   const toggleViewMode = () => {
     setViewMode((prev) => (prev === 'en' ? 'kr' : 'en'));
@@ -82,8 +74,10 @@ export function ChangeCardImageDialog({
   };
 
   const updateBanner = async () => {
-    console.log('updating banner to ', bannerId);
     //todo implement update banner logic
+    // console.log('updating banner to ', bannerId);
+    if (!isValidBannerId) return;
+    onBannerChange(bannerId!);
   };
 
   const sortedSlots = deckslots?.sort((a, b) => {

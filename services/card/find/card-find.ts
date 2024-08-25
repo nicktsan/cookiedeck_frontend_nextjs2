@@ -14,6 +14,9 @@ import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '../card.entity';
 import { ENV } from '@/env';
 import { ErrorResponseDTO } from '@/utils/error.schema';
+import { ResponseError } from '@/utils/responseError';
+import { AxiosError } from 'axios';
+import { ZodError } from 'zod';
 export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEntity[]> {
   function validate(dto: unknown): CardSearchResponseDataDTO {
     return ValidateSchema({
@@ -29,14 +32,22 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
       name: formData.name,
     };
     // console.log('params: ', params);
-    const res: CardSearchResponseDTO | ErrorResponseDTO | Error = await MakeApiRequest({
-      url,
-      method: 'POST',
-      requestSchema: CardSearchRequestSchema,
-      responseSchema: CardSearchResponseSchema,
-      data: params,
-    });
-    if (res instanceof Error) throw res;
+    const res: CardSearchResponseDTO | ResponseError | AxiosError | ZodError | Error =
+      await MakeApiRequest({
+        url,
+        method: 'POST',
+        requestSchema: CardSearchRequestSchema,
+        responseSchema: CardSearchResponseSchema,
+        data: params,
+      });
+    if (
+      res instanceof Error ||
+      res instanceof ResponseError ||
+      res instanceof AxiosError ||
+      res instanceof ZodError
+    ) {
+      throw res;
+    }
     const validatedRes = validate(res.data);
     let cards: CardEntity[] = [];
     if (validatedRes.cards) {
@@ -48,7 +59,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
       //todo handle generic Error
     }
     //todo additional error handling can be added based on error class
-    console.error('Error searching for cards:', error);
+    console.error('Error searching for cards:');
     throw error;
   }
 }

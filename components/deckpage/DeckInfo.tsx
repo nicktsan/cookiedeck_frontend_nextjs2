@@ -30,6 +30,7 @@ export default function DeckInfo({
 }: DeckInfoProps) {
   const [localDeck, setLocalDeck] = useState(displayDeck);
   const [nameErrorClass, setNameErrorClass] = useState('hidden');
+  const [optimisticBannerUrl, setOptimisticBannerUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setLocalDeck(displayDeck);
@@ -55,29 +56,53 @@ export default function DeckInfo({
   });
 
   const handleChange = useCallback(
-    async (field: string, value: string) => {
+    async (field: string, value: string | number) => {
       if (!displayDeck || !displayDeck.id) return;
 
       if (
-        (field === 'description' && value.trim() === localDeck?.description?.trim()) ||
-        (field === 'name' && value.trim() === localDeck?.name?.trim()) ||
-        (field === 'visibility' && value.toLowerCase().trim() === localDeck?.visibility?.trim()) ||
+        (field === 'description' && String(value).trim() === localDeck?.description?.trim()) ||
+        (field === 'name' && String(value).trim() === localDeck?.name?.trim()) ||
+        (field === 'visibility' &&
+          String(value).toLowerCase().trim() === localDeck?.visibility?.trim()) ||
         (field === 'banner' && Number(value) === localDeck?.banner)
       ) {
         return;
       }
-      if (field === 'name' && value.trim().length < 3) {
+      if (field === 'name' && String(value).trim().length < 3) {
         setNameErrorClass('text-red-500');
       }
       const deckUpdateRequestData: DeckUpdateRequestDTO = {
         id: displayDeck.id,
         [field]: value,
       };
+      if (field === 'banner') {
+        const selectedDeckslot = deckslots?.find((slot) => slot.card_id === Number(value));
+        if (selectedDeckslot) {
+          setOptimisticBannerUrl(
+            viewMode === 'en' ? selectedDeckslot.image_link_en! : selectedDeckslot.image_link!,
+          );
+        }
+      }
 
       updateDeckMutation.mutate(deckUpdateRequestData);
     },
-    [displayDeck, localDeck, updateDeckMutation],
+    // [displayDeck, localDeck, updateDeckMutation],
+    [
+      displayDeck,
+      deckslots,
+      viewMode,
+      updateDeckMutation,
+      localDeck?.banner,
+      localDeck?.description,
+      localDeck?.name,
+      localDeck?.visibility,
+    ],
   );
+
+  useEffect(() => {
+    setLocalDeck(displayDeck);
+    setOptimisticBannerUrl(null);
+  }, [displayDeck]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLElement>, field: string) => {
@@ -94,7 +119,8 @@ export default function DeckInfo({
   const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
   const lastUpdated: string = calculateSinceLastUpdate(localDeck);
   const defaultImgURL: string = '/images/cookieruntcg.PNG';
-  let bgImage: string = `url(${localDeck.kr_banner_url || defaultImgURL})`;
+  // let bgImage: string = `url(${localDeck.kr_banner_url || defaultImgURL})`;
+  let bgImage: string = `url(${optimisticBannerUrl || localDeck.kr_banner_url || defaultImgURL})`;
   // console.log("localDeck.en_banner_url", localDeck.en_banner_url)
   // console.log("localDeck.kr_banner_url", localDeck.kr_banner_url)
   return (
@@ -143,12 +169,12 @@ export default function DeckInfo({
             {isOwner ? (
               <ChangeCardImageDialog
                 deckslots={deckslots}
-                displayDeckId={displayDeck?.id}
                 displayDeckBanner={displayDeck?.kr_banner_url}
                 displayDeckBannerId={displayDeck?.banner}
                 defaultImgURL={defaultImgURL}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
+                onBannerChange={(value) => handleChange('banner', value)}
               />
             ) : null}
           </div>
