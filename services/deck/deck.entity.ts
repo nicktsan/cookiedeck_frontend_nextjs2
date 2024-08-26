@@ -23,6 +23,7 @@ export const DeckEntitySchema = z.object({
     .nullable()
     .optional(),
   banner: z.number().nullable().optional(),
+  image_link: z.string().nullable().optional(), //This field comes from cards. Other fields come from deckTable.
   description: z.string().nullable().optional(),
   views: z.number().optional(),
   visibility: z

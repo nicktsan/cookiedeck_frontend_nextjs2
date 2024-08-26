@@ -18,6 +18,7 @@ const allowedFields = [
   'description',
   'views',
   'visibility',
+  'image_link',
 ] as const;
 export const DeckFindCustomRequestSchema = z.object({
   select: z

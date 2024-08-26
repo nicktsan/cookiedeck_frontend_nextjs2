@@ -74,15 +74,12 @@ export function ChangeCardImageDialog({
   };
 
   const updateBanner = async () => {
-    //todo implement update banner logic
     // console.log('updating banner to ', bannerId);
     if (!isValidBannerId) return;
     onBannerChange(bannerId!);
   };
 
   const sortedSlots = deckslots?.sort((a, b) => {
-    // const nameA = viewMode === 'en' ? a.name_eng : a.name_kr;
-    // const nameB = viewMode === 'en' ? b.name_eng : b.name_kr;
     const nameA = a.name_eng;
     const nameB = b.name_eng;
     const colorA = a.color || '';

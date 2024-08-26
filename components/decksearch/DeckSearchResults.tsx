@@ -5,6 +5,8 @@ import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate'
 import { ErrorResponseDataDTO } from '@/utils/error.schema';
 import Link from 'next/link';
 import { FaEye } from 'react-icons/fa';
+import { defaultImgURL } from '../deckpage/DeckInfo';
+import Image from 'next/image';
 
 export default async function DeckSearchResults({
   name,
@@ -14,6 +16,7 @@ export default async function DeckSearchResults({
   // currentPage: number;
 }) {
   let decks: DeckEntity[] = [];
+  //todo revalidate data after a deck is deleted
   // Type guard to check if the response is DeckFindCustomResponseDataDTO
   //todo add deck classifications/tags for users to search up.
   //Add filter/sorting options for viewing, updated_at, rating, etc.
@@ -45,6 +48,15 @@ export default async function DeckSearchResults({
             {decks.map((deck) => (
               <Link key={deck.id} href={`/deck/${deck.id}`} className="h-full">
                 <div className="flex h-full cursor-pointer flex-col justify-between outline outline-offset-2 outline-blue-500">
+                  <div className="relative aspect-[2/1] w-full overflow-hidden">
+                    <Image
+                      src={deck.image_link || defaultImgURL}
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition="top"
+                      alt=""
+                    />
+                  </div>
                   <div>
                     <h2>{deck.name}</h2>
                     <h2>{deck.username}</h2>

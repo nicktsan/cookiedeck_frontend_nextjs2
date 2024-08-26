@@ -20,6 +20,7 @@ interface DeckInfoProps {
   setViewMode: React.Dispatch<React.SetStateAction<'en' | 'kr'>>;
 }
 
+export const defaultImgURL: string = '/images/cookieruntcg.PNG';
 export default function DeckInfo({
   displayDeck,
   deckslots,
@@ -119,7 +120,6 @@ export default function DeckInfo({
 
   const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
   const lastUpdated: string = calculateSinceLastUpdate(localDeck);
-  const defaultImgURL: string = '/images/cookieruntcg.PNG';
   const bgImage: string = `url(${optimisticBannerUrl || localDeck.kr_banner_url || defaultImgURL})`;
 
   return (

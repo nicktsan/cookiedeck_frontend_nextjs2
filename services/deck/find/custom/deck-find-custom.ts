@@ -12,49 +12,51 @@ import {
 } from './deck-find-custom.schema';
 import { validate } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
-import {
-  ErrorResponseDataDTO,
-  ErrorResponseDataSchema,
-  ErrorResponseDTO,
-} from '@/utils/error.schema';
+import { ResponseError } from '@/utils/responseError';
+import { AxiosError } from 'axios';
+import { ZodError } from 'zod';
 
-export async function DeckFindCustom(
-  name: string,
-): Promise<DeckFindCustomResponseDataDTO | ErrorResponseDataDTO> {
+export async function DeckFindCustom(name: string): Promise<DeckFindCustomResponseDataDTO> {
   try {
     const deckFindCustomUrl = ENV.BACKEND_URL + '/deck/find/custom';
     const deckFindCustomRequestData: DeckFindCustomRequestDTO = {
-      select: ['name', 'views', 'username'],
+      select: ['name', 'views', 'username', 'image_link'],
       name: name,
     };
     // console.log("deckFindCustomUrl: ", deckFindCustomUrl)
-    const deckFindCustomResponse: DeckFindCustomResponseDTO | ErrorResponseDTO =
-      await MakeApiRequest({
-        url: deckFindCustomUrl,
-        method: 'POST',
-        requestSchema: DeckFindCustomRequestSchema,
-        responseSchema: DeckFindCustomResponseSchema,
-        data: deckFindCustomRequestData,
-      });
+    const deckFindCustomResponse:
+      | DeckFindCustomResponseDTO
+      | ResponseError
+      | AxiosError
+      | ZodError
+      | Error = await MakeApiRequest({
+      url: deckFindCustomUrl,
+      method: 'POST',
+      requestSchema: DeckFindCustomRequestSchema,
+      responseSchema: DeckFindCustomResponseSchema,
+      data: deckFindCustomRequestData,
+    });
     // console.log("raw deckFindCustomResponse: ", deckFindCustomResponse);
 
-    if (deckFindCustomResponse.statusCode >= 200 && deckFindCustomResponse.statusCode <= 299) {
-      const validated: DeckFindCustomResponseDataDTO = validate(
-        deckFindCustomResponse.data,
-        DeckFindCustomResponseDataSchema,
-        'DeckFindCustomResponseDataSchema',
-      );
-      // console.log("validated deckFindCustomResponse: ", validated);
-      return validated;
+    if (
+      deckFindCustomResponse instanceof AxiosError ||
+      deckFindCustomResponse instanceof ResponseError ||
+      deckFindCustomResponse instanceof ZodError ||
+      deckFindCustomResponse instanceof Error
+    ) {
+      throw deckFindCustomResponse;
     }
-    const validatedError: ErrorResponseDataDTO = validate(
+
+    const validated: DeckFindCustomResponseDataDTO = validate(
       deckFindCustomResponse.data,
-      ErrorResponseDataSchema,
-      'ErrorResponseDataSchema',
+      DeckFindCustomResponseDataSchema,
+      'DeckFindCustomResponseDataSchema',
     );
-    return validatedError;
+    // console.log("validated deckFindCustomResponse: ", validated);
+    // console.log("validated deckFindCustomResponse decks: ", validated.decks)
+    return validated;
   } catch (error) {
-    console.error('Error finding custom deck:', error);
+    console.error('Error finding deck during search:');
     throw error;
   }
 }
