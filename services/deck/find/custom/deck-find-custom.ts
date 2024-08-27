@@ -53,7 +53,7 @@ export async function DeckFindCustom(name: string): Promise<DeckFindCustomRespon
       'DeckFindCustomResponseDataSchema',
     );
     // console.log("validated deckFindCustomResponse: ", validated);
-    // console.log("validated deckFindCustomResponse decks: ", validated.decks)
+    console.log("validated deckFindCustomResponse decks: ", validated.decks)
     return validated;
   } catch (error) {
     console.error('Error finding deck during search:');

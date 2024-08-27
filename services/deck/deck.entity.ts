@@ -3,6 +3,7 @@ export const DeckEntitySchema = z.object({
   id: z.string().uuid({
     message: `creator_id must be a valid UUID`,
   }),
+  unique_colors: z.array(z.string()).nullable().optional(),
   name: z.string().min(3).optional(),
   creator_id: z
     .string()
