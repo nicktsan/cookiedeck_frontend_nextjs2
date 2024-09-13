@@ -9,7 +9,7 @@ import {
   DeckslotUpdateQuantityResponseDataSchema,
   DeckslotUpdateQuantityResponseSchema,
 } from './deckslot-update-quantity.schema';
-import { validate } from '@/utils/schemaValidator';
+import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
 
 export async function UpdateDeckSlotQuantity(
@@ -27,11 +27,11 @@ export async function UpdateDeckSlotQuantity(
       data: payload,
     });
     // console.log('raw deckSlotUpdateResponse: ', deckSlotUpdateResponse.data);
-    const validatedRes: DeckslotUpdateQuantityResponseDataDTO = validate(
-      deckSlotUpdateResponse.data,
-      DeckslotUpdateQuantityResponseDataSchema,
-      'DeckslotUpdateQuantityResponseDataSchema',
-    );
+    const validatedRes: DeckslotUpdateQuantityResponseDataDTO = ValidateSchema({
+      dto: deckSlotUpdateResponse.data,
+      schema: DeckslotUpdateQuantityResponseDataSchema,
+      schemaName: 'DeckslotUpdateQuantityResponseDataSchema',
+    });
     // console.log('validated deckSlotUpdateResponse: ', validatedRes);
     return validatedRes;
   } catch (error) {

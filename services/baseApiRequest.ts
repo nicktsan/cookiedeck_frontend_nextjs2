@@ -1,4 +1,3 @@
-'use server';
 import { z, ZodError } from 'zod';
 import axios, { AxiosError, /*AxiosResponse,*/ Method } from 'axios';
 import { createClient } from '@/utils/supabase/server';
@@ -17,7 +16,7 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
   requestSchema: TRequest;
   responseSchema: TResponse;
   data: z.infer<TRequest>;
-}): Promise<z.infer<TResponse> | ResponseError | AxiosError | ZodError | Error> {
+}): Promise<z.infer<TResponse>> {
   const supabase = createClient();
   const {
     data: { session },
@@ -71,18 +70,18 @@ async function MakeApiRequest<TRequest extends z.ZodType, TResponse extends z.Zo
         data: response?.data || { error: error },
       });
       if (errorParse.success) {
-        return new ResponseError({
+        throw new ResponseError({
           name: 'RESPONSE_ERROR',
           message: errorParse.data.data.error || errorParse.data.data.errorMessage || error.message,
           cause: error,
         });
       }
-      return error as AxiosError;
+      throw error as AxiosError;
     }
     if (error instanceof ZodError) {
-      return error as ZodError;
+      throw error as ZodError;
     }
-    return error as Error;
+    throw error as Error;
   }
   return apiResponse;
 }

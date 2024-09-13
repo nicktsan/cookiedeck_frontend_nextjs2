@@ -7,14 +7,11 @@ import {
 } from './deck-update-incrementview.dto';
 import {
   DeckUpdateIncrementviewRequestSchema,
-  DeckUpdateIncrementviewResponseDataSchema,
+  // DeckUpdateIncrementviewResponseDataSchema,
   DeckUpdateIncrementviewResponseSchema,
 } from './deck-update-incrementview.schema';
-import { validate } from '@/utils/schemaValidator';
+// import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
-import { ZodError } from 'zod';
-import { ResponseError } from '@/utils/responseError';
-import { AxiosError } from 'axios';
 
 //can use this as an example for error handling
 export async function IncrementDeckView(
@@ -25,34 +22,22 @@ export async function IncrementDeckView(
     // console.log("deckUpdateIncrementviewUrl: ", deckUpdateIncrementviewUrl)
     // console.log('deckUpdateIncrementviewRequestData: ', deckUpdateIncrementviewRequestData);
     const deckUpdateIncrementviewResponse:
-      | DeckUpdateIncrementviewResponseDTO
-      | ResponseError
-      | AxiosError
-      | ZodError
-      | Error = await MakeApiRequest({
+      DeckUpdateIncrementviewResponseDTO
+      = await MakeApiRequest({
       url: deckUpdateIncrementviewUrl,
       method: 'PATCH',
       requestSchema: DeckUpdateIncrementviewRequestSchema,
       responseSchema: DeckUpdateIncrementviewResponseSchema,
       data: deckUpdateIncrementviewRequestData,
     });
-
-    // console.log("raw deckUpdateIncrementviewResponse: ", deckUpdateIncrementviewResponse);
-    if (
-      deckUpdateIncrementviewResponse instanceof AxiosError ||
-      deckUpdateIncrementviewResponse instanceof ResponseError ||
-      deckUpdateIncrementviewResponse instanceof ZodError ||
-      deckUpdateIncrementviewResponse instanceof Error
-    ) {
-      throw deckUpdateIncrementviewResponse;
-    }
-    const validated: DeckUpdateIncrementviewResponseDataDTO = validate(
-      deckUpdateIncrementviewResponse.data,
-      DeckUpdateIncrementviewResponseDataSchema,
-      'DeckUpdateIncrementviewResponseDataSchema',
-    );
+    // const validated: DeckUpdateIncrementviewResponseDataDTO = ValidateSchema({
+    //   dto: deckUpdateIncrementviewResponse.data,
+    //   schema: DeckUpdateIncrementviewResponseDataSchema,
+    //   schemaName: 'DeckUpdateIncrementviewResponseDataSchema',
+    // });
     // console.log("validated deckUpdateIncrementviewResponse: ", validated);
-    return validated;
+    return deckUpdateIncrementviewResponse.data as DeckUpdateIncrementviewResponseDataDTO
+    // return validated;
   } catch (error) {
     console.log('Error incrementing deck view:');
     throw error;

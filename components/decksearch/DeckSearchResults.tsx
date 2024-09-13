@@ -21,7 +21,6 @@ export default async function DeckSearchResults({
   // Type guard to check if the response is DeckFindCustomResponseDataDTO
   //todo add deck classifications/tags for users to search up.
   //Add filter/sorting options for viewing, updated_at, rating, etc.
-  //todo add colours in deck.
   function isDeckFindCustomResponseDataDTO(
     response: any,
   ): response is DeckFindCustomResponseDataDTO {
@@ -46,10 +45,10 @@ export default async function DeckSearchResults({
       if (deckFindRes.decks) {
         decks = deckFindRes.decks as DeckEntity[];
         return (
-          <div className="grid w-11/12 grid-cols-4 gap-4">
+          <div className="grid w-11/12 grid-cols-4 gap-4 mb-4">
             {decks.map((deck) => (
               <Link key={deck.id} href={`/deck/${deck.id}`} className="h-full">
-                <div className="flex h-full cursor-pointer flex-col justify-between outline outline-offset-2 outline-blue-500">
+                <div className="flex h-full cursor-pointer flex-col justify-between outline outline-1 rounded">
                   <div className="relative aspect-[2/1] w-full overflow-hidden">
                     <Image
                       src={deck.image_link || defaultImgURL}
@@ -59,25 +58,25 @@ export default async function DeckSearchResults({
                       alt=""
                     />
                   </div>
-                    <div className="flex justify-center items-center gap-1">
-                      {deck.unique_colors
-                        ?.slice() // Create a copy of the array to avoid mutating the original
-                        .sort((a, b) => a.localeCompare(b)) // Sort the array alphabetically
-                        .map((color) => (
-                          <span
-                            key={color}
-                            title={color}
-                            className="inline-flex justify-center items-center w-6 h-6"
-                          >
-                            {colorMapping[color.toLowerCase() as keyof typeof colorMapping] || color}
-                          </span>
-                        ))}
-                    </div>
-                  <div>
+                  <div className="flex items-center justify-center gap-1">
+                    {deck.unique_colors
+                      ?.slice() // Create a copy of the array to avoid mutating the original
+                      .sort((a, b) => a.localeCompare(b)) // Sort the array alphabetically
+                      .map((color) => (
+                        <span
+                          key={color}
+                          title={color}
+                          className="inline-flex h-6 w-6 items-center justify-center"
+                        >
+                          {colorMapping[color.toLowerCase() as keyof typeof colorMapping] || color}
+                        </span>
+                      ))}
+                  </div>
+                  <div className="mx-2">
                     <h2>{deck.name}</h2>
                     <h2>{deck.username}</h2>
                   </div>
-                  <div>
+                  <div className="mx-2">
                     <div className="flex items-center gap-x-1">
                       <FaEye /> <p>{deck.views}</p>
                     </div>

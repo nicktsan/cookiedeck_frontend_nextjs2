@@ -13,18 +13,14 @@ import { ValidateSchema } from '@/utils/schemaValidator';
 import { MakeApiRequest } from '@/services/baseApiRequest';
 import { CardEntity } from '../card.entity';
 import { ENV } from '@/env';
-import { ErrorResponseDTO } from '@/utils/error.schema';
-import { ResponseError } from '@/utils/responseError';
-import { AxiosError } from 'axios';
-import { ZodError } from 'zod';
 export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEntity[]> {
-  function validate(dto: unknown): CardSearchResponseDataDTO {
-    return ValidateSchema({
-      dto,
-      schema: CardSearchResponseDataSchema,
-      schemaName: 'CardSearchResponseDataSchema',
-    });
-  }
+  // function validate(dto: unknown): CardSearchResponseDataDTO {
+  //   return ValidateSchema({
+  //     dto,
+  //     schema: CardSearchResponseDataSchema,
+  //     schemaName: 'CardSearchResponseDataSchema',
+  //   });
+  // }
   try {
     const url = ENV.BACKEND_URL + '/card/find';
     const params: CardSearchRequestDTO = {
@@ -32,7 +28,7 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
       name: formData.name,
     };
     // console.log('params: ', params);
-    const res: CardSearchResponseDTO | ResponseError | AxiosError | ZodError | Error =
+    const res: CardSearchResponseDTO =
       await MakeApiRequest({
         url,
         method: 'POST',
@@ -40,15 +36,13 @@ export async function CardFind(formData: CardSearchRequestDTO): Promise<CardEnti
         responseSchema: CardSearchResponseSchema,
         data: params,
       });
-    if (
-      res instanceof Error ||
-      res instanceof ResponseError ||
-      res instanceof AxiosError ||
-      res instanceof ZodError
-    ) {
-      throw res;
-    }
-    const validatedRes = validate(res.data);
+    
+    // const validatedRes = validate(res.data);
+    const validatedRes: CardSearchResponseDataDTO = ValidateSchema({
+      dto: res.data,
+      schema: CardSearchResponseDataSchema,
+      schemaName: 'CardSearchResponseDataSchema',
+    });
     let cards: CardEntity[] = [];
     if (validatedRes.cards) {
       cards = validatedRes.cards;

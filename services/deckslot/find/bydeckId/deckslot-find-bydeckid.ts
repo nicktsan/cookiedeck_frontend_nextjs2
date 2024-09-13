@@ -9,7 +9,7 @@ import {
   DeckslotFindByDeckIdResponseDataSchema,
   DeckslotFindByDeckIdResponseSchema,
 } from './deckslot-find-bydeckid.schema';
-import { validate } from '@/utils/schemaValidator';
+import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
 
 export async function DeckSlotFindByDeckId(
@@ -28,11 +28,11 @@ export async function DeckSlotFindByDeckId(
       data: deckSlotFindRequestData,
     });
     // console.log("raw deckSlotFindResponse: ", deckSlotFindResponse.data);
-    const validatedRes: DeckslotFindByDeckIdResponseDataDTO = validate(
-      deckSlotFindResponse.data,
-      DeckslotFindByDeckIdResponseDataSchema,
-      'DeckslotFindByDeckIdResponseDataSchema',
-    );
+    const validatedRes: DeckslotFindByDeckIdResponseDataDTO = ValidateSchema({
+      dto: deckSlotFindResponse.data,
+      schema: DeckslotFindByDeckIdResponseDataSchema,
+      schemaName: 'DeckslotFindByDeckIdResponseDataSchema',
+    });
     // console.log("validated deckSlotFindResponse: ", validatedRes);
     return validatedRes;
   } catch (error) {

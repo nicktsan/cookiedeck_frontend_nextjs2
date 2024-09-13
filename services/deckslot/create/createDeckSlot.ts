@@ -17,13 +17,13 @@ export async function CreateDeckSlot(
   cardData: CardEntity,
   deckId: string | undefined,
 ): Promise<boolean> {
-  function validate(dto: unknown): DeckslotCreateResponseDataDTO {
-    return ValidateSchema({
-      dto,
-      schema: DeckslotCreateResponseDataSchema,
-      schemaName: 'DeckslotCreateResponseDataSchema',
-    });
-  }
+  // function validate(dto: unknown): DeckslotCreateResponseDataDTO {
+  //   return ValidateSchema({
+  //     dto,
+  //     schema: DeckslotCreateResponseDataSchema,
+  //     schemaName: 'DeckslotCreateResponseDataSchema',
+  //   });
+  // }
   try {
     const url = ENV.BACKEND_URL + '/deckslot/create';
     if (!deckId) {
@@ -41,7 +41,12 @@ export async function CreateDeckSlot(
       responseSchema: DeckslotCreateResponseSchema,
       data: params,
     });
-    validate(res.data);
+    // validate(res.data);
+    ValidateSchema({
+      dto: res.data,
+      schema: DeckslotCreateResponseDataSchema,
+      schemaName: 'DeckslotCreateResponseDataSchema',
+    });
     // console.log('CreateDeckSlot res:', res.data);
     if (res.data.deck_id) {
       return true;

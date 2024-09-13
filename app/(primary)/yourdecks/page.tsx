@@ -17,13 +17,13 @@ import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
 export default async function YourDecks() {
   //todo revalidate data after a deck is deleted
-  function validate(dto: unknown): DeckFindResponseByCreatorIdDataDTO {
-    return ValidateSchema({
-      dto,
-      schema: DeckFindResponseByCreatorIdDataSchema,
-      schemaName: 'DeckFindResponseByCreatorIdDataSchema',
-    });
-  }
+  // function validate(dto: unknown): DeckFindResponseByCreatorIdDataDTO {
+  //   return ValidateSchema({
+  //     dto,
+  //     schema: DeckFindResponseByCreatorIdDataSchema,
+  //     schemaName: 'DeckFindResponseByCreatorIdDataSchema',
+  //   });
+  // }
 
   const supabase = createClient();
   const {
@@ -45,7 +45,13 @@ export default async function YourDecks() {
     responseSchema: DeckFindResponseByCreatorIdSchema,
     data: params,
   });
-  validate(res.data);
+  // validate(res.data);
+  ValidateSchema({
+    dto: res.data,
+    schema: DeckFindResponseByCreatorIdDataSchema,
+    schemaName: 'DeckFindResponseByCreatorIdDataSchema',
+  })
+  
   let yourDecks: DeckEntity[] = [];
   if (res.data.decks) {
     yourDecks = res.data.decks;

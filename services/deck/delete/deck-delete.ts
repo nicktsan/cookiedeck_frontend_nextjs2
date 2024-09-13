@@ -6,9 +6,9 @@ import {
   DeckDeleteResponseDataSchema,
   DeckDeleteResponseSchema,
 } from './deck-delete.schema';
-import { validate } from '@/utils/schemaValidator';
+import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
-import { ErrorResponseDataDTO, ErrorResponseDataSchema } from '@/utils/error.schema';
+import { ErrorResponseDataDTO } from '@/utils/error.schema';
 
 export async function DeleteDeck(
   id: string,
@@ -25,24 +25,15 @@ export async function DeleteDeck(
       data: deleteDeckRequestData,
     });
     // console.log("raw deleteDeckResponse: ", deleteDeckResponse);
+    const validated: DeckDeleteResponseDataDTO = ValidateSchema({
+      dto: deleteDeckResponse.data,
+      schema: DeckDeleteResponseDataSchema,
+      schemaName: 'DeckDeleteResponseDataSchema',
+    });
+    return validated;
 
-    if (deleteDeckResponse.statusCode >= 200 && deleteDeckResponse.statusCode <= 299) {
-      const validated: DeckDeleteResponseDataDTO = validate(
-        deleteDeckResponse.data,
-        DeckDeleteResponseDataSchema,
-        'DeckDeleteResponseDataSchema',
-      );
-      return validated;
-    }
-    const validatedError: ErrorResponseDataDTO = validate(
-      deleteDeckResponse.data,
-      ErrorResponseDataSchema,
-      'ErrorResponseDataSchema',
-    );
-    // console.log("validated deleteDeckResponse: ", validated);
-    return validatedError;
   } catch (error) {
-    console.error('Error deleting deck:', error);
+    console.error('Error deleting deck:');
     throw error;
   }
 }

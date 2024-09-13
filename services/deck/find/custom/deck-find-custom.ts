@@ -10,11 +10,8 @@ import {
   DeckFindCustomResponseDataSchema,
   DeckFindCustomResponseSchema,
 } from './deck-find-custom.schema';
-import { validate } from '@/utils/schemaValidator';
+import { ValidateSchema } from '@/utils/schemaValidator';
 import { ENV } from '@/env';
-import { ResponseError } from '@/utils/responseError';
-import { AxiosError } from 'axios';
-import { ZodError } from 'zod';
 
 export async function DeckFindCustom(name: string): Promise<DeckFindCustomResponseDataDTO> {
   try {
@@ -24,12 +21,7 @@ export async function DeckFindCustom(name: string): Promise<DeckFindCustomRespon
       name: name,
     };
     // console.log("deckFindCustomUrl: ", deckFindCustomUrl)
-    const deckFindCustomResponse:
-      | DeckFindCustomResponseDTO
-      | ResponseError
-      | AxiosError
-      | ZodError
-      | Error = await MakeApiRequest({
+    const deckFindCustomResponse: DeckFindCustomResponseDTO = await MakeApiRequest({
       url: deckFindCustomUrl,
       method: 'POST',
       requestSchema: DeckFindCustomRequestSchema,
@@ -37,23 +29,13 @@ export async function DeckFindCustom(name: string): Promise<DeckFindCustomRespon
       data: deckFindCustomRequestData,
     });
     // console.log("raw deckFindCustomResponse: ", deckFindCustomResponse);
-
-    if (
-      deckFindCustomResponse instanceof AxiosError ||
-      deckFindCustomResponse instanceof ResponseError ||
-      deckFindCustomResponse instanceof ZodError ||
-      deckFindCustomResponse instanceof Error
-    ) {
-      throw deckFindCustomResponse;
-    }
-
-    const validated: DeckFindCustomResponseDataDTO = validate(
-      deckFindCustomResponse.data,
-      DeckFindCustomResponseDataSchema,
-      'DeckFindCustomResponseDataSchema',
-    );
+    const validated: DeckFindCustomResponseDataDTO = ValidateSchema({
+      dto: deckFindCustomResponse.data,
+      schema: DeckFindCustomResponseDataSchema,
+      schemaName: 'DeckFindCustomResponseDataSchema',
+    });
     // console.log("validated deckFindCustomResponse: ", validated);
-    console.log("validated deckFindCustomResponse decks: ", validated.decks)
+    // console.log('validated deckFindCustomResponse decks: ', validated.decks);
     return validated;
   } catch (error) {
     console.error('Error finding deck during search:');
