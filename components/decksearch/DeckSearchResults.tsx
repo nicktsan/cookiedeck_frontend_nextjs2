@@ -2,7 +2,6 @@ import { DeckEntity } from '@/services/deck/deck.entity';
 import { DeckFindCustom } from '@/services/deck/find/custom/deck-find-custom';
 import { DeckFindCustomResponseDataDTO } from '@/services/deck/find/custom/deck-find-custom.dto';
 import { calculateSinceLastUpdate } from '@/utils/deck/calculateSinceLastUpdate';
-import { ErrorResponseDataDTO } from '@/utils/error.schema';
 import Link from 'next/link';
 import { FaEye } from 'react-icons/fa';
 import { defaultImgURL } from '../deckpage/DeckInfo';
@@ -18,30 +17,12 @@ export default async function DeckSearchResults({
 }) {
   let decks: DeckEntity[] = [];
   //todo revalidate data after a deck is deleted
-  // Type guard to check if the response is DeckFindCustomResponseDataDTO
-  //todo add deck classifications/tags for users to search up.
   //Add filter/sorting options for viewing, updated_at, rating, etc.
-  function isDeckFindCustomResponseDataDTO(
-    response: any,
-  ): response is DeckFindCustomResponseDataDTO {
-    return (
-      (response as DeckFindCustomResponseDataDTO).decks !== undefined ||
-      (response as DeckFindCustomResponseDataDTO).decks !== null
-    );
-  }
 
-  // Type guard to check if the response is ErrorResponseDataDTO
-  function isErrorResponseDataDTO(response: any): response is ErrorResponseDataDTO {
-    return (
-      (response as ErrorResponseDataDTO).error !== undefined ||
-      (response as ErrorResponseDataDTO).DTO !== undefined ||
-      (response as ErrorResponseDataDTO).errorCode !== undefined
-    );
-  }
   if (name.trim().length > 2) {
-    const deckFindRes: DeckFindCustomResponseDataDTO | ErrorResponseDataDTO =
-      await DeckFindCustom(name);
-    if (isDeckFindCustomResponseDataDTO(deckFindRes)) {
+    try {
+      const deckFindRes: DeckFindCustomResponseDataDTO =
+        await DeckFindCustom(name);
       if (deckFindRes.decks) {
         decks = deckFindRes.decks as DeckEntity[];
         return (
@@ -76,6 +57,13 @@ export default async function DeckSearchResults({
                     <h2>{deck.name}</h2>
                     <h2>{deck.username}</h2>
                   </div>
+                  <div className="flex flex-row flex-wrap gap-2 mx-2">
+                    {deck.tag_names?.map((tag_name) => (
+                      <p key={tag_name} className="max-w-full truncate hover:bg-gray-200 border-2 border-black px-2 py-1 rounded-full text-sm">
+                        {tag_name}
+                      </p>
+                    ))}
+                  </div>
                   <div className="mx-2">
                     <div className="flex items-center gap-x-1">
                       <FaEye /> <p>{deck.views}</p>
@@ -88,17 +76,12 @@ export default async function DeckSearchResults({
           </div>
         );
       }
-    } else if (isErrorResponseDataDTO(deckFindRes)) {
-      // console.log(deckFindRes.message || deckFindRes.errorMessage);
-      if (deckFindRes.DTO) {
-        // console.log(deckFindRes.DTO);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        return <p>{error.message}</p>;
       }
-    } else {
-      console.error('Unknown response type:', deckFindRes);
+      return <p>Unknown error</p>
     }
   }
-  if (!name) {
-    return null;
-  }
-  return <div>No decks found.</div>;
 }
