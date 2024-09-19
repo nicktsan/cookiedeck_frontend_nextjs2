@@ -36,7 +36,7 @@ export default function DeckInfo({
   useEffect(() => {
     setLocalDeck(displayDeck);
   }, [displayDeck]);
-
+  //todo add deck tag edit functionality
   const updateDeckMutation = useMutation({
     mutationFn: UpdateDeck,
     onMutate: async (updatedDeck) => {
@@ -118,7 +118,7 @@ export default function DeckInfo({
 
   if (!localDeck) return null;
 
-  const { name, description, creator_username = '', visibility, views = 0 } = localDeck;
+  const { name, description, creator_username = '', visibility, views = 0, tag_names } = localDeck;
   const lastUpdated: string = calculateSinceLastUpdate(localDeck);
   const bgImage: string = `url(${optimisticBannerUrl || localDeck.kr_banner_url || defaultImgURL})`;
 
@@ -176,6 +176,13 @@ export default function DeckInfo({
                 onBannerChange={(value) => handleChange('banner', value)}
               />
             ) : null}
+          </div>
+          <div className="flex flex-row flex-wrap gap-2 mx-2">
+            {tag_names?.map((tag_name) => (
+              <p key={tag_name} className="max-w-full truncate hover:bg-gray-200 border-2 hover:text-black border-black px-2 py-1 rounded-full text-sm">
+                {tag_name}
+              </p>
+            ))}
           </div>
         </div>
       </div>
